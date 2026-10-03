@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-heading"><div><p class="eyebrow">Administration</p><h1>{{ 'Receiver bearbeiten' if receiver else 'Receiver hinzufügen' }}</h1></div></div>
+<section class="panel form-panel"><form method="post" action="/admin/receivers/save" class="form-stack">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}"><input type="hidden" name="id" value="{{ receiver.id if receiver else '0' }}">
+  <label>Name<input name="name" value="{{ values.name if values else '' }}" maxlength="128" required placeholder="z. B. VU+ Duo 4K"></label>
+  <div class="form-grid">
+    <label>IP-Adresse oder Hostname<input name="hostname" value="{{ values.hostname if values else '' }}" maxlength="253" required placeholder="192.0.2.50"></label>
+    <label>OpenWebif-Port<input type="number" name="port" value="{{ values.port if values else '80' }}" min="1" max="65535" required></label>
+  </div>
+  <label class="checkbox-row"><input type="checkbox" name="https" {% if values and values.https %}checked{% endif %}><span>HTTPS für die Verbindung verwenden</span></label>
+  <label class="checkbox-row"><input type="checkbox" name="verify_tls" {% if not values or values.verify_tls %}checked{% endif %}><span>HTTPS-Zertifikat prüfen</span></label>
+  <label>OpenWebif-Benutzername<input name="username" value="{{ values.username if values else '' }}" maxlength="128" autocomplete="off"><small>Leer lassen, wenn OpenWebif keine Anmeldung verlangt.</small></label>
+  <label>OpenWebif-Passwort<input type="password" name="password" maxlength="256" autocomplete="new-password"><small>{{ 'Leer lassen, um das gespeicherte Passwort beizubehalten.' if receiver else 'Wird verschlüsselt gespeichert.' }}</small></label>
+  {% if receiver and receiver.encrypted_password %}<label class="checkbox-row"><input type="checkbox" name="clear_password"><span>Gespeichertes Passwort entfernen</span></label>{% endif %}
+  <label class="checkbox-row"><input type="checkbox" name="enabled" {% if not values or values.enabled %}checked{% endif %}><span>Receiver aktiviert</span></label>
+  <div class="form-actions"><a class="button button-quiet" href="/admin/receivers">Abbrechen</a><button class="button button-primary">Speichern</button></div>
+</form></section>
+{% endblock %}

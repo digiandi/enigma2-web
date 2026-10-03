@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-heading"><div><p class="eyebrow">Administration</p><h1>{{ 'Benutzer bearbeiten' if target else 'Benutzer hinzufügen' }}</h1></div></div>
+<section class="panel form-panel"><form method="post" action="/admin/users/save" class="form-stack" data-user-access-form>
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}"><input type="hidden" name="id" value="{{ target.id if target else '0' }}">
+  {% if target %}<label>Benutzername<input value="{{ target.username }}" readonly></label>{% else %}<label>Benutzername<input name="username" value="{{ values.username if values else '' }}" maxlength="32" required autocomplete="off"></label>{% endif %}
+  {% if owner_tag %}<label>Ersteller-Tag<input value="{{ owner_tag }}" readonly><small>Dieser Tag kann in der Originaloberfläche des Receivers für Timer und Aufnahmen verwendet werden.</small></label>{% endif %}
+  <label>Anzeigename<input name="display_name" value="{{ values.display_name if values else '' }}" maxlength="128" required></label>
+  <label>Rolle<select name="role"><option value="user" {% if not values or values.role == 'user' %}selected{% endif %}>Benutzer</option><option value="admin" {% if values and values.role == 'admin' %}selected{% endif %}>Administrator</option></select></label>
+  <label>{{ 'Neues Startpasswort' if target else 'Startpasswort' }}<input type="password" name="password" maxlength="128" autocomplete="new-password" {% if not target %}required{% endif %}><small>{{ 'Leer lassen, um das Passwort beizubehalten.' if target else 'Der Benutzer muss es nach der Anmeldung ändern.' }}</small></label>
+  <label>Startpasswort wiederholen<input type="password" name="password_confirmation" maxlength="128" autocomplete="new-password" {% if not target %}required{% endif %}></label>
+  <label class="checkbox-row"><input type="checkbox" name="active" {% if not values or values.active %}checked{% endif %}><span>Benutzer aktiv</span></label>
+  {% set access_mode = values.access_mode if values and values.access_mode else ('all_write' if values.all_receivers_write else 'all_read') if values and values.all_receivers else 'assigned' %}
+  <fieldset class="receiver-permissions" data-receiver-permissions {% if values and values.role == 'admin' %}hidden disabled{% endif %}><legend>Receiver-Zugriff</legend>
+    <label>Zuweisung<select name="access_mode" data-access-mode>
+      <option value="assigned" {% if access_mode == 'assigned' %}selected{% endif %}>Receiver einzeln zuweisen</option>
+      <option value="all_read" {% if access_mode == 'all_read' %}selected{% endif %}>Alle Receiver: Lesen</option>
+      <option value="all_write" {% if access_mode == 'all_write' %}selected{% endif %}>Alle Receiver: Lesen und Schreiben</option>
+    </select></label>
+    <p class="form-hint permissions-hint">Lesen: alles anzeigen und Aufnahmen herunterladen. Schreiben: zusätzlich Timer anlegen sowie eigene Timer bearbeiten und löschen und eigene Aufnahmen löschen. Administratoren haben immer alle Rechte.</p>
+    <div class="receiver-grants" data-receiver-grants>
+    {% for r in all_boxes %}<label>{{ r.name }}{{ ' (deaktiviert)' if not r.enabled else '' }}<select name="receiver_access_{{ r.id }}" data-receiver-access="{{ r.id }}">
+      {% for level, label in [('none', 'Kein Zugriff'), ('read', 'Lesen'), ('write', 'Lesen und Schreiben')] %}<option value="{{ level }}" {% if grants.get(r.id, 'none') == level %}selected{% endif %}>{{ label }}</option>{% endfor %}
+    </select></label>{% endfor %}
+    {% if not all_boxes %}<p class="muted">Es sind noch keine Receiver angelegt.</p>{% endif %}
+    </div>
+  </fieldset>
+  <label>Standardreceiver<select name="default_receiver_id" data-default-receiver>
+    <option value="">Erster freigegebener Receiver</option>
+    {% for r in all_boxes %}{% if r.enabled %}<option value="{{ r.id }}" {% if values and values.default_receiver_id|string == r.id|string %}selected{% endif %}>{{ r.name }}</option>{% endif %}{% endfor %}
+  </select><small>Wird nach jeder Anmeldung direkt ausgewählt.</small></label>
+  {% if target %}<p class="form-hint">Änderungen melden die bisherigen Sitzungen dieses Benutzers ab.</p>{% endif %}
+  <div class="form-actions"><a href="/admin/users" class="button button-quiet">Abbrechen</a><button class="button button-primary">Speichern</button></div>
+</form></section>
+{% endblock %}

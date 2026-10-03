@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} · Enigma2 Timer{% endblock %}
+{% block content %}
+<div class="page-heading receiver-heading">
+  <div><h1>Sender{% if selected_receiver %}: {{ selected_receiver.name }}{% endif %}</h1></div>
+  {% include "receiver_selection.html" %}
+</div>
+{% include "catalog_navigation.html" %}
+<section class="panel table-panel">
+  <div class="catalog-heading">
+    <div><h2>{{ section_title }}</h2></div>
+    {% if rows %}<label class="catalog-search" for="channel-filter">{{ 'Listen filtern' if is_group_list else 'Sender filtern' }}<input type="search" id="channel-filter" placeholder="Name eingeben …" data-table-filter="channel-rows" autocomplete="off"></label>{% endif %}
+  </div>
+  {% if not selected_receiver %}
+  {% include "receiver_empty.html" %}
+  {% elif rows %}
+  <div class="table-scroll"><table class="channel-table">
+    <thead><tr><th>{{ 'Liste' if is_group_list else 'Sender' }}</th><th class="table-action">Aktion</th></tr></thead>
+    <tbody id="channel-rows">
+      {% for row in rows %}
+      <tr {% if row.kind == 'marker' %}class="channel-marker"{% endif %} data-search-name="{{ row.name }}">
+        <td data-label="{{ 'Liste' if is_group_list else 'Sender' }}"><strong>{{ row.name }}</strong>{% if row.kind == 'marker' %}<small>Gruppenüberschrift</small>{% endif %}</td>
+        <td class="table-action"><div class="row-actions">{% if row.reference and row.kind != 'marker' %}{% if not for_timer or row.kind == 'group' %}<a class="button button-quiet button-small" href="{{ row.href }}">{{ 'Sender anzeigen' if row.kind == 'group' else 'EPG anzeigen' }}</a>{% endif %}{% if row.timer_url %}<a class="button {{ 'button-primary' if for_timer else 'button-quiet' }} button-small" href="{{ row.timer_url }}">Timer anlegen</a>{% endif %}{% endif %}</div></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table></div>
+  <p class="filter-empty" data-filter-empty hidden role="status">Keine passenden Einträge.</p>
+  {% else %}
+  <div class="empty-state"><h2>{{ 'Abfrage fehlgeschlagen' if error else 'Keine Einträge' }}</h2><p>{{ 'Bitte die Verbindung unter Receiver prüfen.' if error and current_user.is_admin else 'Für diese Auswahl stehen auf dem Receiver keine Einträge zur Verfügung.' }}</p></div>
+  {% endif %}
+</section>
+{% endblock %}

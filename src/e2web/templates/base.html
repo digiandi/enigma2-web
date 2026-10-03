@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#3B35CE">
+  <title>{% block title %}Enigma2 Timer{% endblock %}</title>
+  <link rel="icon" href="/static/favicon.png">
+  <link rel="stylesheet" href="/static/app.css?v={{ version }}">
+  <script defer src="/static/app.js?v={{ version }}"></script>
+</head>
+<body class="{% block body_class %}{% endblock %}">
+<header class="topbar">
+  <a class="brand" href="/">
+    <img class="brand-mark" src="/static/favicon.png" alt="" width="42" height="42">
+    <span class="brand-copy"><strong>Enigma2 Timer</strong><small>Aufnahmen-Verwaltung</small></span>
+  </a>
+  {% if current_user %}
+  <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-navigation" aria-label="Hauptmenü öffnen" data-menu-toggle><span></span><span></span><span></span></button>
+  <div class="header-navigation" id="main-navigation" data-main-menu>
+    <nav class="main-nav" aria-label="Hauptnavigation">
+      {% for path, label in [('/timer', 'Timer'), ('/sender', 'Sender'), ('/aufnahmen', 'Aufnahmen')] %}
+      <a href="{{ path }}" {% if request.url.path == path or request.url.path.startswith(path ~ '/') or (path == '/sender' and request.url.path == '/epg') %}aria-current="page"{% endif %}>{{ label }}</a>
+      {% endfor %}
+      {% if current_user.is_admin %}
+      <a href="/admin/receivers" {% if request.url.path.startswith('/admin/receivers') %}aria-current="page"{% endif %}>Receiver</a>
+      <a href="/admin/users" {% if request.url.path.startswith('/admin/users') %}aria-current="page"{% endif %}>Benutzer</a>
+      {% endif %}
+    </nav>
+    <div class="account-nav">
+      <div class="account-name"><strong>{{ current_user.display_name }}</strong><small>{{ 'Administrator' if current_user.is_admin else 'Benutzer' }}</small></div>
+      <a class="button button-quiet button-small" href="/account/password">Passwort</a>
+      <form method="post" action="/logout"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button class="button button-quiet button-small">Abmelden</button></form>
+    </div>
+  </div>
+  {% endif %}
+</header>
+<main class="page">
+  {% if error %}<div class="notice notice-error" role="alert">{{ error }}</div>{% endif %}
+  {% if notice %}<div class="notice notice-success" role="status">{{ notice }}</div>{% endif %}
+  {% block content %}{% endblock %}
+</main>
+<footer class="site-footer">Version {{ version }} · Release {{ release_date }} · Zeitzone {{ timezone }}</footer>
+</body>
+</html>

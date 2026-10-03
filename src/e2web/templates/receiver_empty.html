@@ -1,0 +1,1 @@
+<div class="empty-state"><h2>Kein Receiver verfügbar</h2><p>{{ 'Zunächst einen Receiver anlegen und die Verbindung testen.' if current_user.is_admin else 'Receiver-Zugriff durch einen Administrator freigeben lassen.' }}</p>{% if current_user.is_admin %}<a class="button button-primary" href="/admin/receivers/new">Receiver hinzufügen</a>{% endif %}</div>

@@ -1,0 +1,22 @@
+[Unit]
+Description=Enigma2 Timer
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=e2web-service
+Group=e2web-service
+WorkingDirectory=/opt/e2web/app
+Environment=E2WEB_CONFIG=/etc/e2web/e2web.toml
+ExecStart=/opt/e2web/.venv/bin/e2web serve
+Restart=on-failure
+RestartSec=5
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/e2web
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Timer · Enigma2 Timer{% endblock %}
+{% block content %}
+<div data-live-page data-receiver-id="{{ selected_receiver.id if selected_receiver else '' }}">
+{% if request.headers.get('X-Live-Refresh') and error %}<div class="notice notice-error" role="alert">{{ error }}</div>{% endif %}
+<div class="page-heading receiver-heading">
+  <div><h1>Timer{% if selected_receiver %}: {{ selected_receiver.name }}{% endif %}</h1></div>
+  <div class="receiver-heading-actions">
+    {% include "receiver_selection.html" %}
+    {% if can_write_receiver %}<a class="button button-primary" href="/timer/new?receiver_id={{ selected_receiver.id }}">Timer anlegen</a>{% endif %}
+  </div>
+</div>
+{% if not selected_receiver %}<section class="panel">{% include "receiver_empty.html" %}</section>
+{% elif list_failed %}<section class="panel empty-state"><h2>Timerliste nicht erreichbar</h2><p>Bitte die Verbindung prüfen und die Seite neu laden.</p><a class="button button-quiet" href="/timer">Neu laden</a></section>
+{% else %}
+{% if file_error %}<div class="notice notice-error" role="status">{{ file_error }}</div>{% endif %}
+{% with entries=running, section_title='Laufend (' ~ running|length ~ ')', empty_message='Derzeit läuft keine Aufnahme.' %}{% include "timer_table.html" %}{% endwith %}
+{% with entries=upcoming, section_title='Anstehend (' ~ upcoming|length ~ ')', empty_message='Derzeit ist keine Aufnahme geplant.' %}{% include "timer_table.html" %}{% endwith %}
+{% if finished %}<details class="timer-history"><summary>Erledigte Timer ({{ finished|length }})</summary>{% with entries=finished, section_title='Erledigte Timer' %}{% include "timer_table.html" %}{% endwith %}</details>{% endif %}
+{% endif %}
+</div>
+{% endblock %}

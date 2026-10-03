@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block body_class %}auth-page{% endblock %}
+{% block content %}
+<section class="panel auth-panel auth-panel-single">
+    <h2>Anmelden</h2>
+    {% if changed %}<div class="notice notice-success">Passwort geändert. Bitte neu anmelden.</div>{% endif %}
+    <form method="post" action="/login" class="form-stack">
+      <input type="hidden" name="csrf_token" value="{{ login_csrf }}">
+      <label>Benutzername<input name="username" autocomplete="username" maxlength="32" required autofocus></label>
+      <label>Passwort<input type="password" name="password" autocomplete="current-password" maxlength="128" required></label>
+      <button class="button button-primary button-full">Anmelden</button>
+    </form>
+</section>
+{% endblock %}

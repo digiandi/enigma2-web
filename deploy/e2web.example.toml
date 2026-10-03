@@ -1,0 +1,8 @@
+data_dir = "/var/lib/e2web"
+host = "127.0.0.1"
+port = 8081
+session_hours = 12
+cookie_secure = false
+receiver_timeout = 8.0
+recording_timeout = 90.0
+timezone = "Europe/Berlin"

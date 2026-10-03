@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Aufnahmen · Enigma2 Timer{% endblock %}
+{% block content %}
+<div data-live-page data-receiver-id="{{ selected_receiver.id if selected_receiver else '' }}">
+{% if request.headers.get('X-Live-Refresh') and error %}<div class="notice notice-error" role="alert">{{ error }}</div>{% endif %}
+<div class="page-heading receiver-heading"><div><h1>Aufnahmen{% if selected_receiver %}: {{ selected_receiver.name }}{% endif %}</h1></div>{% include "receiver_selection.html" %}</div>
+{% if selected_receiver %}<div class="epg-toolbar"><form method="get" action="/aufnahmen" class="inline-form"><label for="recording-directory">Ordner</label><select id="recording-directory" name="directory" data-auto-submit>{% for path in directory_choices %}<option value="{{ path }}" {% if directory == path %}selected{% endif %}>{{ path }}</option>{% endfor %}{% if directory and directory not in directory_choices %}<option value="{{ directory }}" selected>{{ directory }}</option>{% elif not directory_choices %}<option value="" disabled selected>Keine Aufnahmepfade verfügbar</option>{% endif %}</select></form></div>{% endif %}
+{% if not selected_receiver %}<section class="panel">{% include "receiver_empty.html" %}</section>
+{% elif list_failed %}<section class="panel empty-state"><h2>Aufnahmeliste nicht erreichbar</h2><p>Bitte die Verbindung prüfen und die Seite neu laden.</p></section>
+{% elif entries %}<section class="panel table-panel"><div class="table-scroll"><table class="recording-table"><thead><tr><th>Aufnahme</th><th>Sender</th><th>Receiver</th><th>Beginn</th><th>Dauer</th><th>Status</th><th class="table-action">Aktionen</th></tr></thead><tbody>
+{% for item in entries %}{% set recording = item.recording %}
+<tr class="recording-data-row recording-data-row-with-file{% if item.running %} recording-active-row{% endif %}">
+  <td data-label="Aufnahme"><div class="epg-copy"><strong>{{ recording.title }}</strong><small class="recording-owner">von {{ item.owner_name }}</small>{% if recording.description|trim %}<p class="timer-description">{{ recording.description }}</p>{% endif %}</div></td>
+  <td data-label="Sender">{% with channel=recording.channel %}{% include "channel_details.html" %}{% endwith %}</td>
+  <td data-label="Receiver">{{ selected_receiver.name }}</td>
+  <td class="datetime-cell" data-label="Beginn">{{ item.begin.strftime('%d.%m.%Y %H:%M') if item.begin else 'Unbekannt' }}</td>
+  <td class="duration-cell" data-label="Dauer">{{ item.duration }}</td>
+  <td data-label="Status"><span class="badge {{ 'badge-warning' if item.running else '' if item.status_known else 'badge-muted' }}">{{ 'Läuft' if item.running else 'Abgeschlossen' if item.status_known else 'Unbekannt' }}</span></td>
+  <td class="table-action"><div class="row-actions"><a class="button button-quiet button-small" href="{{ item.download_url }}" download>Herunterladen</a>{% if item.delete_token %}<form method="post" action="/aufnahmen/delete"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><input type="hidden" name="action_token" value="{{ item.delete_token }}"><input type="hidden" name="confirmed" value="" data-action-confirm-value><button class="button button-danger button-small action-confirm-button" data-action-confirm data-busy-label="Wird gelöscht …"><span class="action-initial-label">Löschen</span><span class="action-confirm-label" aria-hidden="true">Wirklich löschen?</span></button></form>{% endif %}</div>{% if item.can_manage and not item.running and not item.delete_token %}<small>Löschen derzeit nicht verfügbar</small>{% endif %}</td>
+</tr>
+<tr class="recording-file-row{% if item.running %} recording-active-row{% endif %}"><td colspan="7"><div class="table-detail-line"><span class="recording-file">{{ recording.filename.rsplit('/', 1)[-1] }}</span><span class="table-detail-value">{{ recording.size_label }}</span></div></td></tr>
+{% endfor %}</tbody></table></div></section>
+{% else %}<section class="panel empty-state"><h2>Keine Aufnahmen</h2><p>In diesem Ordner sind keine Aufnahmen vorhanden.</p></section>{% endif %}
+</div>
+{% endblock %}

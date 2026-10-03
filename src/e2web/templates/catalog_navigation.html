@@ -1,0 +1,5 @@
+<div class="catalog-navigation">
+  <nav class="choice-nav" aria-label="Sendertyp">{% for item in type_links %}<a href="{{ item.href }}" {% if item.active %}aria-current="true"{% endif %}>{{ item.label }}</a>{% endfor %}</nav>
+  <nav class="choice-nav" aria-label="Senderlisten">{% for item in source_links %}<a href="{{ item.href }}" {% if item.active %}aria-current="true"{% endif %}>{{ item.label }}</a>{% endfor %}</nav>
+  {% if group_reference %}<a class="button button-quiet catalog-back" href="{{ root_url }}">Zur Übersicht</a>{% endif %}
+</div>

@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Timerauftrag · Enigma2 Timer{% endblock %}
+{% block content %}
+<div class="page-heading"><div><h1>Timerauftrag prüfen: {{ receiver.name }}</h1></div></div>
+<section class="panel form-panel timer-form-panel"><p>{{ message }}</p>
+  {% if conflicts %}<h2>Gemeldete Konflikte</h2><ul>{% for conflict in conflicts %}<li>{{ conflict.name }}{% if conflict.channel %} · {{ conflict.channel }}{% endif %}</li>{% endfor %}</ul>{% endif %}
+  <a class="button button-primary" href="/timer">Timerliste prüfen</a>
+</section>
+{% endblock %}

@@ -1,0 +1,8 @@
+{% if receivers %}
+<form method="post" action="/receiver/select" class="inline-form receiver-selection">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+  <input type="hidden" name="destination" value="{{ '/timer' if request.url.path == '/timer/delete' else '/aufnahmen' if request.url.path == '/aufnahmen/delete' else request.url.path }}">
+  <label for="receiver_id">Receiver</label>
+  <select name="receiver_id" id="receiver_id" data-receiver-select>{% for r in receivers %}<option value="{{ r.id }}" {% if selected_receiver and selected_receiver.id == r.id %}selected{% endif %}>{{ r.name }}</option>{% endfor %}</select>
+</form>
+{% endif %}

@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-heading compact-heading"><div><p class="eyebrow">Administration</p><h1>Benutzer</h1></div><a href="/admin/users/new" class="button button-primary">Benutzer hinzufügen</a></div>
+<section class="panel table-panel"><div class="table-scroll"><table><thead><tr><th>Benutzer</th><th>Rolle</th><th>Receiver-Zugriff</th><th>Status</th><th>Letzte Anmeldung</th><th class="table-action">Aktionen</th></tr></thead><tbody>
+  {% for u in rows %}<tr><td data-label="Benutzer"><strong>{{ u.display_name }}</strong><small>{{ u.username }}</small></td><td data-label="Rolle">{{ 'Administrator' if u.is_admin else 'Benutzer' }}</td><td data-label="Zugriff">{{ 'Alle Receiver: Lesen und Schreiben' if u.is_admin or (u.all_receivers and u.all_receivers_write) else 'Alle Receiver: Lesen' if u.all_receivers else 'Zugewiesene Receiver' }}<small>Standard: {{ default_receiver_names.get(u.default_receiver_id, 'Erster freigegebener Receiver') }}</small></td><td data-label="Status"><span class="badge {{ '' if u.active else 'badge-muted' }}">{{ 'Aktiv' if u.active else 'Deaktiviert' }}</span>{% if u.must_change_password %}<small>Passwortwechsel erforderlich</small>{% endif %}</td><td class="datetime-cell" data-label="Letzte Anmeldung">{{ last_logins[u.id].strftime('%d.%m.%Y %H:%M') if u.id in last_logins else 'Noch nie' }}</td><td class="table-action"><div class="action-group">
+    <a class="button button-quiet button-small" href="/admin/users/{{ u.id }}/edit">Bearbeiten</a>
+    {% if u.id != current_user.id %}<form method="post" action="/admin/users/{{ u.id }}/delete"><input type="hidden" name="confirmed" value="" data-action-confirm-value><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button class="button button-danger button-small action-confirm-button" data-action-confirm data-busy-label="Wird gelöscht …"><span class="action-initial-label">Löschen</span><span class="action-confirm-label" aria-hidden="true">Wirklich löschen?</span></button></form>{% endif %}
+  </div></td></tr>{% endfor %}
+</tbody></table></div></section>
+{% endblock %}

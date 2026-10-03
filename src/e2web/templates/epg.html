@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}EPG · {{ name }} · Enigma2 Timer{% endblock %}
+{% block content %}
+<div class="page-heading receiver-heading">
+  <div><p class="eyebrow">{{ selected_receiver.name if selected_receiver else 'ENIGMA2 WEB' }} · EPG</p><h1>{{ name }}</h1></div>
+  {% include "receiver_selection.html" %}
+</div>
+{% if selected_receiver %}
+<div class="epg-toolbar">
+  <form method="get" action="/epg" class="inline-form">
+    {% for key, value in [('reference', reference), ('name', name), ('group', group), ('group_name', group_name), ('stype', stype), ('source', source)] %}{% if value %}<input type="hidden" name="{{ key }}" value="{{ value }}">{% endif %}{% endfor %}
+    <label for="epg-day">Datum</label>
+    <select name="day" id="epg-day" data-auto-submit>
+      {% for day in days %}<option value="{{ day.isoformat() }}" {% if selected_day == day.isoformat() %}selected{% endif %}>{{ day.strftime('%d.%m.%Y') }}</option>{% endfor %}
+      <option value="all" {% if selected_day == 'all' %}selected{% endif %}>Alle verfügbaren Tage</option>
+    </select>
+    <noscript><button class="button button-quiet">Anzeigen</button></noscript>
+  </form>
+  <a class="button button-quiet" href="{{ back_url }}">Zur Senderauswahl</a>
+</div>
+{% endif %}
+{% if not selected_receiver %}<section class="panel">{% include "receiver_empty.html" %}</section>
+{% elif sections %}
+{% for day, entries in sections.items() %}
+<section class="panel table-panel schedule-section">
+  <div class="section-heading"><h2>{{ day.strftime('%d.%m.%Y') }}</h2></div>
+  <div class="table-scroll"><table class="epg-table">
+    <thead><tr><th class="epg-time">Zeit</th><th>Sendung</th><th class="epg-duration">Dauer</th><th class="table-action">Aktion</th></tr></thead><tbody>
+    {% for item in entries %}
+    <tr {% if item.running %}class="epg-running"{% endif %}>
+      <td class="epg-time" data-label="Zeit"><div><strong><time datetime="{{ item.begin.isoformat() }}">{{ item.begin_label }}</time></strong><small>{{ 'bis ' ~ item.end_label if item.event.duration else 'Ende unbekannt' }}</small>{% if item.running %}<span class="badge">Läuft</span>{% elif item.finished %}<span class="badge badge-muted">Beendet</span>{% endif %}</div></td>
+      <td data-label="Sendung"><div class="epg-copy"><strong class="epg-title">{{ item.event.title }}</strong>{% if item.event.short_description and item.event.short_description != item.event.title %}<p class="epg-short">{{ item.event.short_description }}</p>{% endif %}{% if item.event.description %}<details class="epg-details"><summary>Sendungsdetails</summary><p>{{ item.event.description }}</p></details>{% endif %}</div></td>
+      <td class="epg-duration" data-label="Dauer">{{ item.minutes ~ ' Min.' if item.event.duration else 'Unbekannt' }}</td>
+      <td class="table-action">{% if item.timer_url %}<a class="button button-quiet button-small" href="{{ item.timer_url }}">Timer anlegen</a>{% endif %}</td>
+    </tr>
+    {% endfor %}
+    </tbody></table></div>
+</section>
+{% endfor %}
+{% else %}<section class="panel empty-state"><h2>{{ 'EPG-Abfrage fehlgeschlagen' if error else 'Keine EPG-Daten' }}</h2><p>{{ 'Bitte die Verbindung unter Receiver prüfen.' if error and current_user.is_admin else 'Für diesen Sender und den gewählten Tag stehen auf dem Receiver keine Sendungsdaten zur Verfügung.' }}</p></section>{% endif %}
+{% endblock %}

@@ -1,0 +1,19 @@
+<section class="panel table-panel schedule-section">
+  <div class="section-heading"><h2>{{ section_title }}</h2></div>
+  {% if entries %}<div class="table-scroll"><table class="timer-table">
+    <thead><tr><th>Aufnahme</th><th>Sender</th><th>Receiver</th><th>Start</th><th>Ende</th><th>Dauer</th><th>Status</th><th class="table-action">Aktionen</th></tr></thead>
+    <tbody>{% for item in entries %}{% set timer = item.timer %}
+    <tr class="timer-data-row recording-data-row{% if timer.state == 2 %} recording-data-row-with-file{% if not timer.justplay %} recording-active-row{% endif %}{% endif %}">
+      <td data-label="Aufnahme"><div class="epg-copy"><strong>{{ timer.name or 'Ohne Titel' }}</strong><small>{{ timer.repeat_label or 'Einmalig' }}{% if timer.justplay %} · Umschalt-Timer{% endif %}</small><small class="recording-owner">von {{ item.owner_name }}</small>{% if timer.description|trim %}<p class="timer-description">{{ timer.description }}</p>{% endif %}</div></td>
+      <td data-label="Sender">{% with channel=timer.channel %}{% include "channel_details.html" %}{% endwith %}</td>
+      <td data-label="Receiver">{{ selected_receiver.name }}</td>
+      <td class="datetime-cell" data-label="Start">{{ item.begin.strftime('%d.%m.%Y %H:%M') }}</td>
+      <td class="datetime-cell" data-label="Ende">{{ item.end.strftime('%d.%m.%Y %H:%M') }}</td>
+      <td class="duration-cell" data-label="Dauer">{{ item.duration }}</td>
+      <td data-label="Status"><span class="badge {{ 'badge-muted' if timer.disabled or timer.state == 3 else 'badge-warning' if timer.state == 2 else '' }}">{{ timer.status }}</span></td>
+      <td class="table-action">{% if item.can_manage %}<div class="row-actions"><a class="button button-quiet button-small" href="{{ item.edit_url }}">Bearbeiten</a><form method="post" action="/timer/delete"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><input type="hidden" name="action_token" value="{{ item.delete_token }}"><input type="hidden" name="confirmed" value="" data-action-confirm-value><button class="button button-danger button-small action-confirm-button" data-action-confirm data-busy-label="Wird gelöscht …"><span class="action-initial-label">Löschen</span><span class="action-confirm-label" aria-hidden="true">Wirklich löschen?</span></button></form></div>{% if timer.state == 2 and not timer.justplay %}<small class="delete-hint">Beendet auch die laufende Aufnahme.</small>{% endif %}{% endif %}</td>
+    </tr>
+    {% if timer.state == 2 %}<tr class="recording-file-row{% if not timer.justplay %} recording-active-row{% endif %}"><td colspan="8"><div class="table-detail-line"><span class="recording-file">{{ item.file.name if item.file else 'Umschalt-Timer – keine Aufnahmedatei' if timer.justplay else 'Noch keine Datei vorhanden' }}</span>{% if item.file %}<span class="table-detail-value">{{ item.file.size }}</span>{% endif %}</div></td></tr>{% endif %}
+    {% endfor %}</tbody>
+  </table></div>{% else %}<div class="empty-state compact-empty"><p>{{ empty_message }}</p></div>{% endif %}
+</section>

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-heading compact-heading"><div><p class="eyebrow">Administration</p><h1>Receiver</h1></div><a class="button button-primary" href="/admin/receivers/new">Receiver hinzufügen</a></div>
+<section class="panel table-panel">
+  {% if rows %}
+  <div class="table-scroll"><table><thead><tr><th>Name</th><th>Verbindung</th><th>Zugang</th><th>Status</th><th class="table-action">Aktionen</th></tr></thead><tbody>
+    {% for r in rows %}
+    <tr><td data-label="Name"><strong>{{ r.name }}</strong></td><td data-label="Verbindung">{{ r.base_url }}{% if r.https and not r.verify_tls %}<small>Zertifikatsprüfung deaktiviert</small>{% endif %}</td><td data-label="Zugang">{{ r.username or 'Ohne Anmeldung' }}</td><td data-label="Status"><span class="badge {{ '' if r.enabled else 'badge-muted' }}">{{ 'Aktiviert' if r.enabled else 'Deaktiviert' }}</span>{% if tested_id == r.id %}<small>{{ 'Verbindung fehlgeschlagen' if error else 'Verbindung erfolgreich' }}</small>{% endif %}</td>
+    <td class="table-action"><div class="action-group">
+      <form method="post" action="/admin/receivers/{{ r.id }}/test"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button class="button button-quiet button-small" data-busy-label="Wird geprüft …">Verbindung testen</button></form>
+      <a href="/admin/receivers/{{ r.id }}/edit" class="button button-quiet button-small">Bearbeiten</a>
+      <form method="post" action="/admin/receivers/{{ r.id }}/delete"><input type="hidden" name="confirmed" value="" data-action-confirm-value><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button class="button button-danger button-small action-confirm-button" data-action-confirm data-busy-label="Wird gelöscht …"><span class="action-initial-label">Löschen</span><span class="action-confirm-label" aria-hidden="true">Wirklich löschen?</span></button></form>
+    </div></td></tr>
+    {% endfor %}
+  </tbody></table></div>
+  {% else %}<div class="empty-state"><h2>Noch keine Receiver</h2><p>Füge den ersten Receiver mit seiner OpenWebif-Adresse hinzu.</p></div>{% endif %}
+</section>
+{% endblock %}
