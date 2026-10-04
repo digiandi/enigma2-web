@@ -1,4 +1,41 @@
-# Prüfung von Version 1.1.2
+# Prüfung von Version 1.1.3
+
+Prüfstand: 04.10.2026, Python 3.12 unter Linux.
+
+- 238 automatisierte Tests erfolgreich; Code- und Formatprüfung erfolgreich.
+  Installer- und JavaScript-Syntax geprüft.
+- Regression für Firefox-Lesezeichen: Favicon-GET und HEAD ohne Anmeldung,
+  mit angemeldetem Administrator und bei erzwungenem Passwortwechsel geprüft.
+  Öffentlicher Standardpfad und beide statischen Favicon-Dateien liefern Bilder
+  mit `public, max-age=86400`; GET hat Bilddaten, HEAD keinen Body.
+- PNG-Signatur und echte ICO-Struktur mit drei Bildern in 16, 32 und 48 Pixeln
+  geprüft. Das PNG-Logo ist gegenüber 1.1.2 bytegleich.
+- Bedingte statische Favicon-Abfrage liefert HTTP 304 mit speicherbarem Header.
+  Anmeldung, Health, persönliche Seiten, CSS/JavaScript, fehlende Dateien und
+  unzulässige Methoden behalten `no-store`. Keine Sitzungs-Cookies auf Icon-Antworten.
+- Alle Seiten verwenden `/favicon.ico?v=1.1.3`; PNG und ICO enthalten keine
+  zusätzlichen Netzwerkadressen oder persönlichen Metadaten.
+- Wheel und Quelldistribution vollständig gebaut und geprüft. Start des installierten
+  Wheels mit Schema `0005`, Version 1.1.3, Login, Assets und allen Favicon-Pfaden
+  erfolgreich. Erneute Initialisierung erhält Schlüssel, Port und Aufnahmezeitlimit.
+- Beide ZIPs entpackt und dateiweise verglichen; aus dem Installations-ZIP gebautes
+  Wheel hat identische Inhalte wie das geprüfte Wheel. Keine Betriebsdaten enthalten.
+- Git-Release 1.1.3 setzt den bestätigten bereinigten Stand 1.1.2 fort.
+  Alle bisherigen Commit- und Tag-Kennungen bleiben erhalten. Sauberer Branch
+  `main`, annotierter neuer Tag, `git fsck`, Klonen und gewöhnlicher lokaler Push geprüft.
+- Alle Git-Objekte und Archivdateien weiterhin ohne die entfernten privaten
+  Netzwerkbeispiele. Keine erneute Historienbereinigung erforderlich.
+- Der tatsächliche Eintrag in einem bestehenden Firefox-Profil wird nach dem
+  Installationsupdate durch Öffnen und Neuladen des Lesezeichens geprüft.
+  Die lokale Prüfung ersetzt keinen ausgeführten GitHub-Push oder CI-Lauf.
+
+## Änderungen 1.1.3
+
+- Favicon-Cache-Header gezielt freigegeben; übrige Auslieferung unverändert.
+- Öffentliche ICO-Route und korrekte Einbindung in der gemeinsamen Seitenvorlage.
+- ICO-Datei aus dem vorhandenen PNG-Logo erzeugt; keine neue Laufzeitabhängigkeit.
+
+## Prüfung von Version 1.1.2
 
 Prüfstand: 04.10.2026, Python 3.12 unter Linux.
 

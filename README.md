@@ -1,12 +1,12 @@
-# Enigma2 Timer 1.1.2
+# Enigma2 Timer 1.1.3
 
 Eigenständige, zentral betriebene Webanwendung im Stil von AWAS 3.0.7.
 AWAS und seine Datenbank werden nicht verändert.
 
-Version 1.1.2 ersetzt private Netzwerkadressen in Beispielen und Tests durch
-neutrale Werte. Das Git-Paket enthält auch die bereinigten früheren Release-Stände;
-beim bestehenden GitHub-Repository ist die einmalige Umstellung nach
-[GITHUB.md](GITHUB.md) erforderlich.
+Version 1.1.3 korrigiert das Favicon für Firefox-Lesezeichen. Die Icon-Dateien
+dürfen vom Browser gespeichert werden; `/favicon.ico` ist ohne Anmeldung erreichbar
+und enthält das vorhandene Logo in 16, 32 und 48 Pixeln. Die seit 1.1.2 bereinigte
+Git-Historie wird mit einem gewöhnlichen neuen Release-Commit fortgesetzt.
 Installation und Update: [INSTALL.md](INSTALL.md). GitHub: [GITHUB.md](GITHUB.md).
 [Release-Hinweise](RELEASE_NOTES.md), [Versionsverlauf](CHANGELOG.md),
 [Prüfbericht](VERIFICATION.md) und [Herkunfts-/Lizenzhinweise](NOTICE.md).
@@ -144,7 +144,7 @@ des Administrators. Er benötigt Python 3.12+, `python3-venv`, `rsync` und
 Zugang zum Python-Paketindex. Diese Systempakete bei Bedarf zuvor installieren.
 Es werden weder nginx-Konfigurationen aktiviert noch vorhandene AWAS-Dateien
 verändert. Der Nutzer hat die Erstinstallation und nginx-Anbindung für Version
-0.1.0 auf Ubuntu bestätigt. Die Timer- und Aufnahmefunktionen von 1.1.2 wurden mit
+0.1.0 auf Ubuntu bestätigt. Die Timer- und Aufnahmefunktionen von 1.1.3 wurden mit
 simulierten Receivern geprüft; die Prüfung an der tatsächlichen Hardware steht noch aus.
 
 Pfade:
@@ -605,21 +605,21 @@ Ordner und ihre Unterordner werden akzeptiert. Es wird keine bestimmte
 Symlinkbeziehung vorausgesetzt und kein fremder Wunschpfad zur Prüfung geladen.
 Nach erfolgreichem Löschen bleibt die aktuelle Aufnahmeliste erreichbar.
 
-## Update von 0.1.x bis 1.1.1 auf 1.1.2
+## Update von 0.1.x bis 1.1.2 auf 1.1.3
 
 Das neue Paket auf den Ubuntu-Server übertragen, entpacken und aus dem neuen
 Projektverzeichnis den Installer erneut ausführen. Als root:
 
 ```bash
-unzip enigma2-web-v1.1.2.zip
-cd enigma2-web-v1.1.2
+unzip enigma2-web-v1.1.3.zip
+cd enigma2-web-v1.1.3
 bash scripts/install.sh
 curl --retry 10 --retry-delay 1 --retry-connrefused http://127.0.0.1:8081/health
 ```
 
 Der Installer hält den laufenden Dienst während des Updates an und startet ihn
 anschließend wieder. Der Health-Aufruf wartet bei Bedarf auf den Dienststart.
-Die erwartete Antwort enthält `"version":"1.1.2"`.
+Die erwartete Antwort enthält `"version":"1.1.3"`.
 
 Die vorhandenen Benutzer, Receiver, Passwörter, Sitzungen, die Konfiguration
 und der Verschlüsselungsschlüssel werden weiterverwendet. Ein Administrator
@@ -628,7 +628,7 @@ standardmäßig wird Port 8081 verwendet. Bei einem anderen Port den Health-Aufr
 entsprechend anpassen. In der vorhandenen nginx-Site das Lesezeitlimit auf
 300 Sekunden erhöhen (siehe nächsten Abschnitt); der Installer verändert nginx nicht.
 
-Die Datenbank wird automatisch auf Revision `0005` migriert. Von 0.8.0 bis 1.1.1 auf 1.1.2 ist keine neue Schemaänderung nötig. Vorhandene Konten,
+Die Datenbank wird automatisch auf Revision `0005` migriert. Von 0.8.0 bis 1.1.2 auf 1.1.3 ist keine neue Schemaänderung nötig. Vorhandene Konten,
 Receiverzuordnungen, Sitzungen, Audit-Ereignisse und alte Eigentümerkennungen
 bleiben erhalten. Die neue Migration ergänzt sprechende Ersteller-Tags für alle
 vorhandenen Konten. Frühere Revisionen ergänzen weiterhin Eigentümerkennungen,
@@ -664,7 +664,8 @@ Danach als root:
 nginx -t && systemctl reload nginx
 ```
 
-CSS, JavaScript und Logo verwenden jetzt URLs wie `/static/app.css?v=1.1.2`.
+CSS und JavaScript verwenden URLs wie `/static/app.css?v=1.1.3`.
+Das Favicon verwendet ebenfalls eine versionierte URL: `/favicon.ico?v=1.1.3`.
 Der Browser lädt sie dadurch unter derselben HTTPS-Adresse wie die Seite.
 Das verhindert HTTP-Asset-URLs und Mixed Content bei einer HTTPS-Verbindung
 zum Proxy. Der Proxy-Header ist weiterhin für sichere Sitzungscookies wichtig.
@@ -717,3 +718,17 @@ Heruntergeladene ZIP-Dateien und entpackte Projektordner, beispielsweise
 
 Der vorgesehene Kernumfang ist implementiert. Reale Antworten der eingesetzten
 Receiver dienen jetzt der weiteren Kompatibilitätsprüfung.
+
+## Favicon und Lesezeichen
+
+Alle Seiten verweisen auf `/favicon.ico?v=1.1.3`. Das Icon ist ohne Anmeldung
+mit dem Inhaltstyp `image/vnd.microsoft.icon` erreichbar und enthält das
+vorhandene Logo in 16, 32 und 48 Pixeln. Auch die statischen Icon-Dateien
+dürfen einen Tag lang gespeichert werden (`Cache-Control: public, max-age=86400`).
+Für Anmeldeseiten, persönliche Inhalte und andere Antworten gilt weiterhin `no-store`.
+
+Firefox speichert nicht am Standardpfad liegende Icons mit `no-store` nicht
+für Lesezeichen; die Auslieferung vor 1.1.3 hat dies verhindert. Nach dem Update
+die Seite über das vorhandene Lesezeichen öffnen und neu laden, damit Firefox
+das Icon übernehmen kann. Die Icon-URL enthält die Versionsnummer zur Erneuerung
+bei späteren Updates. Die mitgelieferte nginx-Vorlage benötigt keine Änderung.

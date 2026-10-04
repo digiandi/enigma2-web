@@ -1,5 +1,6 @@
 import html
 import re
+import struct
 from functools import partial
 
 import httpx
@@ -74,6 +75,61 @@ def setup(tmp_path):
     app = create_app(cfg)
     yield cfg, engine, app
     engine.dispose()
+
+
+@pytest.mark.parametrize("session_state", ["anonymous", "admin", "password_change"])
+def test_favicons_persist_without_login_and_private_pages_are_not_cached(setup, session_state):
+    _, engine, app = setup
+    if session_state == "password_change":
+        with Session(engine) as db:
+            db.get(User, 1).must_change_password = True
+            db.commit()
+    with TestClient(app, follow_redirects=False) as client:
+        if session_state != "anonymous":
+            assert login(client).status_code == 303
+        for path, media_type in [
+            ("/favicon.ico?v=1.1.3", "image/vnd.microsoft.icon"),
+            ("/static/favicon.ico", "image/vnd.microsoft.icon"),
+            ("/static/favicon.png", "image/png"),
+        ]:
+            response = client.get(path)
+            assert response.status_code == 200
+            assert response.headers["content-type"] == media_type
+            assert response.headers["cache-control"] == "public, max-age=86400"
+            assert "set-cookie" not in response.headers
+            assert response.headers["x-content-type-options"] == "nosniff"
+            if "ico" in media_type:
+                reserved, kind, count = struct.unpack_from("<HHH", response.content)
+                assert (reserved, kind, count) == (0, 1, 3)
+                sizes = {
+                    struct.unpack_from("<BB", response.content, 6 + 16 * index)
+                    for index in range(count)
+                }
+                assert sizes == {(16, 16), (32, 32), (48, 48)}
+            else:
+                assert response.content.startswith(b"\x89PNG\r\n\x1a\n")
+            head = client.head(path)
+            assert head.status_code == 200 and head.content == b""
+            assert head.headers["cache-control"] == "public, max-age=86400"
+        icon = client.get("/static/favicon.png")
+        not_modified = client.get(
+            "/static/favicon.png", headers={"If-None-Match": icon.headers["etag"]}
+        )
+        assert not_modified.status_code == 304
+        assert not_modified.headers["cache-control"] == "public, max-age=86400"
+        for path in ["/login", "/health", "/admin/users", "/static/app.css", "/static/app.js"]:
+            assert client.get(path).headers["cache-control"] == "no-store"
+        missing = client.get("/static/favicon-missing.png")
+        assert missing.status_code == 404 and missing.headers["cache-control"] == "no-store"
+        invalid_method = client.post("/favicon.ico")
+        assert invalid_method.status_code == 405
+        assert invalid_method.headers["cache-control"] == "no-store"
+        if session_state == "anonymous":
+            page = client.get("/login")
+            assert (
+                'rel="icon" type="image/vnd.microsoft.icon" sizes="16x16 32x32 48x48" '
+                'href="/favicon.ico?v=1.1.3"'
+            ) in page.text
 
 
 def test_login_csrf_cookies_and_logout(setup):

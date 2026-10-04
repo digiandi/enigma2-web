@@ -1,79 +1,77 @@
-# Version 1.1.2 auf GitHub bereitstellen
+# Version 1.1.3 auf GitHub bereitstellen
 
-Das Git-Paket `enigma2-web-git-v1.1.2.zip` enthält ein vorbereitetes Repository
-mit Branch `main` und den annotierten Tags `v1.0.0`, `v1.1.0`, `v1.1.1` und
-`v1.1.2`. Private Netzwerkadressen wurden auch aus den drei früheren
-Release-Ständen entfernt. Dadurch haben deren Commits und Tags neue Kennungen.
-Die Reihenfolge, Versionsnummern und übrigen Inhalte der früheren Releases
-bleiben erhalten. Die Autorenkennung lautet
-`Enigma2 Timer Release <release@localhost>`. Ein Remote ist noch nicht eingerichtet.
+Das Git-Paket `enigma2-web-git-v1.1.3.zip` enthält den vollständigen Quellstand
+als vorbereitetes Repository mit Branch `main` und annotiertem Tag `v1.1.3`.
+Es setzt den bereinigten Stand 1.1.2 mit einem neuen Release-Commit fort.
+Die vorhandenen Tags `v1.0.0`, `v1.1.0`, `v1.1.1` und `v1.1.2` bleiben auf
+ihren bisherigen bereinigten Ständen. Für dieses Update genügt ein normaler Push.
+Die Autorenkennung lautet `Enigma2 Timer Release <release@localhost>`.
+Das Paket enthält noch kein Remote.
 
-## Bestehendes Repository einmalig bereinigen
+## Bestehendes bereinigtes Repository aktualisieren
 
-Das neue Git-Paket in einen eigenen Ordner entpacken, einschließlich `.git`.
-Die folgenden Befehle aus diesem neuen Ordner in PowerShell ausführen:
+Das Git-Paket vollständig in einen eigenen Ordner entpacken, einschließlich
+`.git`. In PowerShell im enthaltenen Projektordner ausführen:
 
 ```powershell
 git status --short --branch
-powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\github-bereinigen.ps1
+git log -2 --oneline
+git remote add origin https://github.com/digiandi/enigma2-web.git
+git push -u origin main
+git push origin v1.1.3
 git ls-remote origin refs/heads/main "refs/tags/v1.*"
 ```
 
-Das Skript verwendet `https://github.com/digiandi/enigma2-web.git` und prüft
-den zuvor bestätigten Remote-Stand. Es ersetzt `main` und die drei alten Tags
-durch die bereinigten Stände und ergänzt `v1.1.2`. Alle fünf Referenzen werden
-gemeinsam mit `--atomic` aktualisiert. Explizite `--force-with-lease`-Angaben
-schützen vor dem Überschreiben eines zwischenzeitlich geänderten Stands.
-Ein erneuter Aufruf bei bereits vollständig aktualisiertem Repository ist möglich.
+Bei einem anderen GitHub-Konto oder Repository die URL entsprechend anpassen.
+Falls `origin` bereits eingerichtet ist, dessen URL mit `git remote -v` prüfen.
+Die normale GitHub-Anmeldung erfolgt über die eingerichtete Git-/Credential-Verwaltung;
+Zugangsdaten gehören nicht in die Remote-URL.
 
-Bei weiteren Branches, zusätzlichen Tags oder geänderten Commits bricht das
-Skript vor dem Push ab. Diese Stände müssen zunächst ebenfalls bereinigt werden;
-den Schutz nicht durch einen unbeschränkten erzwungenen Push umgehen.
-Die Prüfausgabe des Skripts für eine erneute Abstimmung aufbewahren.
-Die GitHub-Anmeldung erfolgt wie bisher über die Git-/Credential-Verwaltung.
-Zugangsdaten gehören nicht in die Remote-URL. Falls GitHub den erzwungenen Push
-durch eine Branch- oder Tag-Regel blockiert, die betreffende Regel für diese
-einmalige Umstellung anpassen und anschließend wieder aktivieren.
+Eigene zusätzliche Commits auf GitHub müssen vor dem Push berücksichtigt werden.
+Ein normaler Push bricht ab, wenn der neue Stand die dortige Historie nicht fortsetzt.
+Die vorhandenen Release-Tags werden nicht erneut übertragen oder verschoben.
 
-Für ein anderes Repository kann die URL ausdrücklich angegeben werden:
+## Einmalige Bereinigung aus Version 1.1.2
 
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\github-bereinigen.ps1 -RemoteUrl https://github.com/OWNER/enigma2-web.git
-```
+Die Entfernung privater Netzwerkbeispiele aus älteren Releases erfolgte mit
+Version 1.1.2. Wer diese Umstellung bereits abgeschlossen hat, verwendet für
+1.1.3 ausschließlich die normalen Update-Befehle oben.
 
-Der Push bereinigt die aktuellen Branches und Tags. Alte hochgeladene ZIP-Dateien
-an GitHub-Releases müssen zusätzlich entfernt oder durch bereinigte Pakete ersetzt
-werden. Das neue Installationspaket beim Release `v1.1.2` verwenden. Bereits
-heruntergeladene Kopien und Forks werden durch einen Push nicht verändert.
-GitHub kann außerdem alte Commit-Ansichten und Pull-Request-Referenzen behalten;
-für die Entfernung solcher serverseitigen Reste gelten die Möglichkeiten und
-Voraussetzungen in der [GitHub-Anleitung zur Datenentfernung](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository).
-Ein Push allein garantiert keine endgültige Löschung aller gespeicherten Kopien.
+Das weiterhin enthaltene `scripts/github-bereinigen.ps1` ist das Hilfsmittel für
+die einmalige Umstellung auf 1.1.2. Es prüft genau diesen Release-Stand und
+ist kein allgemeines Update-Skript für spätere Versionen. Bei einem noch
+unbereinigten Repository zuerst das Git-Paket 1.1.2 samt damaliger Anleitung
+verwenden und anschließend mit Version 1.1.3 fortsetzen.
 
-Nach der Umstellung nur noch mit dem neuen Paket oder einem frisch geklonten
-Repository weiterarbeiten. Die alte lokale Historie nicht wieder hineinmergen.
+Alte hochgeladene ZIP-Dateien an GitHub-Releases zusätzlich entfernen oder durch
+bereinigte Pakete ersetzen. Heruntergeladene Kopien und Forks werden durch
+Git-Pushes nicht verändert. Für eventuell verbliebene Commit-Ansichten und
+Pull-Request-Referenzen gelten die Möglichkeiten und Voraussetzungen in der
+[GitHub-Anleitung zur Datenentfernung](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository).
+Nach der Umstellung mit der bereinigten Historie weiterarbeiten und keine alte
+unbereinigte Historie hineinmergen.
 
 ## Neues leeres Repository anlegen
 
 Auf GitHub ein leeres Repository anlegen. README, `.gitignore` und Lizenzdatei
 bei dessen Anlage nicht automatisch ergänzen: Die Projektdateien sind vorhanden.
-Das Git-Paket vollständig entpacken und im enthaltenen Projektordner ausführen;
+Das Git-Paket vollständig entpacken und im Projektordner ausführen;
 `OWNER` und gegebenenfalls den Repositorynamen ersetzen:
 
 ```powershell
 git remote add origin https://github.com/OWNER/enigma2-web.git
 git push -u origin main
-git push origin v1.0.0 v1.1.0 v1.1.1 v1.1.2
+git push origin v1.0.0 v1.1.0 v1.1.1 v1.1.2 v1.1.3
 ```
 
 Für ein leeres Repository ist das Bereinigungsskript nicht erforderlich.
 
 ## Release veröffentlichen
 
-Unter **Releases** einen Release für den vorhandenen Tag `v1.1.2` und Titel
-**Enigma2 Timer 1.1.2** erstellen. `RELEASE_NOTES.md` als Beschreibung verwenden
-und `enigma2-web-v1.1.2.zip` als Installationspaket anhängen. Git-Tag und
-Installationspaket enthalten denselben Quellstand.
+Unter **Releases** einen Release für Tag `v1.1.3` mit Titel **Enigma2 Timer 1.1.3**
+erstellen. `RELEASE_NOTES.md` als Beschreibung verwenden und
+`enigma2-web-v1.1.3.zip` als Installationspaket anhängen. Git-Tag und Installationspaket
+enthalten denselben Quellstand.
 
 ## Prüfungen und weitere Versionen
 
@@ -92,10 +90,10 @@ ruff format --check .
 pytest
 ```
 
-Spätere Versionen können die neue bereinigte Historie mit gewöhnlichen Commits
-und Pushes fortsetzen. Versionsnummer in `pyproject.toml` und
-`src/e2web/__init__.py`, Release-Datum und Dokumentation aktualisieren, prüfen
-und committen. Bestehende bereinigte Release-Tags danach nicht verschieben.
+Spätere Versionen setzen die bereinigte Historie mit gewöhnlichen Commits und
+Pushes fort. Versionsnummer in `pyproject.toml` und `src/e2web/__init__.py`,
+Release-Datum und Dokumentation aktualisieren, prüfen und committen.
+Bestehende bereinigte Release-Tags danach nicht verschieben.
 
 Konfiguration, Datenbank, Schlüssel und Protokolle sind durch `.gitignore`
 ausgeschlossen. Vor Commits die angezeigten Dateien prüfen. Herkunfts- und

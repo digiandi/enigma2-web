@@ -8,7 +8,7 @@ from urllib.parse import urlencode
 from zoneinfo import ZoneInfo
 
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy import delete, func, select, text
@@ -85,6 +85,13 @@ def create_app(config: Config | None = None) -> FastAPI:
     app.state.client_factory = OpenWebifClient
     app.state.channel_catalog = ChannelCatalog()
     app.mount("/static", StaticFiles(directory=Path(__file__).parent / "static"), name="static")
+    favicon_paths = {"/favicon.ico", "/static/favicon.ico", "/static/favicon.png"}
+
+    @app.api_route("/favicon.ico", methods=["GET", "HEAD"], include_in_schema=False)
+    async def favicon():
+        return FileResponse(
+            Path(__file__).parent / "static/favicon.ico", media_type="image/vnd.microsoft.icon"
+        )
 
     def cookies(request):
         secure = request.url.scheme == "https" or config.cookie_secure
@@ -198,7 +205,9 @@ def create_app(config: Config | None = None) -> FastAPI:
                         db.delete(session)
                         db.commit()
             path = request.url.path
-            if path not in {"/login", "/health"} and not path.startswith("/static/"):
+            if path not in {"/login", "/health"} | favicon_paths and not path.startswith(
+                "/static/"
+            ):
                 if not request.state.user:
                     response = redirect("/login")
                 elif request.state.user.must_change_password and path not in {
@@ -210,7 +219,14 @@ def create_app(config: Config | None = None) -> FastAPI:
                     response = await call_next(request)
             else:
                 response = await call_next(request)
-            response.headers["Cache-Control"] = "no-store"
+            if (
+                path in favicon_paths
+                and request.method in {"GET", "HEAD"}
+                and response.status_code in {200, 304}
+            ):
+                response.headers["Cache-Control"] = "public, max-age=86400"
+            else:
+                response.headers["Cache-Control"] = "no-store"
             response.headers["X-Content-Type-Options"] = "nosniff"
             response.headers["Referrer-Policy"] = "same-origin"
             response.headers["Content-Security-Policy"] = (

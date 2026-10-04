@@ -11,3 +11,4 @@
 *.service text eol=lf
 *.mako text eol=lf
 *.png binary
+*.ico binary

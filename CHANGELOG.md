@@ -1,5 +1,15 @@
 # Versionsverlauf
 
+## 1.1.3 – 04.10.2026
+
+- Favicon-Dateien erhalten einen speicherbaren Cache-Header, damit Firefox sie
+  für Lesezeichen übernehmen kann. Andere Antworten behalten `no-store`.
+- Öffentlicher Standardpfad `/favicon.ico` für GET und HEAD, auch vor Anmeldung
+  oder während eines erzwungenen Passwortwechsels.
+- Echte ICO-Datei mit dem vorhandenen Logo in 16, 32 und 48 Pixeln;
+  versionierter Verweis in allen Seiten.
+- Bereinigte Git-Historie und alle bisherigen Tags fortgeführt; keine Migration.
+
 ## 1.1.2 – 04.10.2026
 
 - Private Netzwerkadressen im Receiverformular und in Tests durch neutrale Beispiele ersetzt.
