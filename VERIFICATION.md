@@ -1,28 +1,40 @@
-# Prüfung von Version 1.1.1
+# Prüfung von Version 1.1.2
 
 Prüfstand: 04.10.2026, Python 3.12 unter Linux.
 
-- 235 automatisierte Tests erfolgreich (`pytest`).
-- Statische Prüfung und Formatprüfung erfolgreich (`ruff`).
-- Installer-Syntax erfolgreich (`bash -n scripts/install.sh`).
-- Python-Wheel und Quelldistribution gebaut und geprüft: alle Seiten, CSS, JavaScript, Logo,
-  Aufnahme-Downloads, Rechteverwaltung, NOTICE und fünf Migrationen enthalten.
-- Wheel mit `pip` in ein separates Installationsverzeichnis installiert;
-  CLI-Initialisierung, erneute Initialisierung mit erhaltenem Schlüssel,
-  Schema `0005`, Aufnahmezeitlimit 90 Sekunden, erhaltener geänderter Port,
-  Login und Health-Version geprüft.
-- Quell-ZIP mit Tests und Installationshinweisen erstellt; keine Datenbanken,
-  Schlüssel, Zugangsdaten, Testdownloads oder Browser-/Testumgebungen enthalten.
-- Chromium-Browserlauf aus dem installierten Wheel mit lokalen HTTP-Receivern
-  für JSON und XML erfolgreich; Login, Timerformular, Ersteller-Tag,
-  versionierte Assets und HTTPS-Proxy geprüft;
-  keine JavaScript-Fehler und keine Dialog-Popups.
-- Filteransichten bei 320, 390, 768, 1024, 1100, 1280 und 1440 Pixel geprüft;
-  kein horizontaler Seitenüberlauf. Timer- und Aufnahmeansichten auf Desktop
-  und mobil gerendert und visuell geprüft.
-- Die früheren umfassenden Funktionsprüfungen, einschließlich langer
-  Receivernamen, Löschbestätigung und Rechteabläufen, sind in den jeweiligen
-  Versionsabschnitten dokumentiert.
+- 235 automatisierte Tests erfolgreich; Code- und Formatprüfung erfolgreich.
+- Installer-Syntax und JavaScript-Syntax geprüft.
+- Wheel und Quelldistribution gebaut und auf vollständige Inhalte geprüft.
+  Das installierte Wheel startet mit Version 1.1.2; CLI-Initialisierung,
+  Schema `0005`, Login, Assets und neutraler Receiver-Platzhalter geprüft.
+  Erneute Initialisierung erhält Schlüssel, Aufnahmezeitlimit 90 Sekunden
+  und einen bereits geänderten Port.
+- Installations- und Git-ZIP entpackt und dateiweise abgeglichen; keine
+  Betriebsdaten, Schlüssel, Zugangsdaten oder Testumgebungen enthalten.
+- Jede Datei aller drei früheren Git-Release-Stände mit dem Original verglichen:
+  ausschließlich die neutralen Netzwerkbeispiele und zugehörigen Testprüfungen
+  geändert. Versionsnummern, Commit-Nachrichten, Autoren und Zeitpunkte erhalten.
+- Alle Git-Objekte des neuen Pakets, einschließlich nicht erreichbarer Objekte,
+  sowie alle Release-Stände und Archivdateien auf verbliebene private
+  Netzwerkbeispiele geprüft. Keine Treffer. Keine alten Sicherungsreferenzen.
+- Vier annotierte Tags, lineare Historie, sauberer Branch `main`, `git fsck`
+  und Klonen geprüft. Git-Paket enthält keine Remote-Konfiguration.
+- Geschützten atomaren Push gegen lokale Repositories geprüft; alle fünf
+  Referenzen aktualisiert. Abbruch bei geänderter Branch- oder Tag-Kennung
+  ohne Teilaktualisierung und Erkennung zusätzlicher Referenzen geprüft.
+- Die bisherigen Browserprüfungen der unveränderten Oberfläche stehen unten.
+  Die lokale Prüfung ersetzt keinen ausgeführten Push oder CI-Lauf auf GitHub.
+
+## Änderungen 1.1.2
+
+- Private Netzwerkadressen in Receiverformular und Testfällen ersetzt durch
+  reservierte Dokumentationsadressen und `example.test`.
+- Vollständige neue Git-Objektdatenbank mit bereinigten Ständen für `v1.0.0`,
+  `v1.1.0` und `v1.1.1` erstellt. Deren Commit- und Tag-Kennungen ändern sich;
+  diese Bereinigung ersetzt die in früheren Prüfberichten beschriebene
+  Beibehaltung der ursprünglichen Kennungen.
+- Release 1.1.2 ergänzt; keine Schemaänderung und keine Änderung gespeicherter
+  Verbindungen. GitHub-Anleitung und PowerShell-Skript für die einmalige Umstellung.
 
 ## Änderungen 1.1.1
 

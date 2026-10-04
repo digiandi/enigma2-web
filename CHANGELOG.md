@@ -1,5 +1,13 @@
 # Versionsverlauf
 
+## 1.1.2 – 04.10.2026
+
+- Private Netzwerkadressen im Receiverformular und in Tests durch neutrale Beispiele ersetzt.
+- Alle drei bisherigen Git-Release-Stände bereinigt, einschließlich annotierter Tags.
+- PowerShell-Skript für die einmalige GitHub-Umstellung mit Prüfung des bekannten
+  Remote-Stands, expliziten Leases und atomarer Aktualisierung.
+- Keine neue Migration; gespeicherte Verbindungen und alle Funktionen bleiben erhalten.
+
 ## 1.1.1 – 04.10.2026
 
 - Timer-Kopfzeile in der Reihenfolge Receiverauswahl, „Liste filtern“, „Timer erstellen“.
