@@ -169,6 +169,102 @@ def install_movie_mock(app, **kwargs):
     return box
 
 
+@pytest.mark.parametrize("response_format", ["json", "json_wrong_directory", "xml"])
+@pytest.mark.parametrize("default_bookmarked", [False, True])
+def test_initial_recording_page_loads_the_displayed_receiver_default(
+    setup, response_format, default_bookmarked
+):
+    _, _, app = setup
+    box = MovieReceiver(xml=response_format == "xml")
+    usb = "/media/usb/"
+    filename = usb + "USB-Nachrichten.ts"
+    reference = "1:0:0:0:0:0:0:0:0:0:" + filename
+    box.paths = [ROOT, usb] if default_bookmarked else [ROOT]
+    box.default_path = usb
+    box.movies = [movie_row(filename=filename, serviceref=reference, eventname="USB-Nachrichten")]
+    calls = []
+
+    def transport(request):
+        method = request.url.path.rsplit("/", 1)[-1]
+        if box.xml and request.url.path.startswith("/api/"):
+            return box(request)
+        if method == "getlocations" and not box.xml:
+            return httpx.Response(200, json={"locations": box.paths})
+        if method == "getcurrlocation":
+            calls.append((method, None))
+        if method == "movielist":
+            dirname = request.url.params.get("dirname")
+            calls.append((method, dirname))
+            if not dirname:
+                if box.xml:
+                    return httpx.Response(200, content=box.movie_xml([], []))
+                result = {"movies": [], "bookmarks": []}
+                if response_format == "json_wrong_directory":
+                    result["directory"] = ROOT
+                return httpx.Response(200, json=result)
+        return box(request)
+
+    app.state.client_factory = partial(OpenWebifClient, transport=httpx.MockTransport(transport))
+    with TestClient(app) as client:
+        login(client, "user", "User-123")
+        page = client.get("/aufnahmen")
+        assert page.status_code == 200
+        assert 'value="/media/usb/" selected' in page.text
+        assert "USB-Nachrichten.ts" in page.text
+        assert "Keine Aufnahmen" not in page.text
+        assert calls[:2] == [("getcurrlocation", None), ("movielist", usb)]
+        refreshed = client.get(
+            "/aufnahmen", params={"live_receiver": "1"}, headers={"X-Live-Refresh": "1"}
+        )
+        assert refreshed.status_code == 200 and "USB-Nachrichten.ts" in refreshed.text
+        other = client.get("/aufnahmen", params={"directory": ROOT})
+        assert other.status_code == 200 and "Keine Aufnahmen" in other.text
+        assert "USB-Nachrichten.ts" not in other.text
+        back = client.get("/aufnahmen", params={"directory": usb})
+        assert back.status_code == 200 and "USB-Nachrichten.ts" in back.text
+        download = client.get(
+            "/aufnahmen/download",
+            params={"receiver_id": 1, "reference": reference, "directory": usb},
+        )
+        assert download.status_code == 200 and download.content == box.file_content
+        assert not box.writes
+
+
+@pytest.mark.parametrize("xml", [False, True])
+@pytest.mark.parametrize("single_root", [False, True])
+def test_recording_default_lookup_unavailable_preserves_folder_fallbacks(setup, xml, single_root):
+    _, _, app = setup
+    box = MovieReceiver(xml=xml)
+    usb = "/media/usb/"
+    filename = usb + "USB-Nachrichten.ts"
+    box.paths = [usb] if single_root else [ROOT, usb]
+    box.default_path = usb
+    box.movies = [movie_row(filename=filename, serviceref="1:0:0:0:0:0:0:0:0:0:" + filename)]
+    movie_directories = []
+
+    def transport(request):
+        method = request.url.path.rsplit("/", 1)[-1]
+        if box.xml and request.url.path.startswith("/api/"):
+            return box(request)
+        if method == "getlocations" and not box.xml:
+            return httpx.Response(200, json={"locations": box.paths})
+        if method == "getcurrlocation":
+            return httpx.Response(404)
+        if method == "movielist":
+            movie_directories.append(request.url.params.get("dirname"))
+        return box(request)
+
+    app.state.client_factory = partial(OpenWebifClient, transport=httpx.MockTransport(transport))
+    with TestClient(app) as client:
+        login(client, "user", "User-123")
+        page = client.get("/aufnahmen")
+        assert page.status_code == 200
+        assert 'value="/media/usb/" selected' in page.text
+        assert "USB-Nachrichten.ts" in page.text
+        assert movie_directories == [usb if single_root else None]
+        assert not box.writes
+
+
 def delete_form(page, **changes):
     return {
         "csrf_token": csrf_value(page),

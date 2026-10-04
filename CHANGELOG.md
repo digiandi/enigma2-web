@@ -1,5 +1,15 @@
 # Versionsverlauf
 
+## 1.1.4 – 04.10.2026
+
+- Standardaufnahmeordner vor dem ersten Laden der Dateien ermitteln und an
+  `movielist` übergeben. Ordnerauswahl und Aufnahmeliste stimmen dadurch auch
+  bei `/media/usb/` und fehlender Standardangabe in `getlocations` überein.
+- Gleiche Pfadauflösung bei automatischer Aktualisierung, Ordnerwechseln und
+  Downloads; JSON- und XML-Antworten berücksichtigt.
+- Vorhandene Pfadprüfung einschließlich vom Receiver bestätigter Symlinkpfade
+  erhalten; keine neue Migration und keine Änderungen auf dem Receiver.
+
 ## 1.1.3 – 04.10.2026
 
 - Favicon-Dateien erhalten einen speicherbaren Cache-Header, damit Firefox sie

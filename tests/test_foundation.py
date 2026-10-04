@@ -88,7 +88,7 @@ def test_favicons_persist_without_login_and_private_pages_are_not_cached(setup, 
         if session_state != "anonymous":
             assert login(client).status_code == 303
         for path, media_type in [
-            ("/favicon.ico?v=1.1.3", "image/vnd.microsoft.icon"),
+            ("/favicon.ico?v=1.1.4", "image/vnd.microsoft.icon"),
             ("/static/favicon.ico", "image/vnd.microsoft.icon"),
             ("/static/favicon.png", "image/png"),
         ]:
@@ -128,7 +128,7 @@ def test_favicons_persist_without_login_and_private_pages_are_not_cached(setup, 
             page = client.get("/login")
             assert (
                 'rel="icon" type="image/vnd.microsoft.icon" sizes="16x16 32x32 48x48" '
-                'href="/favicon.ico?v=1.1.3"'
+                'href="/favicon.ico?v=1.1.4"'
             ) in page.text
 
 

@@ -1,4 +1,45 @@
-# Prüfung von Version 1.1.3
+# Prüfung von Version 1.1.4
+
+Prüfstand: 04.10.2026, Python 3.12 unter Linux.
+
+- 248 automatisierte Tests erfolgreich; Code- und Formatprüfung erfolgreich.
+  Installer- und JavaScript-Syntax geprüft.
+- Gemeldeten Fehler vor der Korrektur in drei Varianten reproduziert: JSON ohne
+  Verzeichnisangabe, JSON mit abweichendem implizitem Verzeichnis und XML.
+  Der Standardpfad war `/media/usb/`, während eine implizite Abfrage keine
+  Aufnahmen lieferte. Alle drei Regressionen schlugen mit dem bisherigen Loader fehl.
+- Erstaufruf und Live-Aktualisierung laden nach der Korrektur ausdrücklich den
+  angezeigten Standardordner. Mit und ohne dessen Eintrag in den Bookmarks
+  geprüft; andere Ordner, Rückwechsel und Dateidownload ebenfalls geprüft.
+- Bei nicht verfügbarer Standardabfrage mit einem und mehreren bekannten
+  Aufnahmepfaden geprüft: eindeutigen Pfad verwenden beziehungsweise die
+  implizite Auswahl des Receivers beibehalten. Keinen ersten Bookmark erraten.
+- Bestehende Prüfungen für kanonische Symlinkpfade, unzulässige Ordner,
+  Downloadrechte, Eigentümerrechte und den Schutz laufender Aufnahmen erfolgreich.
+- Browserprüfung mit JSON- und XML-Receiver-Simulation auf mobilen und breiten
+  Ansichten: Dateien direkt nach dem Erstaufruf sichtbar, Dateigröße nach der
+  automatischen Aktualisierung erneuert, Filtertext erhalten, Ordnerwechsel
+  und Download erfolgreich. Keine JavaScript-Fehler oder Schreibaufträge.
+- Wheel und Quelldistribution gebaut. Installiertes Wheel startet mit Version
+  1.1.4 und Schema `0005`; CLI-Initialisierung, Login, Assets, Favicon und
+  Standardordner-Regressionsfall erfolgreich. Schlüssel, geänderter Port und
+  Aufnahmezeitlimit bei erneuter Initialisierung erhalten.
+- Installations- und Git-ZIP entpackt und dateiweise verglichen. Aus dem finalen
+  Installations-ZIP gebautes Wheel enthält dieselben Dateien wie das geprüfte
+  Wheel. Keine Betriebsdaten enthalten.
+- Sauberer Branch `main`, annotierter Tag `v1.1.4`, unveränderte bisherige Tags,
+  `git fsck`, Klonen und gewöhnlicher lokaler Push geprüft. Alle Archivdateien
+  und Git-Objekte weiterhin ohne die entfernten privaten Netzwerkbeispiele.
+- Die Prüfung verwendet simulierte Receiver. Prüfung am eingesetzten Receiver
+  nach Installation erforderlich; GitHub-Push und GitHub-CI wurden nicht ausgeführt.
+
+## Änderungen 1.1.4
+
+- Ermittlung des Standardaufnahmeordners vor die Abfrage der Dateien verschoben.
+- Keine Änderung am Datenbankschema, an Abhängigkeiten oder an gespeicherten
+  Receiververbindungen. Alle Anfragen zur Pfadauflösung sind Lesezugriffe.
+
+## Prüfung von Version 1.1.3
 
 Prüfstand: 04.10.2026, Python 3.12 unter Linux.
 

@@ -1,11 +1,12 @@
-# Enigma2 Timer 1.1.3
+# Enigma2 Timer 1.1.4
 
 Eigenständige, zentral betriebene Webanwendung im Stil von AWAS 3.0.7.
 AWAS und seine Datenbank werden nicht verändert.
 
-Version 1.1.3 korrigiert das Favicon für Firefox-Lesezeichen. Die Icon-Dateien
-dürfen vom Browser gespeichert werden; `/favicon.ico` ist ohne Anmeldung erreichbar
-und enthält das vorhandene Logo in 16, 32 und 48 Pixeln. Die seit 1.1.2 bereinigte
+Version 1.1.4 korrigiert das erste Laden der Aufnahmen. Der tatsächliche
+Standardordner des Receivers wird vor der Aufnahmeliste ermittelt und ausdrücklich
+abgefragt. Damit stammen Ordnerauswahl und Dateien aus demselben Verzeichnis,
+auch bei einem Standardpfad wie `/media/usb/`. Die seit 1.1.2 bereinigte
 Git-Historie wird mit einem gewöhnlichen neuen Release-Commit fortgesetzt.
 Installation und Update: [INSTALL.md](INSTALL.md). GitHub: [GITHUB.md](GITHUB.md).
 [Release-Hinweise](RELEASE_NOTES.md), [Versionsverlauf](CHANGELOG.md),
@@ -144,7 +145,7 @@ des Administrators. Er benötigt Python 3.12+, `python3-venv`, `rsync` und
 Zugang zum Python-Paketindex. Diese Systempakete bei Bedarf zuvor installieren.
 Es werden weder nginx-Konfigurationen aktiviert noch vorhandene AWAS-Dateien
 verändert. Der Nutzer hat die Erstinstallation und nginx-Anbindung für Version
-0.1.0 auf Ubuntu bestätigt. Die Timer- und Aufnahmefunktionen von 1.1.3 wurden mit
+0.1.0 auf Ubuntu bestätigt. Die Timer- und Aufnahmefunktionen von 1.1.4 wurden mit
 simulierten Receivern geprüft; die Prüfung an der tatsächlichen Hardware steht noch aus.
 
 Pfade:
@@ -534,7 +535,15 @@ Auch der aktuelle Ordner und seine freigegebenen übergeordneten Ordner bleiben
 im Dropdown erreichbar. Neue Unterordner erscheinen mit der automatischen
 Aktualisierung; weitere Ebenen nach Auswahl des betreffenden Ordners.
 Es wird kein kompletter Verzeichnisbaum rekursiv vom Receiver geladen. Der tatsächliche
-Standardpfad ist direkt ausgewählt; der Button für den übergeordneten Ordner entfällt. Die Liste ist nach Aufnahmezeit absteigend
+Standardpfad ist direkt ausgewählt; der Button für den übergeordneten Ordner entfällt.
+Fehlt die Standardangabe in `getlocations`, wird sie vor dem Laden der Dateien
+über `getcurrlocation` ermittelt. `movielist` erhält diesen Ordner ausdrücklich
+als `dirname`, damit die angezeigte Auswahl und die Dateien übereinstimmen.
+Das gilt auch für die automatische Aktualisierung sowie JSON- und XML-Antworten.
+Ist die Standardabfrage nicht verfügbar, wird ein einziger bekannter Aufnahmepfad
+verwendet. Bei mehreren bekannten Pfaden wird keiner willkürlich zum Standard;
+dann bleibt die implizite Pfadauswahl des Receivers erhalten.
+Die Liste ist nach Aufnahmezeit absteigend
 sortiert. Unbekannte Zeiten, Größen oder Laufzeiten bleiben als solche sichtbar.
 Die Liste aktualisiert sich alle fünf Sekunden; deshalb entfällt der Button
 **Neu laden**.
@@ -605,21 +614,21 @@ Ordner und ihre Unterordner werden akzeptiert. Es wird keine bestimmte
 Symlinkbeziehung vorausgesetzt und kein fremder Wunschpfad zur Prüfung geladen.
 Nach erfolgreichem Löschen bleibt die aktuelle Aufnahmeliste erreichbar.
 
-## Update von 0.1.x bis 1.1.2 auf 1.1.3
+## Update von 0.1.x bis 1.1.3 auf 1.1.4
 
 Das neue Paket auf den Ubuntu-Server übertragen, entpacken und aus dem neuen
 Projektverzeichnis den Installer erneut ausführen. Als root:
 
 ```bash
-unzip enigma2-web-v1.1.3.zip
-cd enigma2-web-v1.1.3
+unzip enigma2-web-v1.1.4.zip
+cd enigma2-web-v1.1.4
 bash scripts/install.sh
 curl --retry 10 --retry-delay 1 --retry-connrefused http://127.0.0.1:8081/health
 ```
 
 Der Installer hält den laufenden Dienst während des Updates an und startet ihn
 anschließend wieder. Der Health-Aufruf wartet bei Bedarf auf den Dienststart.
-Die erwartete Antwort enthält `"version":"1.1.3"`.
+Die erwartete Antwort enthält `"version":"1.1.4"`.
 
 Die vorhandenen Benutzer, Receiver, Passwörter, Sitzungen, die Konfiguration
 und der Verschlüsselungsschlüssel werden weiterverwendet. Ein Administrator
@@ -628,7 +637,7 @@ standardmäßig wird Port 8081 verwendet. Bei einem anderen Port den Health-Aufr
 entsprechend anpassen. In der vorhandenen nginx-Site das Lesezeitlimit auf
 300 Sekunden erhöhen (siehe nächsten Abschnitt); der Installer verändert nginx nicht.
 
-Die Datenbank wird automatisch auf Revision `0005` migriert. Von 0.8.0 bis 1.1.2 auf 1.1.3 ist keine neue Schemaänderung nötig. Vorhandene Konten,
+Die Datenbank wird automatisch auf Revision `0005` migriert. Von 0.8.0 bis 1.1.3 auf 1.1.4 ist keine neue Schemaänderung nötig. Vorhandene Konten,
 Receiverzuordnungen, Sitzungen, Audit-Ereignisse und alte Eigentümerkennungen
 bleiben erhalten. Die neue Migration ergänzt sprechende Ersteller-Tags für alle
 vorhandenen Konten. Frühere Revisionen ergänzen weiterhin Eigentümerkennungen,
@@ -664,8 +673,8 @@ Danach als root:
 nginx -t && systemctl reload nginx
 ```
 
-CSS und JavaScript verwenden URLs wie `/static/app.css?v=1.1.3`.
-Das Favicon verwendet ebenfalls eine versionierte URL: `/favicon.ico?v=1.1.3`.
+CSS und JavaScript verwenden URLs wie `/static/app.css?v=1.1.4`.
+Das Favicon verwendet ebenfalls eine versionierte URL: `/favicon.ico?v=1.1.4`.
 Der Browser lädt sie dadurch unter derselben HTTPS-Adresse wie die Seite.
 Das verhindert HTTP-Asset-URLs und Mixed Content bei einer HTTPS-Verbindung
 zum Proxy. Der Proxy-Header ist weiterhin für sichere Sitzungscookies wichtig.
@@ -721,7 +730,7 @@ Receiver dienen jetzt der weiteren Kompatibilitätsprüfung.
 
 ## Favicon und Lesezeichen
 
-Alle Seiten verweisen auf `/favicon.ico?v=1.1.3`. Das Icon ist ohne Anmeldung
+Alle Seiten verweisen auf `/favicon.ico?v=1.1.4`. Das Icon ist ohne Anmeldung
 mit dem Inhaltstyp `image/vnd.microsoft.icon` erreichbar und enthält das
 vorhandene Logo in 16, 32 und 48 Pixeln. Auch die statischen Icon-Dateien
 dürfen einen Tag lang gespeichert werden (`Cache-Control: public, max-age=86400`).

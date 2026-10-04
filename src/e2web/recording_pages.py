@@ -41,6 +41,16 @@ def register_recording_pages(app, config, *, render, selected_receiver, check_cs
             requested = directory_path(requested) if requested else ""
         except ValueError:
             raise HTTPException(400, "Ungültiger Aufnahmepfad.") from None
+        if not default_path:
+            # Some getlocations replies contain only bookmarks. Resolve the
+            # actual default before loading movies so the selected folder and
+            # its contents always come from the same request.
+            try:
+                default_path = directory_path(client.current_recording_location())
+            except (ReceiverError, ValueError):
+                default_path = roots[0] if len(set(roots)) == 1 else ""
+            if default_path:
+                roots.append(default_path)
         listing = None
         if requested and not any(requested.startswith(root) for root in roots):
             # OpenWebif resolves symlinks (e.g. /hdd -> /media/hdd) in its
@@ -64,11 +74,6 @@ def register_recording_pages(app, config, *, render, selected_receiver, check_cs
         if listing is None:
             listing = client.recording_list(requested or default_path or None)
         directory = listing.directory or requested or default_path
-        if not directory:
-            try:
-                directory = client.current_recording_location()
-            except (ReceiverError, ValueError):
-                directory = roots[0] if len(roots) == 1 else ""
         if not requested and directory:
             roots.append(directory)
         return listing, directory, sorted(set(roots), key=str.casefold)
