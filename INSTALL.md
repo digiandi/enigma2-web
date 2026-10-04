@@ -1,10 +1,14 @@
-# Enigma2 Timer 1.0.0 installieren
+# Enigma2 Timer 1.1.0 installieren
 
 Voraussetzungen: Ubuntu/Debian mit systemd, Python 3.12 oder neuer, `python3-venv`,
 `rsync` und `unzip`. Der Server muss die Receiver erreichen können. Der Installer
 benötigt beim ersten Einrichten und beim Update Zugang zum Python-Paketindex.
 
-Die folgenden Befehle sind für eine Anmeldung als root geschrieben.
+Die folgenden Befehle sind für eine Anmeldung als root geschrieben. Sie verwenden
+den Standardport 8081. Ein anderer Port wird in `/etc/e2web/e2web.toml` mit
+`port = 8082` eingestellt; danach den Dienst neu starten und sowohl den
+nginx-Zielport als auch die Health-Abfragen entsprechend anpassen. Beim Update
+bleibt ein bereits geänderter Port erhalten.
 
 ## Neuinstallation
 
@@ -20,8 +24,8 @@ Die angezeigte Python-Version muss mindestens 3.12 sein. Anschließend das
 Installationspaket auf den Server übertragen und entpacken:
 
 ```bash
-unzip enigma2-web-v1.0.0.zip
-cd enigma2-web-v1.0.0
+unzip enigma2-web-v1.1.0.zip
+cd enigma2-web-v1.1.0
 bash scripts/install.sh
 runuser -u e2web-service -- /opt/e2web/.venv/bin/e2web \
   --config /etc/e2web/e2web.toml create-admin
@@ -45,8 +49,8 @@ gestopptem Webdienst oder mit einer konsistenten SQLite-Sicherung.
 Das neue Paket in einen neuen Ordner entpacken und als root ausführen:
 
 ```bash
-unzip enigma2-web-v1.0.0.zip
-cd enigma2-web-v1.0.0
+unzip enigma2-web-v1.1.0.zip
+cd enigma2-web-v1.1.0
 bash scripts/install.sh
 curl --retry 10 --retry-delay 1 --retry-connrefused \
   http://127.0.0.1:8081/health
@@ -55,13 +59,13 @@ curl --retry 10 --retry-delay 1 --retry-connrefused \
 Ein bereits laufender Webdienst wird während des Updates angehalten und wieder
 gestartet. Ein Administrator muss nicht erneut angelegt werden. Die automatische
 Migration erhält vorhandene Daten und verwendet Revision `0005`; beim Update von
-0.8.0 ist keine neue Schemaänderung erforderlich. Auf den Receivern werden durch
+0.8.0 oder 1.0.0 ist keine neue Schemaänderung erforderlich. Auf den Receivern werden durch
 das Update keine Timer oder Aufnahmedateien verändert.
 
 Erwartete Antwort:
 
 ```json
-{"status":"ok","version":"1.0.0"}
+{"status":"ok","version":"1.1.0"}
 ```
 
 Nach dem Update die Browserseite neu laden. Vorher geöffnete Timerformulare neu

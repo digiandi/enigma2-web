@@ -2,18 +2,31 @@
 document.addEventListener("change", event => {
   if (event.target.matches("[data-receiver-select], [data-auto-submit]")) event.target.form.requestSubmit();
 });
-document.querySelectorAll("[data-table-filter]").forEach(input => {
-  const rows = document.getElementById(input.dataset.tableFilter).querySelectorAll("tr");
-  const empty = document.querySelector("[data-filter-empty]");
-  input.addEventListener("input", () => {
-    const query = input.value.trim().toLocaleLowerCase("de");
-    let visible = 0;
-    rows.forEach(row => {
-      row.hidden = !row.dataset.searchName.toLocaleLowerCase("de").includes(query);
-      if (!row.hidden) visible++;
-    });
-    empty.hidden = visible !== 0;
+function filterTable(input) {
+  const area = document.getElementById(input.dataset.tableFilter);
+  if (!area) return;
+  const query = input.value.trim().toLocaleLowerCase("de");
+  let visible = 0;
+  area.querySelectorAll("[data-search-name]").forEach(row => {
+    const fields = [row.dataset.searchName, row.dataset.searchChannel, row.dataset.searchFilename];
+    row.hidden = !fields.some(value => (value || "").toLocaleLowerCase("de").includes(query));
+    if (!row.hidden) visible++;
+    const detail = row.nextElementSibling;
+    if (detail?.matches("[data-filter-detail]")) detail.hidden = row.hidden;
   });
+  area.querySelectorAll("[data-filter-section]").forEach(section => {
+    const count = section.querySelectorAll("[data-search-name]:not([hidden])").length;
+    section.querySelectorAll("[data-filter-count]").forEach(label => {
+      label.textContent = `${label.dataset.filterLabel} (${count})`;
+    });
+  });
+  const empty = area.querySelector("[data-filter-empty]") ||
+    document.querySelector(`[data-filter-empty="${input.dataset.tableFilter}"]`);
+  if (empty) empty.hidden = !query || visible !== 0;
+}
+document.querySelectorAll("[data-table-filter]").forEach(filterTable);
+document.addEventListener("input", event => {
+  if (event.target.matches("[data-table-filter]")) filterTable(event.target);
 });
 document.querySelectorAll("[data-menu-toggle]").forEach(button => {
   button.addEventListener("click", () => {
@@ -105,11 +118,19 @@ document.querySelectorAll("[data-user-access-form]").forEach(form => {
 
 // At most one request; slow HDDs never cause an accumulating request queue.
 let liveLoading = false;
+let filterComposing = false;
+document.addEventListener("compositionstart", event => {
+  if (event.target.matches("[data-table-filter]")) filterComposing = true;
+});
+document.addEventListener("compositionend", event => {
+  if (event.target.matches("[data-table-filter]")) filterComposing = false;
+});
 function liveBlocked() {
   const area = document.querySelector("[data-live-page]");
-  return liveSubmitting || document.hidden || !area ||
+  return liveSubmitting || filterComposing || document.hidden || !area ||
     document.querySelector(".is-confirming") ||
-    (area.contains(document.activeElement) && document.activeElement.matches("input, select"));
+    (area.contains(document.activeElement) &&
+      document.activeElement.matches("input:not([data-table-filter]), select"));
 }
 async function refreshLivePage() {
   if (liveLoading || liveBlocked()) return;
@@ -130,7 +151,23 @@ async function refreshLivePage() {
     const history = area.querySelector(".timer-history");
     const updatedHistory = replacement.querySelector(".timer-history");
     if (history && updatedHistory) updatedHistory.open = history.open;
+    const filters = new Map([...area.querySelectorAll("[data-table-filter]")]
+      .map(input => [input.dataset.tableFilter, input.value]));
+    const active = document.activeElement;
+    const focusedFilter = area.contains(active) && active.matches("[data-table-filter]")
+      ? {target: active.dataset.tableFilter, start: active.selectionStart,
+        end: active.selectionEnd, direction: active.selectionDirection} : null;
+    const updatedFilters = [...replacement.querySelectorAll("[data-table-filter]")];
+    updatedFilters.forEach(input => { input.value = filters.get(input.dataset.tableFilter) || ""; });
     area.replaceWith(replacement);
+    updatedFilters.forEach(filterTable);
+    if (focusedFilter) {
+      const input = updatedFilters.find(input => input.dataset.tableFilter === focusedFilter.target);
+      if (input) {
+        input.focus({preventScroll: true});
+        input.setSelectionRange(focusedFilter.start, focusedFilter.end, focusedFilter.direction);
+      }
+    }
   } catch (_) {
     // A transient failure retains the last successful snapshot; retry next tick.
   } finally { liveLoading = false; }

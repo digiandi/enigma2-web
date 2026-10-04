@@ -348,8 +348,7 @@ td small { margin-top: .15rem; color: var(--muted); }
 .catalog-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.25rem 1rem; }
 .catalog-heading h2 { margin: 0; font-size: 1.2rem; overflow-wrap: anywhere; }
 .catalog-heading p { margin: .3rem 0 0; color: var(--muted); font-size: .85rem; }
-.catalog-search { display: grid; gap: .35rem; width: min(280px, 100%); color: #555; font-size: .75rem; font-weight: 650; }
-.catalog-search input { min-height: 40px; padding: .5rem .7rem; font-weight: 400; }
+.catalog-heading .list-filter { width: min(280px, 100%); }
 .channel-marker { background: #f7f6fe; }
 .channel-marker strong { color: #57518c; }
 .filter-empty { margin: 0; padding: 1.5rem; text-align: center; color: var(--muted); }
@@ -450,3 +449,21 @@ body { display: flex; flex-direction: column; }
 }
 
 .receiver-permissions[hidden] { display: none; }
+
+/* List filters share the input style and remain usable in narrow layouts. */
+.list-filter { width: 230px; max-width: 100%; min-width: 0; min-height: 43px; font-weight: 400; }
+.timer-heading { gap: 1.25rem; }
+.timer-heading .receiver-heading-actions { flex-basis: 720px; gap: .75rem; }
+.timer-heading .list-filter { flex: 1 1 180px; width: 180px; }
+.timer-heading .receiver-selection { flex: 1 1 260px; }
+.recording-toolbar form { flex: 1 1 390px; max-width: 600px; min-width: 0; }
+.recording-toolbar select { min-width: 0; }
+.recording-toolbar .list-filter { flex: 0 1 230px; margin-left: auto; }
+.timer-table tbody tr[hidden], .recording-table tbody tr[hidden], .channel-table tbody tr[hidden] { display: none; }
+@media (max-width: 720px) {
+  .timer-heading .receiver-heading-actions { flex-basis: auto; }
+  .timer-heading .list-filter { flex-basis: 100%; width: 100%; }
+  .timer-heading .receiver-selection { flex: 1 1 160px; }
+  .recording-toolbar form { flex-basis: 100%; width: 100%; }
+  .recording-toolbar .list-filter { flex-basis: 100%; width: 100%; margin: 0; }
+}

@@ -1,6 +1,6 @@
-# Prüfung von Version 1.0.0
+# Prüfung von Version 1.1.0
 
-Prüfstand: 03.10.2026, Python 3.12 unter Linux.
+Prüfstand: 04.10.2026, Python 3.12 unter Linux.
 
 - 235 automatisierte Tests erfolgreich (`pytest`).
 - Statische Prüfung und Formatprüfung erfolgreich (`ruff`).
@@ -9,18 +9,49 @@ Prüfstand: 03.10.2026, Python 3.12 unter Linux.
   Aufnahme-Downloads, Rechteverwaltung, NOTICE und fünf Migrationen enthalten.
 - Wheel mit `pip` in ein separates Installationsverzeichnis installiert;
   CLI-Initialisierung, erneute Initialisierung mit erhaltenem Schlüssel,
-  Schema `0005`, Aufnahmezeitlimit 90 Sekunden, Login und Health-Version geprüft.
+  Schema `0005`, Aufnahmezeitlimit 90 Sekunden, erhaltener geänderter Port,
+  Login und Health-Version geprüft.
 - Quell-ZIP mit Tests und Installationshinweisen erstellt; keine Datenbanken,
   Schlüssel, Zugangsdaten, Testdownloads oder Browser-/Testumgebungen enthalten.
 - Chromium-Browserlauf aus dem installierten Wheel mit lokalen HTTP-Receivern
   für JSON und XML erfolgreich; Login, Timerformular, Ersteller-Tag,
   versionierte Assets und HTTPS-Proxy geprüft;
   keine JavaScript-Fehler und keine Dialog-Popups.
-- Breiten 390, 768, 1024, 1100, 1280 und 1440 Pixel geprüft; kein horizontaler
-  Seitenüberlauf. Timer- und Aufnahmeansichten gerendert und visuell geprüft.
-- Die umfassenden Funktionsprüfungen des unveränderten Stands 0.8.0,
-  einschließlich langer Receivernamen, Löschbestätigung und Rechteabläufen,
-  sind in dessen Abschnitt dokumentiert.
+- Filteransichten bei 320, 390, 768, 1024, 1100, 1280 und 1440 Pixel geprüft;
+  kein horizontaler Seitenüberlauf. Timer- und Aufnahmeansichten auf Desktop
+  und mobil gerendert und visuell geprüft.
+- Die früheren umfassenden Funktionsprüfungen, einschließlich langer
+  Receivernamen, Löschbestätigung und Rechteabläufen, sind in den jeweiligen
+  Versionsabschnitten dokumentiert.
+
+## Änderungen 1.1.0
+
+- Timerfilter links neben der Receiverauswahl in derselben Kopfzeile wie die
+  Überschrift und der Button „Timer erstellen“. Aufnahmefilter rechtsbündig
+  in der Zeile der Ordnerauswahl. Positionen auf Desktop im Browser geprüft.
+- Timer durchsuchen ausschließlich Sender und Titel; Aufnahmen zusätzlich
+  den Dateinamen ohne Verzeichnispfad. Beschreibungen, Ersteller, Bouquets,
+  Receiver, Zeitangaben, Status und Größen ergeben keine zusätzlichen Treffer.
+- Teiltextsuche ohne Groß-/Kleinschreibung und ohne äußere Leerzeichen;
+  Umlaute, Anführungszeichen, HTML-Sonderzeichen und eckige Klammern geprüft.
+- Die Dateizeile folgt der Sichtbarkeit ihres Haupteintrags, auch bei mobiler
+  Tabellendarstellung. Leere Suche zeigt wieder alle Einträge; kein Treffer
+  zeigt „Keine passenden Einträge“. Auch erledigte Timer sind durchsuchbar.
+  Bereichszahlen zeigen die Anzahl der passenden Einträge des jeweiligen Bereichs.
+- Echte Fünf-Sekunden-Abfragen im Browser mit fokussiertem Filter geprüft:
+  Suchtext, Fokus, Cursorposition und offener Verlauf bleiben erhalten;
+  veränderte Größe/Dauer sowie neu hinzugekommene Einträge werden gefiltert.
+  Die Filter funktionieren nach der Aktualisierung weiter.
+- Senderfilter ohne sichtbare Außenbeschriftung mit „Listen filtern“ bzw.
+  „Sender filtern“ im Feld; zugängliche Bezeichnungen per `aria-label`.
+- „Timer erstellen“ in Timerübersicht, Senderliste, EPG, Formularüberschrift
+  und Berechtigungshinweisen. Vorhandene Tests auf neue Beschriftung angepasst.
+- Versionsstand und Asset-URLs 1.1.0, Release-Datum 04.10.2026; keine Migration.
+  Das Git-Paket ergänzt die bestehende Historie und behält `v1.0.0` unverändert.
+- Filter- und Browserprüfungen verwenden nur lokale simulierte Receiver;
+  Filteraktionen erzeugen keine Schreibaufträge.
+- Filter und fokussierte Fünf-Sekunden-Aktualisierung auch mit XML geprüft;
+  Aufnahmegröße und Dauer aktualisiert, Dateizeilen korrekt gefiltert.
 
 ## Änderungen 1.0.0
 

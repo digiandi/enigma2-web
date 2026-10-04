@@ -1,5 +1,16 @@
 # Versionsverlauf
 
+## 1.1.0 – 04.10.2026
+
+- Timerfilter links neben der Receiverauswahl nach Sender und Timer-Titel.
+- Aufnahmefilter rechts neben der Ordnerauswahl nach Sender, Dateiname und Titel.
+- Filterzustand, Eingabefokus und Cursorposition bleiben beim automatischen
+  Aktualisieren erhalten; Dateizeilen folgen ihrem zugehörigen Eintrag.
+- Timer-Zähler nennen die Anzahl der passenden Einträge des jeweiligen Bereichs.
+- Filterbeschriftungen stehen direkt in den Eingabefeldern.
+- Einheitliche Beschriftung „Timer erstellen“ in Timerbereich, Sendern und EPG.
+- Datenbankschema weiterhin Revision `0005`; Update von 1.0.0 ohne Schemaänderung.
+
 ## 1.0.0 – 03.10.2026
 
 - Erste Version der 1.0-Reihe auf dem Funktionsstand von 0.8.0.

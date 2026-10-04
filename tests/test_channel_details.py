@@ -253,7 +253,7 @@ def test_timer_and_recording_pages_show_ordered_channel_details_and_new_branding
         login(client, "user", "User-123")
         timers = client.get("/timer")
         assert re.search(
-            r'class="receiver-heading-actions">.*?/receiver/select.*?Timer anlegen',
+            r'class="receiver-heading-actions">.*?/receiver/select.*?Timer erstellen',
             timers.text,
             re.S,
         )

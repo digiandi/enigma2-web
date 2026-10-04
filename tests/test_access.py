@@ -64,7 +64,7 @@ def test_assign_permissions_default_and_revoke_old_sessions(setup):
             == 303
         )
         page = user.get("/timer")
-        assert "<h1>Timer: VU+ Duo 4K</h1>" in page.text and "Timer anlegen" not in page.text
+        assert "<h1>Timer: VU+ Duo 4K</h1>" in page.text and "Timer erstellen" not in page.text
         user.post("/logout", data={"csrf_token": csrf_value(page)})
         login(user, "user", "User-123")
         assert "<h1>Timer: DM920</h1>" in user.get("/timer").text
@@ -118,7 +118,7 @@ def test_read_only_views_download_and_forged_writes(setup, mode):
         ]:
             page = client.get(path)
             assert page.status_code == 200
-            assert "Timer anlegen" not in page.text and "Bearbeiten</a>" not in page.text
+            assert "Timer erstellen" not in page.text and "Bearbeiten</a>" not in page.text
             assert "data-action-confirm" not in page.text
         assert "DM920" in page.text if mode == "all_read" else "DM920" not in page.text
         assert client.get(new_url()).status_code == 403

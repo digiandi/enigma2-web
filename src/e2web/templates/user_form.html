@@ -17,7 +17,7 @@
       <option value="all_read" {% if access_mode == 'all_read' %}selected{% endif %}>Alle Receiver: Lesen</option>
       <option value="all_write" {% if access_mode == 'all_write' %}selected{% endif %}>Alle Receiver: Lesen und Schreiben</option>
     </select></label>
-    <p class="form-hint permissions-hint">Lesen: alles anzeigen und Aufnahmen herunterladen. Schreiben: zusätzlich Timer anlegen sowie eigene Timer bearbeiten und löschen und eigene Aufnahmen löschen. Administratoren haben immer alle Rechte.</p>
+    <p class="form-hint permissions-hint">Lesen: alles anzeigen und Aufnahmen herunterladen. Schreiben: zusätzlich Timer erstellen sowie eigene Timer bearbeiten und löschen und eigene Aufnahmen löschen. Administratoren haben immer alle Rechte.</p>
     <div class="receiver-grants" data-receiver-grants>
     {% for r in all_boxes %}<label>{{ r.name }}{{ ' (deaktiviert)' if not r.enabled else '' }}<select name="receiver_access_{{ r.id }}" data-receiver-access="{{ r.id }}">
       {% for level, label in [('none', 'Kein Zugriff'), ('read', 'Lesen'), ('write', 'Lesen und Schreiben')] %}<option value="{{ level }}" {% if grants.get(r.id, 'none') == level %}selected{% endif %}>{{ label }}</option>{% endfor %}

@@ -1,9 +1,10 @@
-# Enigma2 Timer 1.0.0
+# Enigma2 Timer 1.1.0
 
 Eigenständige, zentral betriebene Webanwendung im Stil von AWAS 3.0.7.
 AWAS und seine Datenbank werden nicht verändert.
 
-Version 1.0.0 enthält den Funktionsstand von 0.8.0 als erste Version der 1.0-Reihe.
+Version 1.1.0 ergänzt Listenfilter für Timer und Aufnahmen und vereinheitlicht
+die Filterfelder und die Beschriftung „Timer erstellen“.
 Installation und Update: [INSTALL.md](INSTALL.md). GitHub: [GITHUB.md](GITHUB.md).
 [Release-Hinweise](RELEASE_NOTES.md), [Versionsverlauf](CHANGELOG.md),
 [Prüfbericht](VERIFICATION.md) und [Herkunfts-/Lizenzhinweise](NOTICE.md).
@@ -32,9 +33,11 @@ Implementiert:
 - Erstellerangabe „von …“ bei jedem Timer und jeder Aufnahme wie bei AWAS;
 - sprechende Ersteller-Tags wie `e2web-owner-digiandi`, auch manuell am Receiver verwendbar;
 - automatische Aktualisierung von Timern und Aufnahmen alle fünf Sekunden;
+- sofortige Listenfilter: Timer nach Sender/Titel, Aufnahmen nach Sender/Dateiname/Titel;
+  Filtertext bleibt bei der automatischen Aktualisierung einschließlich Cursorposition erhalten;
 - verschlüsselte Receiver-Passwörter mit persistentem separatem Schlüssel;
 - Receiver-Auswahl rechts neben der großen Überschrift, mit direkter Umschaltung;
-- „Timer anlegen“ rechts neben der Receiverauswahl in derselben Kopfzeile;
+- „Timer erstellen“ rechts neben der Receiverauswahl in derselben Kopfzeile;
 - nach jeder Anmeldung automatisch den vom Administrator festgelegten Receiver wählen;
 - mittiges Login-Formular ohne Slogan; relative CSS-/JavaScript-URLs für HTTPS hinter nginx;
 - Seitenname „Enigma2 Timer“ mit Untertitel „Aufnahmen-Verwaltung“;
@@ -138,7 +141,7 @@ des Administrators. Er benötigt Python 3.12+, `python3-venv`, `rsync` und
 Zugang zum Python-Paketindex. Diese Systempakete bei Bedarf zuvor installieren.
 Es werden weder nginx-Konfigurationen aktiviert noch vorhandene AWAS-Dateien
 verändert. Der Nutzer hat die Erstinstallation und nginx-Anbindung für Version
-0.1.0 auf Ubuntu bestätigt. Die Timer- und Aufnahmefunktionen von 1.0.0 wurden mit
+0.1.0 auf Ubuntu bestätigt. Die Timer- und Aufnahmefunktionen von 1.1.0 wurden mit
 simulierten Receivern geprüft; die Prüfung an der tatsächlichen Hardware steht noch aus.
 
 Pfade:
@@ -289,6 +292,26 @@ an spätere Konten. Änderungen der Anmeldedaten desselben Receivers erhalten
 die Eigentümerzuordnung. Datenbank und Schlüssel müssen
 bei einem Update erhalten bleiben.
 
+### Listen filtern
+
+Auf **Timer** steht das Eingabefeld **Liste filtern** in der Kopfzeile links
+neben der Receiverauswahl. Es durchsucht ausschließlich Sendernamen und Timer-Titel,
+auch im aufklappbaren Verlauf. Auf **Aufnahmen** steht das Feld rechts neben der
+Ordnerauswahl und durchsucht Sendernamen, Dateinamen und Aufnahme-/Timer-Titel.
+Beschreibungen, Ersteller, Receiver, Bouquets, Verzeichnispfade und Zeitangaben
+sind keine Suchfelder. Groß-/Kleinschreibung wird ignoriert; ein Textteil genügt.
+
+Die Filter wirken unmittelbar auf die angezeigte Liste und lösen keine
+Schreibaufträge aus. Dateizeilen werden mit dem zugehörigen Eintrag ein- und
+ausgeblendet. Bei der Fünf-Sekunden-Aktualisierung bleiben Suchtext, Fokus und
+Cursorposition erhalten; neue und geänderte Einträge werden erneut gefiltert.
+Beim Leeren des Felds erscheinen wieder alle Einträge. Die Bereichszahlen bei
+Timern zeigen die Anzahl der passenden Einträge des jeweiligen Bereichs.
+
+Bei Sendern stehen **Listen filtern** bzw. **Sender filtern** direkt im
+Eingabefeld. Alle Filterfelder besitzen eine zugängliche Bezeichnung ohne
+zusätzlichen sichtbaren Beschriftungstext.
+
 ### Automatische Aktualisierung
 
 Timer und Aufnahmen werden bei sichtbarer Seite alle fünf Sekunden neu vom
@@ -388,7 +411,7 @@ Ein Wechsel der Receiver-Verbindungsdaten verwirft die bisherige Zuordnung.
 
 ## Timer
 
-**Timer anlegen** steht in derselben Kopfzeile rechts neben der Receiverauswahl.
+**Timer erstellen** steht in derselben Kopfzeile rechts neben der Receiverauswahl.
 
 **Timer** ist die Startseite. Die AWAS-Bereiche **Laufend (x)** und
 **Anstehend (x)** zeigen jeweils die Anzahl ihrer Einträge. Auch bei null
@@ -410,7 +433,7 @@ verhindern keine Timerbearbeitung. Ohne zugeordnete Datei erscheint
 Geplante, vorbereitete, deaktivierte und erledigte Timer zeigen keine Dateizeile.
 Für sie werden auch keine Aufnahmelisten zur Dateigrößenanzeige abgefragt.
 
-**Timer anlegen** öffnet direkt das Timerformular. Seine gemeinsame
+**Timer erstellen** öffnet direkt das Timerformular. Seine gemeinsame
 Bouquet-Auswahl enthält zunächst die TV-Bouquets, darunter die Radio-Bouquets,
 in der Reihenfolge des Receivers. Das erste Bouquet und dessen erster
 aufnehmbarer Sender sind vorausgewählt. Unter der Bouquet-Auswahl steht die
@@ -576,28 +599,28 @@ Ordner und ihre Unterordner werden akzeptiert. Es wird keine bestimmte
 Symlinkbeziehung vorausgesetzt und kein fremder Wunschpfad zur Prüfung geladen.
 Nach erfolgreichem Löschen bleibt die aktuelle Aufnahmeliste erreichbar.
 
-## Update von 0.1.x bis 0.8.0 auf 1.0.0
+## Update von 0.1.x bis 1.0.0 auf 1.1.0
 
 Das neue Paket auf den Ubuntu-Server übertragen, entpacken und aus dem neuen
 Projektverzeichnis den Installer erneut ausführen. Als root:
 
 ```bash
-unzip enigma2-web-v1.0.0.zip
-cd enigma2-web-v1.0.0
+unzip enigma2-web-v1.1.0.zip
+cd enigma2-web-v1.1.0
 bash scripts/install.sh
 curl --retry 10 --retry-delay 1 --retry-connrefused http://127.0.0.1:8081/health
 ```
 
 Der Installer hält den laufenden Dienst während des Updates an und startet ihn
 anschließend wieder. Der Health-Aufruf wartet bei Bedarf auf den Dienststart.
-Die erwartete Antwort enthält `"version":"1.0.0"`.
+Die erwartete Antwort enthält `"version":"1.1.0"`.
 
 Die vorhandenen Benutzer, Receiver, Passwörter, Sitzungen, die Konfiguration
 und der Verschlüsselungsschlüssel werden weiterverwendet. Ein Administrator
 muss nicht erneut angelegt werden. Port 8081 bleibt bestehen. In der vorhandenen nginx-Site das Lesezeitlimit auf
 300 Sekunden erhöhen (siehe nächsten Abschnitt); der Installer verändert nginx nicht.
 
-Die Datenbank wird automatisch auf Revision `0005` migriert. Von 0.8.0 auf 1.0.0 ist keine neue Schemaänderung nötig. Vorhandene Konten,
+Die Datenbank wird automatisch auf Revision `0005` migriert. Von 0.8.0 oder 1.0.0 auf 1.1.0 ist keine neue Schemaänderung nötig. Vorhandene Konten,
 Receiverzuordnungen, Sitzungen, Audit-Ereignisse und alte Eigentümerkennungen
 bleiben erhalten. Die neue Migration ergänzt sprechende Ersteller-Tags für alle
 vorhandenen Konten. Frühere Revisionen ergänzen weiterhin Eigentümerkennungen,
@@ -633,7 +656,7 @@ Danach als root:
 nginx -t && systemctl reload nginx
 ```
 
-CSS, JavaScript und Logo verwenden jetzt URLs wie `/static/app.css?v=1.0.0`.
+CSS, JavaScript und Logo verwenden jetzt URLs wie `/static/app.css?v=1.1.0`.
 Der Browser lädt sie dadurch unter derselben HTTPS-Adresse wie die Seite.
 Das verhindert HTTP-Asset-URLs und Mixed Content bei einer HTTPS-Verbindung
 zum Proxy. Der Proxy-Header ist weiterhin für sichere Sitzungscookies wichtig.

@@ -31,7 +31,7 @@
       <td class="epg-time" data-label="Zeit"><div><strong><time datetime="{{ item.begin.isoformat() }}">{{ item.begin_label }}</time></strong><small>{{ 'bis ' ~ item.end_label if item.event.duration else 'Ende unbekannt' }}</small>{% if item.running %}<span class="badge">Läuft</span>{% elif item.finished %}<span class="badge badge-muted">Beendet</span>{% endif %}</div></td>
       <td data-label="Sendung"><div class="epg-copy"><strong class="epg-title">{{ item.event.title }}</strong>{% if item.event.short_description and item.event.short_description != item.event.title %}<p class="epg-short">{{ item.event.short_description }}</p>{% endif %}{% if item.event.description %}<details class="epg-details"><summary>Sendungsdetails</summary><p>{{ item.event.description }}</p></details>{% endif %}</div></td>
       <td class="epg-duration" data-label="Dauer">{{ item.minutes ~ ' Min.' if item.event.duration else 'Unbekannt' }}</td>
-      <td class="table-action">{% if item.timer_url %}<a class="button button-quiet button-small" href="{{ item.timer_url }}">Timer anlegen</a>{% endif %}</td>
+      <td class="table-action">{% if item.timer_url %}<a class="button button-quiet button-small" href="{{ item.timer_url }}">Timer erstellen</a>{% endif %}</td>
     </tr>
     {% endfor %}
     </tbody></table></div>
