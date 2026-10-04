@@ -1,5 +1,11 @@
 # Versionsverlauf
 
+## 1.1.1 – 04.10.2026
+
+- Timer-Kopfzeile in der Reihenfolge Receiverauswahl, „Liste filtern“, „Timer erstellen“.
+- Filterfelder bei Timern, Sendern und Aufnahmen exakt so hoch wie die Receiverauswahl,
+  auch in der mobilen Ansicht.
+
 ## 1.1.0 – 04.10.2026
 
 - Timerfilter links neben der Receiverauswahl nach Sender und Timer-Titel.

@@ -1,14 +1,21 @@
-# Enigma2 Timer 1.1.0
+# Enigma2 Timer 1.1.1
 
-Release: 04.10.2026 · Git-Tag: `v1.1.0` · Datenbankschema: `0005`
+Release: 04.10.2026 · Git-Tag: `v1.1.1` · Datenbankschema: `0005`
 
 Zentrale Timer- und Aufnahmen-Verwaltung für mehrere Enigma2-Receiver über
 OpenWebif oder das ältere XML-WebInterface, mit deutscher Oberfläche im AWAS-Stil.
 
-## Neu in 1.1.0
+## Neu in 1.1.1
 
-- **Timer:** „Liste filtern“ links neben der Receiverauswahl in der Kopfzeile;
-  Suche ausschließlich in Sendernamen und Timer-Titeln.
+- **Timer:** Kopfzeile in der Reihenfolge Receiverauswahl, „Liste filtern“,
+  „Timer erstellen“. Auf schmalen Bildschirmen steht die Receiverauswahl
+  über Filter und Button.
+- **Timer, Sender und Aufnahmen:** Filterfelder exakt so hoch wie das
+  Dropdownmenü der Receiverauswahl, auch in der mobilen Ansicht.
+
+## Listenfilter seit 1.1.0
+
+- **Timer:** Suche ausschließlich in Sendernamen und Timer-Titeln.
 - **Aufnahmen:** „Liste filtern“ rechts neben der Ordnerauswahl; Suche in
   Sendernamen, Dateinamen und Aufnahme-/Timer-Titeln.
 - **Alle Filter:** Beschriftung im Eingabefeld; keine zusätzliche sichtbare
@@ -29,17 +36,17 @@ OpenWebif oder das ältere XML-WebInterface, mit deutscher Oberfläche im AWAS-S
   Rückstellung nach fünf Sekunden.
 - Sprechende Ersteller-Tags, manuell am Receiver verwendbar; alte Kennungen bleiben gültig.
 - systemd-Installer, nginx-Vorlage und HTTPS-Betrieb hinter einem vorhandenen Proxy.
-- GitHub-Unterlagen mit CI-Workflow und vorbereiteter Git-Historie samt `v1.1.0`.
+- GitHub-Unterlagen mit CI-Workflow und vorbereiteter Git-Historie samt `v1.1.1`.
 
 ## Installation und Update
 
-Das Installationspaket `enigma2-web-v1.1.0.zip` entpacken und im enthaltenen
+Das Installationspaket `enigma2-web-v1.1.1.zip` entpacken und im enthaltenen
 Projektverzeichnis als root `bash scripts/install.sh` ausführen.
 Bei Neuinstallation danach einen Administrator anlegen und `e2web` aktivieren;
 bei vorhandener Installation werden Konten, Receiver, Konfiguration, Datenbank
 und Schlüssel weiterverwendet. Einzelheiten: [INSTALL.md](INSTALL.md).
 
-Das Update von 0.8.0 oder 1.0.0 auf 1.1.0 benötigt keine neue Schemaänderung
+Das Update von 0.8.0, 1.0.0 oder 1.1.0 auf 1.1.1 benötigt keine neue Schemaänderung
 und verändert keine Timer oder Aufnahmedateien auf Receivern. Vorhandene
 Konfiguration, einschließlich eines geänderten Ports, wird erhalten.
 
@@ -47,7 +54,8 @@ Konfiguration, einschließlich eines geänderten Ports, wird erhalten.
 
 235 automatisierte Tests, Code-/Formatprüfung, Paketbau sowie Start der gebauten
 Installation mit Migration und Health-Endpunkt. JSON- und XML-Antworten werden
-mit simulierten Receivern geprüft. Einzelheiten: [VERIFICATION.md](VERIFICATION.md).
+mit simulierten Receivern geprüft. Reihenfolge und identische Feldhöhen sind
+im Browser bei sieben Bildschirmbreiten geprüft. Einzelheiten: [VERIFICATION.md](VERIFICATION.md).
 
 Das Installationspaket enthält keine Betriebsdaten oder Zugangsdaten. Für die
 Prüfung an der eingesetzten Hardware steht nach Installation der Verbindungstest
@@ -55,6 +63,7 @@ in der Receiververwaltung zur Verfügung.
 
 ## GitHub
 
-`enigma2-web-git-v1.1.0.zip` enthält das vorbereitete Repository mit Branch `main`
-und Tag `v1.1.0`. Quellstand und Installationspaket sind identisch.
+`enigma2-web-git-v1.1.1.zip` enthält das vorbereitete Repository mit Branch `main`
+und Tag `v1.1.1`. Die Tags `v1.0.0` und `v1.1.0` bleiben unverändert.
+Quellstand und Installationspaket sind identisch.
 Anleitung: [GITHUB.md](GITHUB.md). Lizenz- und Herkunftsangaben: [NOTICE.md](NOTICE.md).

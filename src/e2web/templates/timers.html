@@ -6,8 +6,8 @@
 <div class="page-heading receiver-heading timer-heading">
   <div><h1>Timer{% if selected_receiver %}: {{ selected_receiver.name }}{% endif %}</h1></div>
   <div class="receiver-heading-actions">
-    {% if selected_receiver %}<input type="search" id="timer-filter" class="list-filter" placeholder="Liste filtern" aria-label="Liste filtern" data-table-filter="timer-rows" autocomplete="off">{% endif %}
     {% include "receiver_selection.html" %}
+    {% if selected_receiver %}<input type="search" id="timer-filter" class="list-filter" placeholder="Liste filtern" aria-label="Liste filtern" data-table-filter="timer-rows" autocomplete="off">{% endif %}
     {% if can_write_receiver %}<a class="button button-primary" href="/timer/new?receiver_id={{ selected_receiver.id }}">Timer erstellen</a>{% endif %}
   </div>
 </div>

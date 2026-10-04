@@ -1,4 +1,4 @@
-# Prüfung von Version 1.1.0
+# Prüfung von Version 1.1.1
 
 Prüfstand: 04.10.2026, Python 3.12 unter Linux.
 
@@ -23,6 +23,21 @@ Prüfstand: 04.10.2026, Python 3.12 unter Linux.
 - Die früheren umfassenden Funktionsprüfungen, einschließlich langer
   Receivernamen, Löschbestätigung und Rechteabläufen, sind in den jeweiligen
   Versionsabschnitten dokumentiert.
+
+## Änderungen 1.1.1
+
+- Timer-Kopfzeile auf Desktop in der Reihenfolge Receiverauswahl, „Liste filtern“,
+  „Timer erstellen“, mittig auf gleicher Höhe mit der Überschrift.
+  Auf mobilen Geräten zuerst die Receiverauswahl, darunter Filter und Button.
+- Filter und Receiver-Dropdown haben bei Timern, Sendern und Aufnahmen dieselbe
+  gemessene Höhe von 46 CSS-Pixeln; beide Senderansichten (Listen und Sender)
+  sowie JSON- und XML-Receiver bei sieben Bildschirmbreiten geprüft.
+- Filterfunktion, Dateizeilen und Fünf-Sekunden-Aktualisierung einschließlich
+  Suchtext, Fokus und Cursorposition bleiben erhalten.
+- Versionsstand und Asset-URLs 1.1.1, Release-Datum 04.10.2026; keine Migration.
+- Beide ZIPs entpackt und dateiweise abgeglichen. Git-Historie fortgeführt;
+  `v1.0.0` und `v1.1.0` unverändert, annotierter Tag `v1.1.1` auf dem neuen
+  Release-Commit. `git fsck`, Klonen und lokaler fortführender Push erfolgreich.
 
 ## Änderungen 1.1.0
 

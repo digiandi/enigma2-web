@@ -20,6 +20,7 @@
   --success: #176b46;
   --success-dark: #eef9f3;
   --radius: 18px;
+  --list-control-height: 2.875rem;
 }
 
 * { box-sizing: border-box; }
@@ -450,8 +451,9 @@ body { display: flex; flex-direction: column; }
 
 .receiver-permissions[hidden] { display: none; }
 
-/* List filters share the input style and remain usable in narrow layouts. */
-.list-filter { width: 230px; max-width: 100%; min-width: 0; min-height: 43px; font-weight: 400; }
+/* List filters and receiver dropdowns have the same height on every page. */
+.list-filter, .receiver-selection select { height: var(--list-control-height); min-height: var(--list-control-height); line-height: normal; }
+.list-filter { width: 230px; max-width: 100%; min-width: 0; font-weight: 400; }
 .timer-heading { gap: 1.25rem; }
 .timer-heading .receiver-heading-actions { flex-basis: 720px; gap: .75rem; }
 .timer-heading .list-filter { flex: 1 1 180px; width: 180px; }
@@ -462,8 +464,8 @@ body { display: flex; flex-direction: column; }
 .timer-table tbody tr[hidden], .recording-table tbody tr[hidden], .channel-table tbody tr[hidden] { display: none; }
 @media (max-width: 720px) {
   .timer-heading .receiver-heading-actions { flex-basis: auto; }
-  .timer-heading .list-filter { flex-basis: 100%; width: 100%; }
-  .timer-heading .receiver-selection { flex: 1 1 160px; }
+  .timer-heading .receiver-selection { flex-basis: 100%; width: 100%; }
+  .timer-heading .list-filter { flex-basis: 120px; width: auto; }
   .recording-toolbar form { flex-basis: 100%; width: 100%; }
   .recording-toolbar .list-filter { flex-basis: 100%; width: 100%; margin: 0; }
 }

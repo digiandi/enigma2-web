@@ -1,9 +1,10 @@
-# Version 1.1.0 auf GitHub bereitstellen
+# Version 1.1.1 auf GitHub bereitstellen
 
-Das Git-Paket `enigma2-web-git-v1.1.0.zip` enthält den vollständigen Quellstand
-als vorbereitetes Git-Repository. Branch: `main`, annotierter Tag: `v1.1.0`.
-Das Repository führt die Git-Historie von 1.0.0 fort: `v1.0.0` bleibt auf
-dem ursprünglichen Commit, darüber liegt der Release-Commit für `v1.1.0`. Die
+Das Git-Paket `enigma2-web-git-v1.1.1.zip` enthält den vollständigen Quellstand
+als vorbereitetes Git-Repository. Branch: `main`, annotierter Tag: `v1.1.1`.
+Das Repository führt die Git-Historie von 1.1.0 fort: `v1.0.0` und `v1.1.0`
+bleiben auf ihren ursprünglichen Commits; darüber liegt der Release-Commit
+für `v1.1.1`. Die
 lokale Autorenkennung lautet `Enigma2 Timer Release <release@localhost>`.
 Das Paket enthält noch kein Remote.
 
@@ -19,13 +20,13 @@ In PowerShell in den entpackten Ordner wechseln. `OWNER` und gegebenenfalls den
 Repositorynamen in der folgenden URL durch die tatsächlichen Angaben ersetzen:
 
 ```powershell
-cd .\enigma2-web-git-v1.1.0
+cd .\enigma2-web-git-v1.1.1
 git status --short --branch
 git log -1 --oneline
 git tag --list
 git remote add origin https://github.com/OWNER/enigma2-web.git
 git push -u origin main
-git push origin v1.0.0 v1.1.0
+git push origin v1.0.0 v1.1.0 v1.1.1
 ```
 
 Falls `origin` bereits eingerichtet wurde, dessen URL mit `git remote -v` prüfen.
@@ -34,7 +35,7 @@ Git-/Credential-Verwaltung; Zugangsdaten gehören nicht in die Remote-URL.
 
 ## Bereits vorhandenes Repository
 
-Ist Version 1.0.0 bereits mit diesem vorbereiteten Repository hochgeladen,
+Ist Version 1.0.0 oder 1.1.0 bereits mit diesem vorbereiteten Repository hochgeladen,
 führt das neue Paket dessen Historie unverändert fort. Das Paket in einen neuen
 Ordner entpacken, die tatsächliche `origin`-URL eintragen und vor dem Push prüfen:
 
@@ -42,17 +43,18 @@ Ordner entpacken, die tatsächliche `origin`-URL eintragen und vor dem Push prü
 git fetch origin
 git log --oneline --graph --decorate --all -8
 git push -u origin main
-git push origin v1.1.0
+git push origin v1.1.0 v1.1.1
 ```
 
 Eigene zusätzliche Commits auf GitHub müssen vor dem Push zusammengeführt werden.
-Kein erzwungener Push ist nötig. Der vorhandene Tag `v1.0.0` wird nicht verschoben.
+Kein erzwungener Push ist nötig. Die vorhandenen Tags `v1.0.0` und `v1.1.0`
+werden nicht verschoben.
 
 ## Release veröffentlichen
 
-Unter **Releases** einen Release für den vorhandenen Tag `v1.1.0` und Titel
-**Enigma2 Timer 1.1.0** erstellen. Den Inhalt von `RELEASE_NOTES.md` als Beschreibung
-verwenden und `enigma2-web-v1.1.0.zip` als Installationspaket anhängen. Der Git-Tag
+Unter **Releases** einen Release für den vorhandenen Tag `v1.1.1` und Titel
+**Enigma2 Timer 1.1.1** erstellen. Den Inhalt von `RELEASE_NOTES.md` als Beschreibung
+verwenden und `enigma2-web-v1.1.1.zip` als Installationspaket anhängen. Der Git-Tag
 bezeichnet denselben Quellstand wie das Installationspaket.
 
 ## Prüfungen
@@ -79,7 +81,7 @@ Die oben beschriebenen Git-Befehle können auch in PowerShell verwendet werden.
 
 Vor einem späteren Tag Versionsnummer in `pyproject.toml` und
 `src/e2web/__init__.py`, Release-Datum sowie Dokumentation aktualisieren.
-Änderungen prüfen und als eigenen Commit aufnehmen. Der Tag `v1.1.0` bleibt
+Änderungen prüfen und als eigenen Commit aufnehmen. Der Tag `v1.1.1` bleibt
 unverändert auf dem ursprünglichen Release-Commit.
 
 Konfiguration, Datenbank, Schlüssel und lokale Protokolle werden durch `.gitignore`

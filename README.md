@@ -1,10 +1,11 @@
-# Enigma2 Timer 1.1.0
+# Enigma2 Timer 1.1.1
 
 Eigenständige, zentral betriebene Webanwendung im Stil von AWAS 3.0.7.
 AWAS und seine Datenbank werden nicht verändert.
 
-Version 1.1.0 ergänzt Listenfilter für Timer und Aufnahmen und vereinheitlicht
-die Filterfelder und die Beschriftung „Timer erstellen“.
+Version 1.1.1 ordnet die Timer-Kopfzeile als Receiverauswahl, Listenfilter und
+„Timer erstellen“ an. Die Filterfelder bei Timern, Sendern und Aufnahmen sind
+exakt so hoch wie die Receiverauswahl.
 Installation und Update: [INSTALL.md](INSTALL.md). GitHub: [GITHUB.md](GITHUB.md).
 [Release-Hinweise](RELEASE_NOTES.md), [Versionsverlauf](CHANGELOG.md),
 [Prüfbericht](VERIFICATION.md) und [Herkunfts-/Lizenzhinweise](NOTICE.md).
@@ -37,7 +38,8 @@ Implementiert:
   Filtertext bleibt bei der automatischen Aktualisierung einschließlich Cursorposition erhalten;
 - verschlüsselte Receiver-Passwörter mit persistentem separatem Schlüssel;
 - Receiver-Auswahl rechts neben der großen Überschrift, mit direkter Umschaltung;
-- „Timer erstellen“ rechts neben der Receiverauswahl in derselben Kopfzeile;
+- Timer-Kopfzeile mit Receiverauswahl, Listenfilter und „Timer erstellen“ in dieser Reihenfolge;
+- Filterfelder und Receiverauswahl mit gleicher Höhe auf Desktop und mobil;
 - nach jeder Anmeldung automatisch den vom Administrator festgelegten Receiver wählen;
 - mittiges Login-Formular ohne Slogan; relative CSS-/JavaScript-URLs für HTTPS hinter nginx;
 - Seitenname „Enigma2 Timer“ mit Untertitel „Aufnahmen-Verwaltung“;
@@ -141,7 +143,7 @@ des Administrators. Er benötigt Python 3.12+, `python3-venv`, `rsync` und
 Zugang zum Python-Paketindex. Diese Systempakete bei Bedarf zuvor installieren.
 Es werden weder nginx-Konfigurationen aktiviert noch vorhandene AWAS-Dateien
 verändert. Der Nutzer hat die Erstinstallation und nginx-Anbindung für Version
-0.1.0 auf Ubuntu bestätigt. Die Timer- und Aufnahmefunktionen von 1.1.0 wurden mit
+0.1.0 auf Ubuntu bestätigt. Die Timer- und Aufnahmefunktionen von 1.1.1 wurden mit
 simulierten Receivern geprüft; die Prüfung an der tatsächlichen Hardware steht noch aus.
 
 Pfade:
@@ -294,8 +296,8 @@ bei einem Update erhalten bleiben.
 
 ### Listen filtern
 
-Auf **Timer** steht das Eingabefeld **Liste filtern** in der Kopfzeile links
-neben der Receiverauswahl. Es durchsucht ausschließlich Sendernamen und Timer-Titel,
+Auf **Timer** steht das Eingabefeld **Liste filtern** in der Kopfzeile rechts
+neben der Receiverauswahl und vor **Timer erstellen**. Es durchsucht ausschließlich Sendernamen und Timer-Titel,
 auch im aufklappbaren Verlauf. Auf **Aufnahmen** steht das Feld rechts neben der
 Ordnerauswahl und durchsucht Sendernamen, Dateinamen und Aufnahme-/Timer-Titel.
 Beschreibungen, Ersteller, Receiver, Bouquets, Verzeichnispfade und Zeitangaben
@@ -310,7 +312,8 @@ Timern zeigen die Anzahl der passenden Einträge des jeweiligen Bereichs.
 
 Bei Sendern stehen **Listen filtern** bzw. **Sender filtern** direkt im
 Eingabefeld. Alle Filterfelder besitzen eine zugängliche Bezeichnung ohne
-zusätzlichen sichtbaren Beschriftungstext.
+zusätzlichen sichtbaren Beschriftungstext. Bei Timern, Sendern und Aufnahmen
+sind sie exakt so hoch wie das Dropdownmenü der Receiverauswahl.
 
 ### Automatische Aktualisierung
 
@@ -411,7 +414,9 @@ Ein Wechsel der Receiver-Verbindungsdaten verwirft die bisherige Zuordnung.
 
 ## Timer
 
-**Timer erstellen** steht in derselben Kopfzeile rechts neben der Receiverauswahl.
+Die Kopfzeile enthält rechts neben der Überschrift zuerst die Receiverauswahl,
+dann **Liste filtern** und danach **Timer erstellen**. Auf schmalen Bildschirmen
+steht die Receiverauswahl über Filter und Button.
 
 **Timer** ist die Startseite. Die AWAS-Bereiche **Laufend (x)** und
 **Anstehend (x)** zeigen jeweils die Anzahl ihrer Einträge. Auch bei null
@@ -599,28 +604,30 @@ Ordner und ihre Unterordner werden akzeptiert. Es wird keine bestimmte
 Symlinkbeziehung vorausgesetzt und kein fremder Wunschpfad zur Prüfung geladen.
 Nach erfolgreichem Löschen bleibt die aktuelle Aufnahmeliste erreichbar.
 
-## Update von 0.1.x bis 1.0.0 auf 1.1.0
+## Update von 0.1.x bis 1.1.0 auf 1.1.1
 
 Das neue Paket auf den Ubuntu-Server übertragen, entpacken und aus dem neuen
 Projektverzeichnis den Installer erneut ausführen. Als root:
 
 ```bash
-unzip enigma2-web-v1.1.0.zip
-cd enigma2-web-v1.1.0
+unzip enigma2-web-v1.1.1.zip
+cd enigma2-web-v1.1.1
 bash scripts/install.sh
 curl --retry 10 --retry-delay 1 --retry-connrefused http://127.0.0.1:8081/health
 ```
 
 Der Installer hält den laufenden Dienst während des Updates an und startet ihn
 anschließend wieder. Der Health-Aufruf wartet bei Bedarf auf den Dienststart.
-Die erwartete Antwort enthält `"version":"1.1.0"`.
+Die erwartete Antwort enthält `"version":"1.1.1"`.
 
 Die vorhandenen Benutzer, Receiver, Passwörter, Sitzungen, die Konfiguration
 und der Verschlüsselungsschlüssel werden weiterverwendet. Ein Administrator
-muss nicht erneut angelegt werden. Port 8081 bleibt bestehen. In der vorhandenen nginx-Site das Lesezeitlimit auf
+muss nicht erneut angelegt werden. Ein bereits angepasster Port bleibt erhalten;
+standardmäßig wird Port 8081 verwendet. Bei einem anderen Port den Health-Aufruf
+entsprechend anpassen. In der vorhandenen nginx-Site das Lesezeitlimit auf
 300 Sekunden erhöhen (siehe nächsten Abschnitt); der Installer verändert nginx nicht.
 
-Die Datenbank wird automatisch auf Revision `0005` migriert. Von 0.8.0 oder 1.0.0 auf 1.1.0 ist keine neue Schemaänderung nötig. Vorhandene Konten,
+Die Datenbank wird automatisch auf Revision `0005` migriert. Von 0.8.0, 1.0.0 oder 1.1.0 auf 1.1.1 ist keine neue Schemaänderung nötig. Vorhandene Konten,
 Receiverzuordnungen, Sitzungen, Audit-Ereignisse und alte Eigentümerkennungen
 bleiben erhalten. Die neue Migration ergänzt sprechende Ersteller-Tags für alle
 vorhandenen Konten. Frühere Revisionen ergänzen weiterhin Eigentümerkennungen,
@@ -656,7 +663,7 @@ Danach als root:
 nginx -t && systemctl reload nginx
 ```
 
-CSS, JavaScript und Logo verwenden jetzt URLs wie `/static/app.css?v=1.1.0`.
+CSS, JavaScript und Logo verwenden jetzt URLs wie `/static/app.css?v=1.1.1`.
 Der Browser lädt sie dadurch unter derselben HTTPS-Adresse wie die Seite.
 Das verhindert HTTP-Asset-URLs und Mixed Content bei einer HTTPS-Verbindung
 zum Proxy. Der Proxy-Header ist weiterhin für sichere Sitzungscookies wichtig.
