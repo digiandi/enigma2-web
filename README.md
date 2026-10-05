@@ -1,12 +1,12 @@
-# Enigma2 Timer 1.1.4
+# Enigma2 Timer 1.1.5
 
 Eigenständige, zentral betriebene Webanwendung im Stil von AWAS 3.0.7.
 AWAS und seine Datenbank werden nicht verändert.
 
-Version 1.1.4 korrigiert das erste Laden der Aufnahmen. Der tatsächliche
-Standardordner des Receivers wird vor der Aufnahmeliste ermittelt und ausdrücklich
-abgefragt. Damit stammen Ordnerauswahl und Dateien aus demselben Verzeichnis,
-auch bei einem Standardpfad wie `/media/usb/`. Die seit 1.1.2 bereinigte
+Version 1.1.5 verbreitert die Receiverauswahl um etwa 50 Prozent und gibt dem
+Text in den Auswahl- und Filterfeldern mehr vertikalen Platz. Der aktive
+Receiver steht in den Seitenüberschriften nach einem Leerzeichen und mit
+halber Schriftgröße neben dem bisherigen Haupttitel. Die seit 1.1.2 bereinigte
 Git-Historie wird mit einem gewöhnlichen neuen Release-Commit fortgesetzt.
 Installation und Update: [INSTALL.md](INSTALL.md). GitHub: [GITHUB.md](GITHUB.md).
 [Release-Hinweise](RELEASE_NOTES.md), [Versionsverlauf](CHANGELOG.md),
@@ -39,7 +39,7 @@ Implementiert:
 - sofortige Listenfilter: Timer nach Sender/Titel, Aufnahmen nach Sender/Dateiname/Titel;
   Filtertext bleibt bei der automatischen Aktualisierung einschließlich Cursorposition erhalten;
 - verschlüsselte Receiver-Passwörter mit persistentem separatem Schlüssel;
-- Receiver-Auswahl rechts neben der großen Überschrift, mit direkter Umschaltung;
+- breitere Receiver-Auswahl rechts neben der großen Überschrift, mit direkter Umschaltung;
 - Timer-Kopfzeile mit Receiverauswahl, Listenfilter und „Timer erstellen“ in dieser Reihenfolge;
 - Filterfelder und Receiverauswahl mit gleicher Höhe auf Desktop und mobil;
 - nach jeder Anmeldung automatisch den vom Administrator festgelegten Receiver wählen;
@@ -57,8 +57,8 @@ Implementiert:
   Dateigrößen ausschließlich bei laufenden Timern; AWAS-Spalten Aufnahme, Sender, Receiver, Start, Ende, Dauer und
   Status; direkt sichtbarer Beschreibung, Wiederholung und
   aufklappbarem Verlauf; ohne Beschreibung entfällt die entsprechende Zeile;
-- gemeinsame große Überschriften wie „Timer: Vu+ Zero“, „Sender: Vu+ Zero“ und
-  „Aufnahmen: Vu+ Zero“;
+- Haupttitel mit danebenstehendem aktivem Receiver ohne Doppelpunkt;
+  Receivername mit halber Schriftgröße, auch im EPG und in den Timerformularen;
 - Timerformular mit gemeinsamer TV-/Radio-Bouquetauswahl und direkt geladener
   Senderliste, erstem Bouquet/Sender vorausgewählt und tatsächlichem Standardpfad;
 - bündige Felder für Beginn und Ende, gemeinsamer Hinweis unter beiden Feldern;
@@ -145,7 +145,7 @@ des Administrators. Er benötigt Python 3.12+, `python3-venv`, `rsync` und
 Zugang zum Python-Paketindex. Diese Systempakete bei Bedarf zuvor installieren.
 Es werden weder nginx-Konfigurationen aktiviert noch vorhandene AWAS-Dateien
 verändert. Der Nutzer hat die Erstinstallation und nginx-Anbindung für Version
-0.1.0 auf Ubuntu bestätigt. Die Timer- und Aufnahmefunktionen von 1.1.4 wurden mit
+0.1.0 auf Ubuntu bestätigt. Die Timer- und Aufnahmefunktionen von 1.1.5 wurden mit
 simulierten Receivern geprüft; die Prüfung an der tatsächlichen Hardware steht noch aus.
 
 Pfade:
@@ -614,21 +614,21 @@ Ordner und ihre Unterordner werden akzeptiert. Es wird keine bestimmte
 Symlinkbeziehung vorausgesetzt und kein fremder Wunschpfad zur Prüfung geladen.
 Nach erfolgreichem Löschen bleibt die aktuelle Aufnahmeliste erreichbar.
 
-## Update von 0.1.x bis 1.1.3 auf 1.1.4
+## Update von 0.1.x bis 1.1.4 auf 1.1.5
 
 Das neue Paket auf den Ubuntu-Server übertragen, entpacken und aus dem neuen
 Projektverzeichnis den Installer erneut ausführen. Als root:
 
 ```bash
-unzip enigma2-web-v1.1.4.zip
-cd enigma2-web-v1.1.4
+unzip enigma2-web-v1.1.5.zip
+cd enigma2-web-v1.1.5
 bash scripts/install.sh
 curl --retry 10 --retry-delay 1 --retry-connrefused http://127.0.0.1:8081/health
 ```
 
 Der Installer hält den laufenden Dienst während des Updates an und startet ihn
 anschließend wieder. Der Health-Aufruf wartet bei Bedarf auf den Dienststart.
-Die erwartete Antwort enthält `"version":"1.1.4"`.
+Die erwartete Antwort enthält `"version":"1.1.5"`.
 
 Die vorhandenen Benutzer, Receiver, Passwörter, Sitzungen, die Konfiguration
 und der Verschlüsselungsschlüssel werden weiterverwendet. Ein Administrator
@@ -637,7 +637,7 @@ standardmäßig wird Port 8081 verwendet. Bei einem anderen Port den Health-Aufr
 entsprechend anpassen. In der vorhandenen nginx-Site das Lesezeitlimit auf
 300 Sekunden erhöhen (siehe nächsten Abschnitt); der Installer verändert nginx nicht.
 
-Die Datenbank wird automatisch auf Revision `0005` migriert. Von 0.8.0 bis 1.1.3 auf 1.1.4 ist keine neue Schemaänderung nötig. Vorhandene Konten,
+Die Datenbank wird automatisch auf Revision `0005` migriert. Von 0.8.0 bis 1.1.4 auf 1.1.5 ist keine neue Schemaänderung nötig. Vorhandene Konten,
 Receiverzuordnungen, Sitzungen, Audit-Ereignisse und alte Eigentümerkennungen
 bleiben erhalten. Die neue Migration ergänzt sprechende Ersteller-Tags für alle
 vorhandenen Konten. Frühere Revisionen ergänzen weiterhin Eigentümerkennungen,
@@ -673,8 +673,8 @@ Danach als root:
 nginx -t && systemctl reload nginx
 ```
 
-CSS und JavaScript verwenden URLs wie `/static/app.css?v=1.1.4`.
-Das Favicon verwendet ebenfalls eine versionierte URL: `/favicon.ico?v=1.1.4`.
+CSS und JavaScript verwenden URLs wie `/static/app.css?v=1.1.5`.
+Das Favicon verwendet ebenfalls eine versionierte URL: `/favicon.ico?v=1.1.5`.
 Der Browser lädt sie dadurch unter derselben HTTPS-Adresse wie die Seite.
 Das verhindert HTTP-Asset-URLs und Mixed Content bei einer HTTPS-Verbindung
 zum Proxy. Der Proxy-Header ist weiterhin für sichere Sitzungscookies wichtig.
@@ -730,7 +730,7 @@ Receiver dienen jetzt der weiteren Kompatibilitätsprüfung.
 
 ## Favicon und Lesezeichen
 
-Alle Seiten verweisen auf `/favicon.ico?v=1.1.4`. Das Icon ist ohne Anmeldung
+Alle Seiten verweisen auf `/favicon.ico?v=1.1.5`. Das Icon ist ohne Anmeldung
 mit dem Inhaltstyp `image/vnd.microsoft.icon` erreichbar und enthält das
 vorhandene Logo in 16, 32 und 48 Pixeln. Auch die statischen Icon-Dateien
 dürfen einen Tag lang gespeichert werden (`Cache-Control: public, max-age=86400`).

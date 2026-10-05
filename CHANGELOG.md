@@ -1,5 +1,16 @@
 # Versionsverlauf
 
+## 1.1.5 – 05.10.2026
+
+- Receiverauswahl auf Timer-, Sender-, Aufnahme- und EPG-Seiten um etwa
+  50 Prozent verbreitert; auf schmalen Bildschirmen an den verfügbaren Platz angepasst.
+- Vertikale Innenabstände in den Auswahl- und Filterfeldern reduziert, damit
+  Unterlängen wie bei „g“ vollständig sichtbar sind. Einheitliche Feldhöhe erhalten.
+- Haupttitel unverändert, aktiven Receiver ohne Doppelpunkt und nach einem
+  Leerzeichen mit halber Schriftgröße daneben anzeigen. Auch Timer erstellen,
+  bearbeiten und Auftragsprüfung sowie Sender-EPG berücksichtigen.
+- Keine Änderung am Datenbankschema oder an Receiveraufträgen.
+
 ## 1.1.4 – 04.10.2026
 
 - Standardaufnahmeordner vor dem ersten Laden der Dateien ermitteln und an

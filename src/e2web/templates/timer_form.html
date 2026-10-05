@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Timer {{ 'bearbeiten' if editing else 'erstellen' }} · Enigma2 Timer{% endblock %}
 {% block content %}
-<div class="page-heading compact-heading"><div><h1>Timer {{ 'bearbeiten' if editing else 'erstellen' }}: {{ receiver.name }}</h1></div><a class="button button-quiet" href="/timer">Zur Timerliste</a></div>
+<div class="page-heading compact-heading"><div><h1>Timer {{ 'bearbeiten' if editing else 'erstellen' }} <span class="heading-receiver">{{ receiver.name }}</span></h1></div><a class="button button-quiet" href="/timer">Zur Timerliste</a></div>
 <section class="panel form-panel timer-form-panel">
   {% if conflicts %}<div class="timer-conflicts"><h2>Gemeldete Konflikte</h2><ul>{% for conflict in conflicts %}<li>{{ conflict.name }}{% if conflict.channel %} · {{ conflict.channel }}{% endif %}</li>{% endfor %}</ul></div>{% endif %}
   <form method="post" action="/timer/save" class="form-grid" {% if selection %}data-timer-selection data-receiver-id="{{ receiver.id }}"{% endif %}>

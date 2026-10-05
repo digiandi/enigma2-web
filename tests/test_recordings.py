@@ -288,7 +288,7 @@ def test_movie_formats_folder_navigation_and_explicit_single_use_delete(setup, x
     with TestClient(app) as client:
         login(client, "user", "User-123")
         page = client.get("/aufnahmen")
-        assert "<h1>Aufnahmen: VU+ Duo 4K</h1>" in page.text
+        assert '<h1>Aufnahmen <span class="heading-receiver">VU+ Duo 4K</span></h1>' in page.text
         assert "Nachrichten + A &amp; B.ts" in page.text
         assert f'value="{ROOT}Serien/"' in page.text and "00:15:30" in page.text
         assert "folder-navigation" not in page.text
@@ -306,7 +306,10 @@ def test_movie_formats_folder_navigation_and_explicit_single_use_delete(setup, x
         assert client.post("/aufnahmen/delete", data=form).status_code == 409
         assert len(box.writes) == 1
         empty = client.get(result.headers["location"])
-        assert "<h1>Aufnahmen: VU+ Duo 4K</h1>" in empty.text and "Keine Aufnahmen" in empty.text
+        assert (
+            '<h1>Aufnahmen <span class="heading-receiver">VU+ Duo 4K</span></h1>' in empty.text
+            and "Keine Aufnahmen" in empty.text
+        )
         child = client.get("/aufnahmen", params={"directory": ROOT + "Serien/"})
         assert child.status_code == 200 and "Übergeordneter Ordner" not in child.text
         before = len(box.requests)
@@ -425,7 +428,9 @@ def test_movie_delete_errors_stay_in_list_without_automatic_retry(setup, xml, ou
         form = delete_form(client.get("/aufnahmen"))
         response = client.post("/aufnahmen/delete", data=form)
         assert response.status_code == (409 if outcome == "rejected" else 502)
-        assert "<h1>Aufnahmen: VU+ Duo 4K</h1>" in response.text
+        assert (
+            '<h1>Aufnahmen <span class="heading-receiver">VU+ Duo 4K</span></h1>' in response.text
+        )
         assert "abgelehnt" in response.text if outcome == "rejected" else "unklar" in response.text
         assert len(box.writes) == 1
         assert client.post("/aufnahmen/delete", data=form).status_code == 409

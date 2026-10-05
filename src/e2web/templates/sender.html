@@ -2,7 +2,7 @@
 {% block title %}{{ title }} · Enigma2 Timer{% endblock %}
 {% block content %}
 <div class="page-heading receiver-heading">
-  <div><h1>Sender{% if selected_receiver %}: {{ selected_receiver.name }}{% endif %}</h1></div>
+  <div><h1>Sender{% if selected_receiver %} <span class="heading-receiver">{{ selected_receiver.name }}</span>{% endif %}</h1></div>
   {% include "receiver_selection.html" %}
 </div>
 {% include "catalog_navigation.html" %}

@@ -3,7 +3,7 @@
 {% block content %}
 <div data-live-page data-receiver-id="{{ selected_receiver.id if selected_receiver else '' }}">
 {% if request.headers.get('X-Live-Refresh') and error %}<div class="notice notice-error" role="alert">{{ error }}</div>{% endif %}
-<div class="page-heading receiver-heading"><div><h1>Aufnahmen{% if selected_receiver %}: {{ selected_receiver.name }}{% endif %}</h1></div>{% include "receiver_selection.html" %}</div>
+<div class="page-heading receiver-heading"><div><h1>Aufnahmen{% if selected_receiver %} <span class="heading-receiver">{{ selected_receiver.name }}</span>{% endif %}</h1></div>{% include "receiver_selection.html" %}</div>
 {% if selected_receiver %}<div class="epg-toolbar recording-toolbar"><form method="get" action="/aufnahmen" class="inline-form"><label for="recording-directory">Ordner</label><select id="recording-directory" name="directory" data-auto-submit>{% for path in directory_choices %}<option value="{{ path }}" {% if directory == path %}selected{% endif %}>{{ path }}</option>{% endfor %}{% if directory and directory not in directory_choices %}<option value="{{ directory }}" selected>{{ directory }}</option>{% elif not directory_choices %}<option value="" disabled selected>Keine Aufnahmepfade verfügbar</option>{% endif %}</select></form><input type="search" id="recording-filter" class="list-filter" placeholder="Liste filtern" aria-label="Liste filtern" data-table-filter="recording-rows" autocomplete="off"></div>{% endif %}
 {% if not selected_receiver %}<section class="panel">{% include "receiver_empty.html" %}</section>
 {% elif list_failed %}<section class="panel empty-state"><h2>Aufnahmeliste nicht erreichbar</h2><p>Bitte die Verbindung prüfen und die Seite neu laden.</p></section>

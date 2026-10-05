@@ -1,11 +1,26 @@
-# Enigma2 Timer 1.1.4
+# Enigma2 Timer 1.1.5
 
-Release: 04.10.2026 · Git-Tag: `v1.1.4` · Datenbankschema: `0005`
+Release: 05.10.2026 · Git-Tag: `v1.1.5` · Datenbankschema: `0005`
 
 Zentrale Timer- und Aufnahmen-Verwaltung für mehrere Enigma2-Receiver über
 OpenWebif oder das ältere XML-WebInterface, mit deutscher Oberfläche im AWAS-Stil.
 
-## Neu in 1.1.4
+## Neu in 1.1.5
+
+- **Receiverauswahl:** Auswahlfeld auf allen Seiten mit Receiverumschaltung
+  um etwa 50 Prozent verbreitert. Auf kleinen Bildschirmen wird weiterhin
+  die verfügbare Breite genutzt.
+- **Schrift in Auswahlfeldern:** Mehr vertikaler Platz bei unveränderter
+  Feldhöhe, damit Buchstaben wie „g“, „p“ und „y“ nicht abgeschnitten werden.
+  Filterfelder bleiben genauso hoch wie die Receiverauswahl.
+- **Überschriften:** Haupttitel unverändert, danach ein Leerzeichen und der
+  aktive Receiver in exakt halber Schriftgröße; kein Doppelpunkt.
+  Gilt für Timer, Sender, Aufnahmen, EPG und die Timerformulare einschließlich
+  der Auftragsprüfung. Lange Namen können auf schmalen Bildschirmen umbrechen.
+- **Update:** Keine neue Migration; vorhandene Benutzer, Receiver, Timer,
+  Konfiguration und Schlüssel bleiben erhalten.
+
+## Aufnahmeordner seit 1.1.4
 
 - **Aufnahmen beim ersten Aufruf:** Der tatsächliche Standardordner des Receivers
   wird vor dem Laden der Dateien ermittelt und ausdrücklich an `movielist`
@@ -71,26 +86,26 @@ OpenWebif oder das ältere XML-WebInterface, mit deutscher Oberfläche im AWAS-S
   Rückstellung nach fünf Sekunden.
 - Sprechende Ersteller-Tags, manuell am Receiver verwendbar; alte Kennungen bleiben gültig.
 - systemd-Installer, nginx-Vorlage und HTTPS-Betrieb hinter einem vorhandenen Proxy.
-- GitHub-Unterlagen mit CI-Workflow und vorbereiteter Git-Historie samt `v1.1.4`.
+- GitHub-Unterlagen mit CI-Workflow und vorbereiteter Git-Historie samt `v1.1.5`.
 
 ## Installation und Update
 
-Das Installationspaket `enigma2-web-v1.1.4.zip` entpacken und im enthaltenen
+Das Installationspaket `enigma2-web-v1.1.5.zip` entpacken und im enthaltenen
 Projektverzeichnis als root `bash scripts/install.sh` ausführen.
 Bei Neuinstallation danach einen Administrator anlegen und `e2web` aktivieren;
 bei vorhandener Installation werden Konten, Receiver, Konfiguration, Datenbank
 und Schlüssel weiterverwendet. Einzelheiten: [INSTALL.md](INSTALL.md).
 
-Das Update von 0.8.0 bis 1.1.3 auf 1.1.4 benötigt keine neue Schemaänderung
+Das Update von 0.8.0 bis 1.1.4 auf 1.1.5 benötigt keine neue Schemaänderung
 und verändert keine Timer oder Aufnahmedateien auf Receivern. Vorhandene
 Konfiguration, einschließlich eines geänderten Ports, wird erhalten.
 
 ## Prüfung
 
 248 automatisierte Tests, Code-/Formatprüfung, Paketbau und Start des gebauten
-Wheels. Erstaufruf mit fehlender Standardangabe, abweichendem impliziten Ordner,
-JSON und XML sowie Aktualisierung, Ordnerwechsel und Downloads geprüft.
-Die bisherigen Favicon-, Rechte- und Pfadprüfungen bleiben erfolgreich.
+Wheels. Neue Überschriften, halbe Schriftgröße, breitere Auswahlfelder,
+Platz für Unterlängen und gleiche Filterhöhe in mobilen und breiten Ansichten geprüft.
+Die bisherigen Aufnahmeordner-, Favicon-, Rechte- und Pfadprüfungen bleiben erfolgreich.
 Bisherige bereinigte Git-Tags unverändert und sämtliche Git-Objekte weiterhin
 frei von den entfernten Netzwerkbeispielen. Einzelheiten: [VERIFICATION.md](VERIFICATION.md).
 
@@ -100,10 +115,10 @@ in der Receiververwaltung zur Verfügung.
 
 ## GitHub
 
-`enigma2-web-git-v1.1.4.zip` enthält das vorbereitete Repository mit Branch `main`
-und Tag `v1.1.4`. Alle bisherigen bereinigten Tags einschließlich `v1.1.3`
+`enigma2-web-git-v1.1.5.zip` enthält das vorbereitete Repository mit Branch `main`
+und Tag `v1.1.5`. Alle bisherigen bereinigten Tags einschließlich `v1.1.4`
 bleiben auf ihren bisherigen Ständen. Nach der abgeschlossenen Bereinigung
-genügt ein gewöhnlicher Push von `main` und `v1.1.4`; der vorige Tag `v1.1.3`
+genügt ein gewöhnlicher Push von `main` und `v1.1.5`; der vorige Tag `v1.1.4`
 kann dabei mit übertragen werden, falls er noch nicht auf GitHub vorhanden ist.
 Quellstand und Installationspaket sind identisch.
 Anleitung: [GITHUB.md](GITHUB.md). Lizenz- und Herkunftsangaben: [NOTICE.md](NOTICE.md).

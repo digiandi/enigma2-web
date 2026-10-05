@@ -54,7 +54,7 @@ def test_assign_permissions_default_and_revoke_old_sessions(setup):
             assert not db.get(Grant, (2, 1)).can_write and db.get(Grant, (2, 2)).can_write
         login(user, "user", "User-123")
         page = user.get("/timer")
-        assert "<h1>Timer: DM920</h1>" in page.text
+        assert '<h1>Timer <span class="heading-receiver">DM920</span></h1>' in page.text
         assert (
             user.post(
                 "/receiver/select",
@@ -64,10 +64,15 @@ def test_assign_permissions_default_and_revoke_old_sessions(setup):
             == 303
         )
         page = user.get("/timer")
-        assert "<h1>Timer: VU+ Duo 4K</h1>" in page.text and "Timer erstellen" not in page.text
+        assert (
+            '<h1>Timer <span class="heading-receiver">VU+ Duo 4K</span></h1>' in page.text
+            and "Timer erstellen" not in page.text
+        )
         user.post("/logout", data={"csrf_token": csrf_value(page)})
         login(user, "user", "User-123")
-        assert "<h1>Timer: DM920</h1>" in user.get("/timer").text
+        assert (
+            '<h1>Timer <span class="heading-receiver">DM920</span></h1>' in user.get("/timer").text
+        )
 
 
 @pytest.mark.parametrize(
@@ -171,7 +176,10 @@ def test_unavailable_default_falls_back_to_alphabetical_allowed_receiver(setup, 
         db.commit()
     with TestClient(app) as client:
         login(client, "user", "User-123")
-        assert "<h1>Timer: DM920</h1>" in client.get("/timer").text
+        assert (
+            '<h1>Timer <span class="heading-receiver">DM920</span></h1>'
+            in client.get("/timer").text
+        )
 
 
 def test_upgrade_preserves_users_permissions_credentials_sessions_and_audit(setup):

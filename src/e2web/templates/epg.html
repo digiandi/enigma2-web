@@ -2,7 +2,7 @@
 {% block title %}EPG · {{ name }} · Enigma2 Timer{% endblock %}
 {% block content %}
 <div class="page-heading receiver-heading">
-  <div><p class="eyebrow">{{ selected_receiver.name if selected_receiver else 'ENIGMA2 WEB' }} · EPG</p><h1>{{ name }}</h1></div>
+  <div><p class="eyebrow">EPG</p><h1>{{ name }}{% if selected_receiver %} <span class="heading-receiver">{{ selected_receiver.name }}</span>{% endif %}</h1></div>
   {% include "receiver_selection.html" %}
 </div>
 {% if selected_receiver %}

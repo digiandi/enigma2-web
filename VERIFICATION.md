@@ -1,4 +1,42 @@
-# Prüfung von Version 1.1.4
+# Prüfung von Version 1.1.5
+
+Prüfstand: 05.10.2026, Python 3.12 unter Linux.
+
+- 248 automatisierte Tests erfolgreich; Code- und Formatprüfung erfolgreich.
+  Installer- und JavaScript-Syntax geprüft. Bestehende Tests der aktiven
+  Receiverüberschrift an die neue Darstellung angepasst.
+- Browserprüfung von Timer-, Sender-, Aufnahme- und EPG-Seiten sowie Timer
+  erstellen und bearbeiten bei 320, 390, 720, 768, 1024, 1280, 1440 und 1920
+  Pixeln Breite. Auftragsprüfung zusätzlich bei 390 und 1280 Pixeln geprüft.
+- Receivername in allen betroffenen Hauptüberschriften ohne Doppelpunkt und
+  nach einem Leerzeichen; berechnete Schriftgröße exakt 50 Prozent des
+  unveränderten Haupttitels. Lange Namen und responsive Zeilenumbrüche geprüft.
+- Receiverfelder auf breiten Ansichten gegenüber 1.1.4 gemessen: Timer von
+  rund 245 auf 368 Pixel, übrige Listen und EPG von rund 266 auf 400 Pixel.
+  Auf mobilen Ansichten begrenzt die verfügbare Breite das Feld; keine horizontale
+  Überbreite der Seite. Auf mittleren Breiten hat die Timerkopfzeile zwei Zeilen,
+  damit die Auswahlfelder nicht durch die Überschrift zusammengedrückt werden.
+- Auswahlfelder und Filter weiterhin 46 Pixel hoch. Textbereich durch kleinere
+  vertikale Innenabstände von rund 21 auf 28 Pixel erhöht. Schriftmetriken mit
+  „Agjpqy“ und Bildschirmbilder geprüft; Unterlängen vollständig sichtbar.
+- Wheel und Quelldistribution gebaut. Installiertes Wheel startet mit Version
+  1.1.5 und Schema `0005`; Login, Assets und Receiverüberschriften erfolgreich.
+  Erneute Initialisierung erhält Schlüssel, geänderten Port und Aufnahmezeitlimit.
+- Installations- und Git-ZIP entpackt und dateiweise verglichen. Paketbau aus
+  dem finalen Installations-ZIP hat dieselben Inhalte wie der zuvor geprüfte
+  Paketbau. Keine Betriebsdaten enthalten.
+- Sauberer Branch `main`, annotierter Tag `v1.1.5`, unveränderte bisherige Tags,
+  `git fsck`, Klonen und gewöhnlicher lokaler Push geprüft. Alle Archivdateien
+  und Git-Objekte weiterhin ohne die entfernten privaten Netzwerkbeispiele.
+- Die Prüfung verwendet simulierte Receiver. GitHub-Push und GitHub-CI wurden
+  nicht ausgeführt; bestehende Firefox-Profile wurden nicht geändert.
+
+## Änderungen 1.1.5
+
+- Gemeinsame CSS-Regeln und sechs betroffene Seitenvorlagen angepasst.
+- Keine Änderung am Datenbankschema, an Abhängigkeiten oder an Receiveraufträgen.
+
+## Prüfung von Version 1.1.4
 
 Prüfstand: 04.10.2026, Python 3.12 unter Linux.
 

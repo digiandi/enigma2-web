@@ -337,7 +337,7 @@ def test_running_timer_can_be_edited_without_creating_a_duplicate(setup, xml):
     with TestClient(app) as client:
         login(client, "user", "User-123")
         page = client.get("/timer")
-        assert "<h1>Timer: VU+ Duo 4K</h1>" in page.text
+        assert '<h1>Timer <span class="heading-receiver">VU+ Duo 4K</span></h1>' in page.text
         assert '<p class="timer-description">Nachrichten</p>' in page.text
         assert "<summary>Beschreibung</summary>" not in page.text
         edit = client.get(existing_url("/timer/edit", original))

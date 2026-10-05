@@ -4,7 +4,7 @@
 <div data-live-page data-receiver-id="{{ selected_receiver.id if selected_receiver else '' }}">
 {% if request.headers.get('X-Live-Refresh') and error %}<div class="notice notice-error" role="alert">{{ error }}</div>{% endif %}
 <div class="page-heading receiver-heading timer-heading">
-  <div><h1>Timer{% if selected_receiver %}: {{ selected_receiver.name }}{% endif %}</h1></div>
+  <div><h1>Timer{% if selected_receiver %} <span class="heading-receiver">{{ selected_receiver.name }}</span>{% endif %}</h1></div>
   <div class="receiver-heading-actions">
     {% include "receiver_selection.html" %}
     {% if selected_receiver %}<input type="search" id="timer-filter" class="list-filter" placeholder="Liste filtern" aria-label="Liste filtern" data-table-filter="timer-rows" autocomplete="off">{% endif %}
