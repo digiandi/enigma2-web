@@ -31,6 +31,7 @@ from e2web.db import (
 )
 from e2web.openwebif import OpenWebifClient, ReceiverError
 from e2web.ownership import ensure_owner_tag
+from e2web.receiver_loading import loading_response
 from e2web.recording_pages import register_recording_pages
 from e2web.security import (
     active_admins,
@@ -216,7 +217,14 @@ def create_app(config: Config | None = None) -> FastAPI:
                 }:
                     response = redirect("/account/password")
                 else:
-                    response = await call_next(request)
+                    response = loading_response(
+                        request,
+                        render=render,
+                        selected_receiver=selected_receiver,
+                        can_write_receiver=can_write_receiver,
+                    )
+                    if response is None:
+                        response = await call_next(request)
             else:
                 response = await call_next(request)
             if (

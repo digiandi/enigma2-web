@@ -1,12 +1,12 @@
-# Enigma2 Timer 1.1.5
+# Enigma2 Timer 1.1.6
 
 Eigenständige, zentral betriebene Webanwendung im Stil von AWAS 3.0.7.
 AWAS und seine Datenbank werden nicht verändert.
 
-Version 1.1.5 verbreitert die Receiverauswahl um etwa 50 Prozent und gibt dem
-Text in den Auswahl- und Filterfeldern mehr vertikalen Platz. Der aktive
-Receiver steht in den Seitenüberschriften nach einem Leerzeichen und mit
-halber Schriftgröße neben dem bisherigen Haupttitel. Die seit 1.1.2 bereinigte
+Version 1.1.6 öffnet Aufnahmen im konfigurierten Standardaufnahmeordner des
+Receivers, unabhängig vom zuletzt lokal geöffneten Ordner. Seiten mit
+Receiver-Abfragen erscheinen sofort mit „Lade Daten von Receiver...“ und
+übernehmen die vollständige Antwort anschließend. Die seit 1.1.2 bereinigte
 Git-Historie wird mit einem gewöhnlichen neuen Release-Commit fortgesetzt.
 Installation und Update: [INSTALL.md](INSTALL.md). GitHub: [GITHUB.md](GITHUB.md).
 [Release-Hinweise](RELEASE_NOTES.md), [Versionsverlauf](CHANGELOG.md),
@@ -35,6 +35,7 @@ Implementiert:
 - Eigentümerrechte: Benutzer ändern/löschen nur eigene Timer und Aufnahmen;
 - Erstellerangabe „von …“ bei jedem Timer und jeder Aufnahme wie bei AWAS;
 - sprechende Ersteller-Tags wie `e2web-owner-digiandi`, auch manuell am Receiver verwendbar;
+- sofortiger Seitenrahmen mit Ladeanzeige bei Receiver-Abfragen;
 - automatische Aktualisierung von Timern und Aufnahmen alle fünf Sekunden;
 - sofortige Listenfilter: Timer nach Sender/Titel, Aufnahmen nach Sender/Dateiname/Titel;
   Filtertext bleibt bei der automatischen Aktualisierung einschließlich Cursorposition erhalten;
@@ -145,7 +146,7 @@ des Administrators. Er benötigt Python 3.12+, `python3-venv`, `rsync` und
 Zugang zum Python-Paketindex. Diese Systempakete bei Bedarf zuvor installieren.
 Es werden weder nginx-Konfigurationen aktiviert noch vorhandene AWAS-Dateien
 verändert. Der Nutzer hat die Erstinstallation und nginx-Anbindung für Version
-0.1.0 auf Ubuntu bestätigt. Die Timer- und Aufnahmefunktionen von 1.1.5 wurden mit
+0.1.0 auf Ubuntu bestätigt. Die Timer- und Aufnahmefunktionen von 1.1.6 wurden mit
 simulierten Receivern geprüft; die Prüfung an der tatsächlichen Hardware steht noch aus.
 
 Pfade:
@@ -203,6 +204,9 @@ geprüft. Die ältere Timerbearbeitung wurde außerdem
 anhand der primären
 [WebInterface-Implementierung](https://github.com/oe-alliance/enigma2-plugins/blob/master/webinterface/src/WebComponents/Sources/Timer.py)
 geprüft: `deleteOldOnSave=1` wählt dort die Änderung des vorhandenen Timers.
+Die Standardordner-Einstellung `config.usage.default_path` wurde anhand der
+[Enigma2-Konfiguration](https://github.com/openatv/enigma2/blob/master/lib/python/Components/UsageConfig.py)
+und das JSON-/XML-Format von `settings` anhand der API-Referenz geprüft.
 Es wird kein OpenWebif-Quellcode in die Anwendung eingebunden.
 
 
@@ -316,6 +320,33 @@ Bei Sendern stehen **Listen filtern** bzw. **Sender filtern** direkt im
 Eingabefeld. Alle Filterfelder besitzen eine zugängliche Bezeichnung ohne
 zusätzlichen sichtbaren Beschriftungstext. Bei Timern, Sendern und Aufnahmen
 sind sie exakt so hoch wie das Dropdownmenü der Receiverauswahl.
+
+### Seiten laden
+
+Beim normalen Browseraufruf von Timer, Aufnahmen, Sender, EPG sowie Timer
+erstellen/bearbeiten erscheinen Navigation, Überschrift und Receivername sofort.
+Solange die Daten fehlen, steht **Lade Daten von Receiver...** in der Seite.
+Die Antwort wird anschließend vollständig eingesetzt. Filter, Ordnerauswahl,
+Bouquetwechsel, Timerformulare und die automatische Aktualisierung funktionieren
+auch nach dem Nachladen. Die neue Startauswahl der Aufnahmen wird dabei vor
+`movielist` ermittelt; eine langsam anlaufende Festplatte lässt den Seitenrahmen
+sichtbar. Fehler werden nach der Antwort in der Seite angezeigt. Scheitert die
+Verbindung zum Webserver, bleibt eine Fehlermeldung mit **Erneut versuchen**.
+
+Das Nachladen ist ein reiner GET-Lesezugriff und an die Sitzung sowie den
+angezeigten Receiver gebunden. Es sendet keine Timer- oder Löschaufträge.
+Schreibaktionen bleiben einmalige POST-Aufträge mit derselben Rechteprüfung
+und Löschbestätigung. Während solcher Receiveraufträge erscheint ebenfalls
+der Ladehinweis. Beim Bouquetwechsel steht derselbe Hinweis im Timerformular.
+Geht die Antwort auf einen Schreibauftrag verloren, wird er nicht automatisch
+wiederholt. Die Seite bietet **Liste prüfen**, um den aktuellen Stand zu lesen.
+Eine laufende Abfrage wird nicht durch parallele automatische Abfragen ergänzt.
+
+Für das automatische Nachladen muss JavaScript aktiviert sein. Ohne JavaScript
+führt **Daten anzeigen** zur vollständigen Seite mit herkömmlicher Wartezeit.
+HTTP-Abfragen ohne HTML-Navigation und die Live-Aktualisierung erhalten weiterhin
+direkt die vollständige Antwort. Das bestehende nginx-Zeitlimit bleibt nötig;
+der schnell geladene Seitenrahmen verkürzt nicht die Antwortzeit des Receivers.
 
 ### Automatische Aktualisierung
 
@@ -536,13 +567,24 @@ im Dropdown erreichbar. Neue Unterordner erscheinen mit der automatischen
 Aktualisierung; weitere Ebenen nach Auswahl des betreffenden Ordners.
 Es wird kein kompletter Verzeichnisbaum rekursiv vom Receiver geladen. Der tatsächliche
 Standardpfad ist direkt ausgewählt; der Button für den übergeordneten Ordner entfällt.
-Fehlt die Standardangabe in `getlocations`, wird sie vor dem Laden der Dateien
-über `getcurrlocation` ermittelt. `movielist` erhält diesen Ordner ausdrücklich
-als `dirname`, damit die angezeigte Auswahl und die Dateien übereinstimmen.
-Das gilt auch für die automatische Aktualisierung sowie JSON- und XML-Antworten.
-Ist die Standardabfrage nicht verfügbar, wird ein einziger bekannter Aufnahmepfad
-verwendet. Bei mehreren bekannten Pfaden wird keiner willkürlich zum Standard;
-dann bleibt die implizite Pfadauswahl des Receivers erhalten.
+Der Startordner kommt aus `config.usage.default_path`, gelesen über
+`/api/settings` mit XML-Fallback auf `/web/settings`. `getcurrlocation` liefert
+bei manchen Receivern den zuletzt lokal geöffneten Ordner und wird für diese
+Startauswahl nicht mehr verwendet. Auch ein `default`-Eintrag in `getlocations`
+ersetzt den konfigurierten Pfad nicht. `movielist` erhält den ermittelten Ordner
+vor dem Laden ausdrücklich als `dirname`, für JSON und XML gleichermaßen.
+Der bestätigte Standardpfad bleibt auch dann nutzbar, wenn er nicht unter den
+Bookmarks steht. Bei einem erneuten Aufruf über das Menü wird er wieder geöffnet.
+Nach einem manuellen Wechsel bleiben der ausgewählte Ordner und seine Dateien
+beim Neuladen und bei der automatischen Aktualisierung erhalten. Die
+Aktualisierung übergibt stets den tatsächlich angezeigten Ordner.
+
+Kann der konfigurierte Standard nicht gelesen werden, erscheint eine
+Fehlermeldung mit der Möglichkeit, einen angebotenen Ordner ausdrücklich
+zu wählen. Es wird kein Bookmark oder zuletzt geöffneter Ordner zum Standard
+umgedeutet. Die Abfrage liest Einstellungen; sie ändert keine Receiverkonfiguration.
+Nur der benötigte Aufnahmepfad wird verwendet, andere Receiver-Einstellungen
+werden weder im Browser ausgegeben noch in der Datenbank gespeichert.
 Die Liste ist nach Aufnahmezeit absteigend
 sortiert. Unbekannte Zeiten, Größen oder Laufzeiten bleiben als solche sichtbar.
 Die Liste aktualisiert sich alle fünf Sekunden; deshalb entfällt der Button
@@ -614,21 +656,21 @@ Ordner und ihre Unterordner werden akzeptiert. Es wird keine bestimmte
 Symlinkbeziehung vorausgesetzt und kein fremder Wunschpfad zur Prüfung geladen.
 Nach erfolgreichem Löschen bleibt die aktuelle Aufnahmeliste erreichbar.
 
-## Update von 0.1.x bis 1.1.4 auf 1.1.5
+## Update von 0.1.x bis 1.1.5 auf 1.1.6
 
 Das neue Paket auf den Ubuntu-Server übertragen, entpacken und aus dem neuen
 Projektverzeichnis den Installer erneut ausführen. Als root:
 
 ```bash
-unzip enigma2-web-v1.1.5.zip
-cd enigma2-web-v1.1.5
+unzip enigma2-web-v1.1.6.zip
+cd enigma2-web-v1.1.6
 bash scripts/install.sh
 curl --retry 10 --retry-delay 1 --retry-connrefused http://127.0.0.1:8081/health
 ```
 
 Der Installer hält den laufenden Dienst während des Updates an und startet ihn
 anschließend wieder. Der Health-Aufruf wartet bei Bedarf auf den Dienststart.
-Die erwartete Antwort enthält `"version":"1.1.5"`.
+Die erwartete Antwort enthält `"version":"1.1.6"`.
 
 Die vorhandenen Benutzer, Receiver, Passwörter, Sitzungen, die Konfiguration
 und der Verschlüsselungsschlüssel werden weiterverwendet. Ein Administrator
@@ -637,7 +679,7 @@ standardmäßig wird Port 8081 verwendet. Bei einem anderen Port den Health-Aufr
 entsprechend anpassen. In der vorhandenen nginx-Site das Lesezeitlimit auf
 300 Sekunden erhöhen (siehe nächsten Abschnitt); der Installer verändert nginx nicht.
 
-Die Datenbank wird automatisch auf Revision `0005` migriert. Von 0.8.0 bis 1.1.4 auf 1.1.5 ist keine neue Schemaänderung nötig. Vorhandene Konten,
+Die Datenbank wird automatisch auf Revision `0005` migriert. Von 0.8.0 bis 1.1.5 auf 1.1.6 ist keine neue Schemaänderung nötig. Vorhandene Konten,
 Receiverzuordnungen, Sitzungen, Audit-Ereignisse und alte Eigentümerkennungen
 bleiben erhalten. Die neue Migration ergänzt sprechende Ersteller-Tags für alle
 vorhandenen Konten. Frühere Revisionen ergänzen weiterhin Eigentümerkennungen,
@@ -673,8 +715,8 @@ Danach als root:
 nginx -t && systemctl reload nginx
 ```
 
-CSS und JavaScript verwenden URLs wie `/static/app.css?v=1.1.5`.
-Das Favicon verwendet ebenfalls eine versionierte URL: `/favicon.ico?v=1.1.5`.
+CSS und JavaScript verwenden URLs wie `/static/app.css?v=1.1.6`.
+Das Favicon verwendet ebenfalls eine versionierte URL: `/favicon.ico?v=1.1.6`.
 Der Browser lädt sie dadurch unter derselben HTTPS-Adresse wie die Seite.
 Das verhindert HTTP-Asset-URLs und Mixed Content bei einer HTTPS-Verbindung
 zum Proxy. Der Proxy-Header ist weiterhin für sichere Sitzungscookies wichtig.
@@ -730,7 +772,7 @@ Receiver dienen jetzt der weiteren Kompatibilitätsprüfung.
 
 ## Favicon und Lesezeichen
 
-Alle Seiten verweisen auf `/favicon.ico?v=1.1.5`. Das Icon ist ohne Anmeldung
+Alle Seiten verweisen auf `/favicon.ico?v=1.1.6`. Das Icon ist ohne Anmeldung
 mit dem Inhaltstyp `image/vnd.microsoft.icon` erreichbar und enthält das
 vorhandene Logo in 16, 32 und 48 Pixeln. Auch die statischen Icon-Dateien
 dürfen einen Tag lang gespeichert werden (`Cache-Control: public, max-age=86400`).

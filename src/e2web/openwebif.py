@@ -280,6 +280,35 @@ class OpenWebifClient:
         except ValueError:
             raise ReceiverError("Der Receiver liefert einen ungültigen Aufnahmepfad.") from None
 
+    def default_recording_location(self):
+        # getcurrlocation describes the movie browser's last folder, not this setting.
+        data, xml = self._request("settings", {})
+        key = "config.usage.default_path"
+        if xml:
+            if data.tag != "e2settings":
+                raise ReceiverError("Die Antwort enthält keine Receiver-Einstellungen.")
+            values = [
+                row.findtext("e2settingvalue")
+                for row in data.findall("e2setting")
+                if row.findtext("e2settingname") == key
+            ]
+        else:
+            values = []
+            for row in self._rows(data, "settings", "Receiver-Einstellungen"):
+                if isinstance(row, list) and len(row) == 2 and row[0] == key:
+                    values.append(row[1])
+                elif isinstance(row, dict) and row.get("name") == key:
+                    values.append(row.get("value"))
+        try:
+            paths = {directory_path(plain_text(value)) for value in values}
+            if len(paths) != 1:
+                raise ValueError
+        except (ReceiverError, ValueError):
+            raise ReceiverError(
+                "Der konfigurierte Standardaufnahmeordner konnte nicht ermittelt werden."
+            ) from None
+        return paths.pop()
+
     def open_recording(self, filename, range_header=None):
         if (
             not filename.startswith("/")

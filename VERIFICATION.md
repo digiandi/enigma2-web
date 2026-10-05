@@ -1,4 +1,60 @@
-# Prüfung von Version 1.1.5
+# Prüfung von Version 1.1.6
+
+Prüfstand: 06.10.2026, Python 3.12 unter Linux.
+
+- 276 automatisierte Tests erfolgreich; Code- und Formatprüfung erfolgreich.
+  Installer- und JavaScript-Syntax geprüft. Die bestehenden Rechte-, Eigentümer-,
+  Pfad-, Favicon- und Auftragsprüfungen bleiben erfolgreich.
+- Standardaufnahmeordner über `settings` geprüft: offizielles JSON-Format mit
+  Schlüssel-/Wertpaaren, kompatible Objekteinträge und das ältere XML-Format.
+  Maßgeblich ist ausschließlich `config.usage.default_path`; ein abweichender
+  lokaler Ordner und ein abweichendes `default` aus `getlocations` werden ignoriert.
+- Erstaufruf mit und ohne Bookmark des konfigurierten Standards geprüft.
+  `movielist` erhält diesen Pfad ausdrücklich. Fehlende, ungültige oder
+  widersprüchliche Standards ergeben eine verständliche Meldung und eine
+  ausdrückliche Ordnerauswahl; kein impliziter oder erratener Startordner.
+- Seitenrahmen für Timer, Aufnahmen, Sender, EPG sowie Timer erstellen und
+  bearbeiten antworten ohne Receiveranfrage. Nachladen ist an den ausgewählten,
+  weiterhin berechtigten Receiver gebunden. Gewechselte Receiver und entzogene
+  Berechtigungen verhindern eine unpassende Datenabfrage.
+- Browserprüfung dieser sechs Seiten mit absichtlich verzögerten JSON- und
+  XML-Antworten bei 390 und 1440 Pixeln Breite: 24 Ansichten erfolgreich.
+  Ladehinweis und Navigation sofort sichtbar, Daten nach vollständiger Antwort,
+  keine horizontale Überbreite, keine JavaScript-Fehler oder Dialoge.
+  Erneut versuchen wird ausschließlich nach einem fehlgeschlagenen Erstladen
+  sichtbar. Ohne JavaScript liefert Daten anzeigen die vollständige Seite.
+- Nachgeladene Timerformulare, TV-/Radio-Bouquetwechsel, Filter, Ordnerwechsel
+  und Downloads im Browser geprüft. Dateigröße erneuert sich automatisch;
+  Filtertext und angezeigter Ordner bleiben erhalten, auch wenn sich der
+  konfigurierte oder lokal gewählte Receiverordner zwischenzeitlich ändert.
+- Speichern und Löschen zeigen den Ladehinweis während verzögerter Antworten.
+  Fünf-Sekunden-Rückstellung der Löschbestätigung erhalten. Schreibaufträge
+  werden genau einmal gesendet. Nach ausgeführtem POST absichtlich die
+  Webserverantwort unterbrochen: verständliche Meldung, gesperrtes Formular,
+  Liste prüfen und kein erneuter Schreibauftrag, für JSON und XML geprüft.
+- Wheel und Quelldistribution gebaut. Installiertes Wheel startet mit Version
+  1.1.6 und Schema `0005`; CLI-Initialisierung, Login, Ladevorlagen, Assets,
+  Favicon und Standardordner-Regressionsfall erfolgreich. Erneute Initialisierung
+  erhält Schlüssel, geänderten Port und Aufnahmezeitlimit von 90 Sekunden.
+- Installations- und Git-ZIP entpackt und dateiweise verglichen. Paketbau aus
+  dem finalen Installations-ZIP hat dieselben Inhalte wie der zuvor geprüfte
+  Paketbau. Neue Ladevorlage, neues Modul und neue Tests sind enthalten.
+  Keine Betriebsdaten oder Zugangsdaten enthalten.
+- Sauberer Branch `main`, annotierter Tag `v1.1.6`, sieben unveränderte bisherige
+  Tags, `git fsck`, Klonen und gewöhnlicher lokaler Push geprüft. Alle
+  Archivdateien und Git-Objekte weiterhin ohne die entfernten Netzwerkbeispiele.
+- Die Prüfung verwendet simulierte Receiver. GitHub-Push und GitHub-CI wurden
+  nicht ausgeführt; Receiverkonfigurationen und Aufnahmedateien auf der
+  eingesetzten Hardware wurden aus dieser Entwicklungsumgebung nicht geändert.
+
+## Änderungen 1.1.6
+
+- Startordner der Aufnahmen aus der konfigurierten Receiver-Einstellung lesen.
+- Sofortiger Seitenrahmen mit nachgeladener vollständiger Receiverantwort;
+  Ladehinweis auch bei bestehenden Receiveraufträgen und Bouquetwechseln.
+- Kein neues Datenbankschema und keine neuen Abhängigkeiten.
+
+## Prüfung von Version 1.1.5
 
 Prüfstand: 05.10.2026, Python 3.12 unter Linux.
 

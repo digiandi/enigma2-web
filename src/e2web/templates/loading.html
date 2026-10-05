@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}{{ page_title }} · Enigma2 Timer{% endblock %}
+{% block content %}
+<div data-receiver-load data-receiver-id="{{ selected_receiver.id }}">
+  <div class="page-heading receiver-heading{% if request.url.path == '/timer' %} timer-heading{% endif %}">
+    <div><h1>{{ page_title }} <span class="heading-receiver">{{ selected_receiver.name }}</span></h1></div>
+    {% if show_selection %}
+    <div class="receiver-heading-actions">
+      {% include "receiver_selection.html" %}
+      {% if request.url.path == '/timer' and can_write_receiver %}<a class="button button-primary" href="/timer/new?receiver_id={{ selected_receiver.id }}">Timer erstellen</a>{% endif %}
+    </div>
+    {% else %}<a class="button button-quiet" href="/timer">Zur Timerliste</a>{% endif %}
+  </div>
+  <section class="panel empty-state loading-state" aria-busy="true" data-loading-panel>
+    <p class="loading-message" role="status"><span class="loading-spinner" aria-hidden="true"></span><span data-loading-message>Lade Daten von Receiver...</span></p>
+    <button class="button button-quiet" type="button" data-load-retry hidden>Erneut versuchen</button>
+    <noscript><p>JavaScript ist deaktiviert.</p><a class="button button-quiet" href="{{ direct_url }}">Daten anzeigen</a></noscript>
+  </section>
+</div>
+{% endblock %}

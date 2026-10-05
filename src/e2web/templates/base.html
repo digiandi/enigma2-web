@@ -35,7 +35,7 @@
   </div>
   {% endif %}
 </header>
-<main class="page">
+<main class="page" data-page-content>
   {% if error %}<div class="notice notice-error" role="alert">{{ error }}</div>{% endif %}
   {% if notice %}<div class="notice notice-success" role="status">{{ notice }}</div>{% endif %}
   {% block content %}{% endblock %}

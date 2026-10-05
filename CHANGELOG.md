@@ -1,5 +1,19 @@
 # Versionsverlauf
 
+## 1.1.6 – 06.10.2026
+
+- Aufnahmen starten mit `config.usage.default_path` aus der Receiver-Konfiguration
+  über JSON-/XML-`settings`; der zuletzt lokal geöffnete Ordner ist kein Standard.
+- Standardpfad ausdrücklich vor `movielist` festlegen, auch ohne Bookmark;
+  unlesbaren Standard melden und eine ausdrückliche Ordnerauswahl ermöglichen.
+- Sichtbaren Aufnahmeordner bei der Fünf-Sekunden-Aktualisierung festhalten.
+- Seitenrahmen für Timer, Aufnahmen, Sender, EPG und Timerformulare sofort laden;
+  bis zur vollständigen Antwort „Lade Daten von Receiver...“ anzeigen.
+- Receiverbindung, Fehlermeldungen, erneuter Leseversuch und JavaScript-Fallback;
+  nachgeladenen Formularen und Filtern ihre Bedienfunktionen zuweisen.
+- Ladehinweis auch bei Bouquetwechsel und während bestehender Receiveraufträge.
+- Keine neue Migration, keine Änderung von Abhängigkeiten oder Receiverdaten.
+
 ## 1.1.5 – 05.10.2026
 
 - Receiverauswahl auf Timer-, Sender-, Aufnahme- und EPG-Seiten um etwa

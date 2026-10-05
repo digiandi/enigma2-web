@@ -49,6 +49,7 @@ class MovieReceiver(MockReceiver):
         self.file_redirect = None
         self.file_content_type = "video/mpeg"
         self.default_path = ROOT
+        self.current_path = ROOT
         self.paths = [ROOT]
         self.timeouts = []
 
@@ -108,10 +109,27 @@ class MovieReceiver(MockReceiver):
                 data, status = data[start : end + 1], 206
             headers["Content-Length"] = str(len(data))
             return httpx.Response(status, headers=headers, stream=httpx.ByteStream(data))
-        if method in {"getlocations", "getcurrlocation"}:
+        if method in {"getlocations", "getcurrlocation", "settings"}:
             self.requests.append((request.method, request.url.path, request.url.host))
             if self.xml and request.url.path.startswith("/api/"):
                 return httpx.Response(404)
+            if method == "settings":
+                if self.xml:
+                    root = Element("e2settings")
+                    row = SubElement(root, "e2setting")
+                    SubElement(row, "e2settingname").text = "config.usage.default_path"
+                    SubElement(row, "e2settingvalue").text = self.default_path
+                    return httpx.Response(200, content=tostring(root))
+                return httpx.Response(
+                    200,
+                    json={
+                        "result": True,
+                        "settings": [
+                            ["config.usage.default_path", self.default_path],
+                            ["config.movielist.last_videodir", self.current_path],
+                        ],
+                    },
+                )
             if method == "getlocations":
                 if self.xml:
                     root = Element("e2locations")
@@ -122,8 +140,8 @@ class MovieReceiver(MockReceiver):
                     200, json={"locations": self.paths, "default": self.default_path}
                 )
             if self.xml:
-                return httpx.Response(200, text=f"<e2location>{self.default_path}</e2location>")
-            return httpx.Response(200, json={"result": True, "location": self.default_path})
+                return httpx.Response(200, text=f"<e2location>{self.current_path}</e2location>")
+            return httpx.Response(200, json={"result": True, "location": self.current_path})
         if method not in {"movielist", "moviedelete"}:
             if method == "timerlist" and self.status_unavailable:
                 return httpx.Response(503)
@@ -181,6 +199,7 @@ def test_initial_recording_page_loads_the_displayed_receiver_default(
     reference = "1:0:0:0:0:0:0:0:0:0:" + filename
     box.paths = [ROOT, usb] if default_bookmarked else [ROOT]
     box.default_path = usb
+    box.current_path = ROOT + "Zuletzt geöffnet/"
     box.movies = [movie_row(filename=filename, serviceref=reference, eventname="USB-Nachrichten")]
     calls = []
 
@@ -189,9 +208,10 @@ def test_initial_recording_page_loads_the_displayed_receiver_default(
         if box.xml and request.url.path.startswith("/api/"):
             return box(request)
         if method == "getlocations" and not box.xml:
-            return httpx.Response(200, json={"locations": box.paths})
-        if method == "getcurrlocation":
+            return httpx.Response(200, json={"locations": box.paths, "default": box.current_path})
+        if method == "settings":
             calls.append((method, None))
+        assert method != "getcurrlocation"
         if method == "movielist":
             dirname = request.url.params.get("dirname")
             calls.append((method, dirname))
@@ -212,7 +232,7 @@ def test_initial_recording_page_loads_the_displayed_receiver_default(
         assert 'value="/media/usb/" selected' in page.text
         assert "USB-Nachrichten.ts" in page.text
         assert "Keine Aufnahmen" not in page.text
-        assert calls[:2] == [("getcurrlocation", None), ("movielist", usb)]
+        assert calls[:2] == [("settings", None), ("movielist", usb)]
         refreshed = client.get(
             "/aufnahmen", params={"live_receiver": "1"}, headers={"X-Live-Refresh": "1"}
         )
@@ -232,7 +252,9 @@ def test_initial_recording_page_loads_the_displayed_receiver_default(
 
 @pytest.mark.parametrize("xml", [False, True])
 @pytest.mark.parametrize("single_root", [False, True])
-def test_recording_default_lookup_unavailable_preserves_folder_fallbacks(setup, xml, single_root):
+def test_unknown_recording_default_requires_explicit_folder_without_guessing(
+    setup, xml, single_root
+):
     _, _, app = setup
     box = MovieReceiver(xml=xml)
     usb = "/media/usb/"
@@ -248,7 +270,7 @@ def test_recording_default_lookup_unavailable_preserves_folder_fallbacks(setup, 
             return box(request)
         if method == "getlocations" and not box.xml:
             return httpx.Response(200, json={"locations": box.paths})
-        if method == "getcurrlocation":
+        if method == "settings":
             return httpx.Response(404)
         if method == "movielist":
             movie_directories.append(request.url.params.get("dirname"))
@@ -259,9 +281,15 @@ def test_recording_default_lookup_unavailable_preserves_folder_fallbacks(setup, 
         login(client, "user", "User-123")
         page = client.get("/aufnahmen")
         assert page.status_code == 200
-        assert 'value="/media/usb/" selected' in page.text
-        assert "USB-Nachrichten.ts" in page.text
-        assert movie_directories == [usb if single_root else None]
+        assert "Standardaufnahmeordner konnte nicht ermittelt werden" in page.text
+        assert 'value="" disabled selected>Ordner auswählen' in page.text
+        assert "USB-Nachrichten.ts" not in page.text
+        assert movie_directories == []
+        selected = client.get("/aufnahmen", params={"directory": usb})
+        assert selected.status_code == 200
+        assert 'value="/media/usb/" selected' in selected.text
+        assert "USB-Nachrichten.ts" in selected.text
+        assert movie_directories == [usb]
         assert not box.writes
 
 

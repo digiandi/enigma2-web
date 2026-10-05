@@ -30,33 +30,29 @@ def register_recording_pages(app, config, *, render, selected_receiver, check_cs
 
     def load_recordings(client, requested):
         try:
-            paths, default_path = client.recording_locations()
+            paths, _ = client.recording_locations()
             roots = [directory_path(path) for path in paths]
-            default_path = directory_path(default_path) if default_path else ""
-            if default_path:
-                roots.append(default_path)
         except (ReceiverError, ValueError):
-            roots, default_path = [], ""
+            roots = []
         try:
             requested = directory_path(requested) if requested else ""
         except ValueError:
             raise HTTPException(400, "Ungültiger Aufnahmepfad.") from None
-        if not default_path:
-            # Some getlocations replies contain only bookmarks. Resolve the
-            # actual default before loading movies so the selected folder and
-            # its contents always come from the same request.
-            try:
-                default_path = directory_path(client.current_recording_location())
-            except (ReceiverError, ValueError):
-                default_path = roots[0] if len(set(roots)) == 1 else ""
-            if default_path:
-                roots.append(default_path)
+        try:
+            default_path = client.default_recording_location()
+        except ReceiverError:
+            default_path = ""
+        if default_path:
+            roots.append(default_path)
+        elif not requested:
+            # No implicit movielist request: it can select the last local folder.
+            return None, "", sorted(set(roots), key=str.casefold)
         listing = None
         if requested and not any(requested.startswith(root) for root in roots):
             # OpenWebif resolves symlinks (e.g. /hdd -> /media/hdd) in its
             # response. Resolve only configured roots, never the requested path,
             # before accepting a canonical root returned by the receiver.
-            probes = list(dict.fromkeys([default_path, *roots])) if roots else [""]
+            probes = list(dict.fromkeys(path for path in [default_path, *roots] if path))
             for root in probes:
                 try:
                     resolved = client.recording_list(root or None)
@@ -93,6 +89,11 @@ def register_recording_pages(app, config, *, render, selected_receiver, check_cs
                 )
                 listing, directory, roots = load_recordings(client, requested)
                 directory_choices = list(roots)
+                if listing is None:
+                    raise ReceiverError(
+                        "Der konfigurierte Standardaufnahmeordner konnte nicht ermittelt werden. "
+                        "Bitte einen Ordner auswählen."
+                    )
                 if directory:
                     directory_choices.append(directory)
                     for parent in PurePosixPath(directory).parents:

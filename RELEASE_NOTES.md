@@ -1,11 +1,35 @@
-# Enigma2 Timer 1.1.5
+# Enigma2 Timer 1.1.6
 
-Release: 05.10.2026 · Git-Tag: `v1.1.5` · Datenbankschema: `0005`
+Release: 06.10.2026 · Git-Tag: `v1.1.6` · Datenbankschema: `0005`
 
 Zentrale Timer- und Aufnahmen-Verwaltung für mehrere Enigma2-Receiver über
 OpenWebif oder das ältere XML-WebInterface, mit deutscher Oberfläche im AWAS-Stil.
 
-## Neu in 1.1.5
+## Neu in 1.1.6
+
+- **Aufnahmen:** Beim Aufruf über das Menü wird der konfigurierte Standard-
+  Aufnahmeordner des Receivers geöffnet. Maßgeblich ist `config.usage.default_path`
+  aus der Einstellungen-Abfrage, unabhängig vom zuletzt lokal geöffneten Ordner.
+  JSON und das ältere XML-WebInterface werden unterstützt.
+- **Ordnerwechsel:** Ein manuell gewählter Ordner bleibt beim Neuladen und bei
+  der automatischen Aktualisierung erhalten. Auch ein Standardpfad außerhalb
+  der Bookmarks ist nutzbar. Ist der Standard nicht lesbar, erscheint eine
+  Fehlermeldung mit ausdrücklicher Ordnerauswahl, statt einen Pfad zu erraten.
+- **Ladeanzeige:** Timer, Aufnahmen, Sender, EPG und Timerformulare erscheinen
+  sofort mit Navigation und Überschrift. Bis zur vollständigen Receiver-Antwort
+  steht **Lade Daten von Receiver...** in der Seite; danach folgen Daten oder
+  eine verständliche Fehlermeldung. Kein leerer Browser während des Wartens.
+- **Bedienung:** Nachgeladene Filter, Ordnerauswahl und Timerformulare bleiben
+  bedienbar. Derselbe Ladehinweis erscheint bei Bouquetwechseln und während
+  bestehender Receiveraufträge. Beim Erstladen kann nach einem Verbindungsfehler
+  über **Erneut versuchen** erneut gelesen werden. Schreibaufträge werden nicht
+  automatisch wiederholt; bei unklarer Antwort ist **Liste prüfen** verfügbar.
+  Ohne JavaScript ist **Daten anzeigen** verfügbar.
+- **Update:** Keine neue Migration oder Abhängigkeit. Konten, Receiver,
+  Konfiguration und Schlüssel bleiben erhalten; das Aufnahmezeitlimit beträgt
+  weiterhin standardmäßig 90 Sekunden.
+
+## Oberfläche seit 1.1.5
 
 - **Receiverauswahl:** Auswahlfeld auf allen Seiten mit Receiverumschaltung
   um etwa 50 Prozent verbreitert. Auf kleinen Bildschirmen wird weiterhin
@@ -22,9 +46,10 @@ OpenWebif oder das ältere XML-WebInterface, mit deutscher Oberfläche im AWAS-S
 
 ## Aufnahmeordner seit 1.1.4
 
-- **Aufnahmen beim ersten Aufruf:** Der tatsächliche Standardordner des Receivers
-  wird vor dem Laden der Dateien ermittelt und ausdrücklich an `movielist`
-  übergeben. Ein Ordner wie `/media/usb/` zeigt dadurch direkt seine Aufnahmen.
+- **Aufnahmen beim ersten Aufruf:** Der gewählte Ordner wird vor dem Laden
+  ausdrücklich an `movielist` übergeben. Version 1.1.6 liest dafür den
+  konfigurierten Standard aus `settings`, statt den aktuellen lokalen Ordner
+  aus `getcurrlocation` als Standard zu behandeln.
 - **Ursache:** Enthielt `getlocations` keinen Standardpfad, wurde zuvor die Liste
   ohne Ordner geladen und erst anschließend der angezeigte Pfad ermittelt.
   Einige Receiver lieferten dabei eine leere Liste aus einem anderen Ordner.
@@ -86,26 +111,27 @@ OpenWebif oder das ältere XML-WebInterface, mit deutscher Oberfläche im AWAS-S
   Rückstellung nach fünf Sekunden.
 - Sprechende Ersteller-Tags, manuell am Receiver verwendbar; alte Kennungen bleiben gültig.
 - systemd-Installer, nginx-Vorlage und HTTPS-Betrieb hinter einem vorhandenen Proxy.
-- GitHub-Unterlagen mit CI-Workflow und vorbereiteter Git-Historie samt `v1.1.5`.
+- GitHub-Unterlagen mit CI-Workflow und vorbereiteter Git-Historie samt `v1.1.6`.
 
 ## Installation und Update
 
-Das Installationspaket `enigma2-web-v1.1.5.zip` entpacken und im enthaltenen
+Das Installationspaket `enigma2-web-v1.1.6.zip` entpacken und im enthaltenen
 Projektverzeichnis als root `bash scripts/install.sh` ausführen.
 Bei Neuinstallation danach einen Administrator anlegen und `e2web` aktivieren;
 bei vorhandener Installation werden Konten, Receiver, Konfiguration, Datenbank
 und Schlüssel weiterverwendet. Einzelheiten: [INSTALL.md](INSTALL.md).
 
-Das Update von 0.8.0 bis 1.1.4 auf 1.1.5 benötigt keine neue Schemaänderung
+Das Update von 0.8.0 bis 1.1.5 auf 1.1.6 benötigt keine neue Schemaänderung
 und verändert keine Timer oder Aufnahmedateien auf Receivern. Vorhandene
 Konfiguration, einschließlich eines geänderten Ports, wird erhalten.
 
 ## Prüfung
 
-248 automatisierte Tests, Code-/Formatprüfung, Paketbau und Start des gebauten
-Wheels. Neue Überschriften, halbe Schriftgröße, breitere Auswahlfelder,
-Platz für Unterlängen und gleiche Filterhöhe in mobilen und breiten Ansichten geprüft.
-Die bisherigen Aufnahmeordner-, Favicon-, Rechte- und Pfadprüfungen bleiben erfolgreich.
+276 automatisierte Tests einschließlich der Standardordner- und Ladeanzeige-
+Regressionen. Code-/Formatprüfung, Paketbau und Start des gebauten Wheels.
+Browserprüfung mit verzögerten JSON-/XML-Antworten auf mobilen und breiten
+Ansichten, nachgeladenen Formularen, Filtern, Downloads und Fehleranzeigen.
+Die bisherigen Favicon-, Rechte-, Eigentümer- und Pfadprüfungen bleiben erfolgreich.
 Bisherige bereinigte Git-Tags unverändert und sämtliche Git-Objekte weiterhin
 frei von den entfernten Netzwerkbeispielen. Einzelheiten: [VERIFICATION.md](VERIFICATION.md).
 
@@ -115,10 +141,10 @@ in der Receiververwaltung zur Verfügung.
 
 ## GitHub
 
-`enigma2-web-git-v1.1.5.zip` enthält das vorbereitete Repository mit Branch `main`
-und Tag `v1.1.5`. Alle bisherigen bereinigten Tags einschließlich `v1.1.4`
+`enigma2-web-git-v1.1.6.zip` enthält das vorbereitete Repository mit Branch `main`
+und Tag `v1.1.6`. Alle bisherigen bereinigten Tags einschließlich `v1.1.5`
 bleiben auf ihren bisherigen Ständen. Nach der abgeschlossenen Bereinigung
-genügt ein gewöhnlicher Push von `main` und `v1.1.5`; der vorige Tag `v1.1.4`
+genügt ein gewöhnlicher Push von `main` und `v1.1.6`; der vorige Tag `v1.1.5`
 kann dabei mit übertragen werden, falls er noch nicht auf GitHub vorhanden ist.
 Quellstand und Installationspaket sind identisch.
 Anleitung: [GITHUB.md](GITHUB.md). Lizenz- und Herkunftsangaben: [NOTICE.md](NOTICE.md).
