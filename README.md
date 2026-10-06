@@ -1,10 +1,11 @@
-# Enigma2 Timer 1.1.6
+# Enigma2 Timer 1.1.7
 
 Eigenständige, zentral betriebene Webanwendung im Stil von AWAS 3.0.7.
 AWAS und seine Datenbank werden nicht verändert.
 
-Version 1.1.6 öffnet Aufnahmen im konfigurierten Standardaufnahmeordner des
-Receivers, unabhängig vom zuletzt lokal geöffneten Ordner. Seiten mit
+Version 1.1.7 öffnet Aufnahmen im konfigurierten Standardaufnahmeordner des
+Receivers. Kann dieser nicht ermittelt werden, wird automatisch der erste
+Eintrag der alphabetisch sortierten Ordnerliste ausgewählt und geladen. Seiten mit
 Receiver-Abfragen erscheinen sofort mit „Lade Daten von Receiver...“ und
 übernehmen die vollständige Antwort anschließend. Die seit 1.1.2 bereinigte
 Git-Historie wird mit einem gewöhnlichen neuen Release-Commit fortgesetzt.
@@ -146,7 +147,7 @@ des Administrators. Er benötigt Python 3.12+, `python3-venv`, `rsync` und
 Zugang zum Python-Paketindex. Diese Systempakete bei Bedarf zuvor installieren.
 Es werden weder nginx-Konfigurationen aktiviert noch vorhandene AWAS-Dateien
 verändert. Der Nutzer hat die Erstinstallation und nginx-Anbindung für Version
-0.1.0 auf Ubuntu bestätigt. Die Timer- und Aufnahmefunktionen von 1.1.6 wurden mit
+0.1.0 auf Ubuntu bestätigt. Die Timer- und Aufnahmefunktionen von 1.1.7 wurden mit
 simulierten Receivern geprüft; die Prüfung an der tatsächlichen Hardware steht noch aus.
 
 Pfade:
@@ -579,10 +580,12 @@ Nach einem manuellen Wechsel bleiben der ausgewählte Ordner und seine Dateien
 beim Neuladen und bei der automatischen Aktualisierung erhalten. Die
 Aktualisierung übergibt stets den tatsächlich angezeigten Ordner.
 
-Kann der konfigurierte Standard nicht gelesen werden, erscheint eine
-Fehlermeldung mit der Möglichkeit, einen angebotenen Ordner ausdrücklich
-zu wählen. Es wird kein Bookmark oder zuletzt geöffneter Ordner zum Standard
-umgedeutet. Die Abfrage liest Einstellungen; sie ändert keine Receiverkonfiguration.
+Kann der konfigurierte Standard nicht gelesen werden, wird der erste Eintrag
+der alphabetisch sortierten Ordnerliste ausgewählt und ausdrücklich geladen.
+Ein vorhandener Standard hat weiterhin Vorrang; eine manuelle Auswahl bleibt
+erhalten. Nur wenn auch keine auswählbaren Aufnahmepfade verfügbar sind,
+erscheint eine entsprechende Fehlermeldung. Die Abfrage liest Einstellungen;
+sie ändert keine Receiverkonfiguration.
 Nur der benötigte Aufnahmepfad wird verwendet, andere Receiver-Einstellungen
 werden weder im Browser ausgegeben noch in der Datenbank gespeichert.
 Die Liste ist nach Aufnahmezeit absteigend
@@ -656,21 +659,21 @@ Ordner und ihre Unterordner werden akzeptiert. Es wird keine bestimmte
 Symlinkbeziehung vorausgesetzt und kein fremder Wunschpfad zur Prüfung geladen.
 Nach erfolgreichem Löschen bleibt die aktuelle Aufnahmeliste erreichbar.
 
-## Update von 0.1.x bis 1.1.5 auf 1.1.6
+## Update von 0.1.x bis 1.1.6 auf 1.1.7
 
 Das neue Paket auf den Ubuntu-Server übertragen, entpacken und aus dem neuen
 Projektverzeichnis den Installer erneut ausführen. Als root:
 
 ```bash
-unzip enigma2-web-v1.1.6.zip
-cd enigma2-web-v1.1.6
+unzip enigma2-web-v1.1.7.zip
+cd enigma2-web-v1.1.7
 bash scripts/install.sh
 curl --retry 10 --retry-delay 1 --retry-connrefused http://127.0.0.1:8081/health
 ```
 
 Der Installer hält den laufenden Dienst während des Updates an und startet ihn
 anschließend wieder. Der Health-Aufruf wartet bei Bedarf auf den Dienststart.
-Die erwartete Antwort enthält `"version":"1.1.6"`.
+Die erwartete Antwort enthält `"version":"1.1.7"`.
 
 Die vorhandenen Benutzer, Receiver, Passwörter, Sitzungen, die Konfiguration
 und der Verschlüsselungsschlüssel werden weiterverwendet. Ein Administrator
@@ -679,7 +682,7 @@ standardmäßig wird Port 8081 verwendet. Bei einem anderen Port den Health-Aufr
 entsprechend anpassen. In der vorhandenen nginx-Site das Lesezeitlimit auf
 300 Sekunden erhöhen (siehe nächsten Abschnitt); der Installer verändert nginx nicht.
 
-Die Datenbank wird automatisch auf Revision `0005` migriert. Von 0.8.0 bis 1.1.5 auf 1.1.6 ist keine neue Schemaänderung nötig. Vorhandene Konten,
+Die Datenbank wird automatisch auf Revision `0005` migriert. Von 0.8.0 bis 1.1.6 auf 1.1.7 ist keine neue Schemaänderung nötig. Vorhandene Konten,
 Receiverzuordnungen, Sitzungen, Audit-Ereignisse und alte Eigentümerkennungen
 bleiben erhalten. Die neue Migration ergänzt sprechende Ersteller-Tags für alle
 vorhandenen Konten. Frühere Revisionen ergänzen weiterhin Eigentümerkennungen,
@@ -715,8 +718,8 @@ Danach als root:
 nginx -t && systemctl reload nginx
 ```
 
-CSS und JavaScript verwenden URLs wie `/static/app.css?v=1.1.6`.
-Das Favicon verwendet ebenfalls eine versionierte URL: `/favicon.ico?v=1.1.6`.
+CSS und JavaScript verwenden URLs wie `/static/app.css?v=1.1.7`.
+Das Favicon verwendet ebenfalls eine versionierte URL: `/favicon.ico?v=1.1.7`.
 Der Browser lädt sie dadurch unter derselben HTTPS-Adresse wie die Seite.
 Das verhindert HTTP-Asset-URLs und Mixed Content bei einer HTTPS-Verbindung
 zum Proxy. Der Proxy-Header ist weiterhin für sichere Sitzungscookies wichtig.
@@ -772,7 +775,7 @@ Receiver dienen jetzt der weiteren Kompatibilitätsprüfung.
 
 ## Favicon und Lesezeichen
 
-Alle Seiten verweisen auf `/favicon.ico?v=1.1.6`. Das Icon ist ohne Anmeldung
+Alle Seiten verweisen auf `/favicon.ico?v=1.1.7`. Das Icon ist ohne Anmeldung
 mit dem Inhaltstyp `image/vnd.microsoft.icon` erreichbar und enthält das
 vorhandene Logo in 16, 32 und 48 Pixeln. Auch die statischen Icon-Dateien
 dürfen einen Tag lang gespeichert werden (`Cache-Control: public, max-age=86400`).

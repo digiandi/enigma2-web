@@ -1,5 +1,15 @@
 # Versionsverlauf
 
+## 1.1.7 – 06.10.2026
+
+- Bei unbekanntem Standardaufnahmeordner automatisch den ersten Eintrag der
+  alphabetisch sortierten Ordnerliste auswählen und dessen Aufnahmen laden.
+- Lesbaren Standard und manuelle Auswahl weiterhin bevorzugen; angezeigten
+  Ordner bei der automatischen Aktualisierung beibehalten.
+- Fehlermeldung bei unbekanntem Standard nur, wenn keine auswählbaren
+  Aufnahmepfade vorhanden sind. JSON und XML unterstützt.
+- Keine neue Migration, keine neuen Abhängigkeiten oder Receiveränderungen.
+
 ## 1.1.6 – 06.10.2026
 
 - Aufnahmen starten mit `config.usage.default_path` aus der Receiver-Konfiguration

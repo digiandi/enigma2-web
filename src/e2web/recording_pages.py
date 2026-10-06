@@ -45,8 +45,11 @@ def register_recording_pages(app, config, *, render, selected_receiver, check_cs
         if default_path:
             roots.append(default_path)
         elif not requested:
-            # No implicit movielist request: it can select the last local folder.
-            return None, "", sorted(set(roots), key=str.casefold)
+            # Match the first offered folder; always send an explicit movielist path.
+            roots = sorted(set(roots), key=str.casefold)
+            if not roots:
+                return None, "", roots
+            default_path = roots[0]
         listing = None
         if requested and not any(requested.startswith(root) for root in roots):
             # OpenWebif resolves symlinks (e.g. /hdd -> /media/hdd) in its
@@ -92,7 +95,7 @@ def register_recording_pages(app, config, *, render, selected_receiver, check_cs
                 if listing is None:
                     raise ReceiverError(
                         "Der konfigurierte Standardaufnahmeordner konnte nicht ermittelt werden. "
-                        "Bitte einen Ordner auswählen."
+                        "Es sind keine auswählbaren Aufnahmepfade verfügbar."
                     )
                 if directory:
                     directory_choices.append(directory)

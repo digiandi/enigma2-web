@@ -1,4 +1,48 @@
-# Prüfung von Version 1.1.6
+# Prüfung von Version 1.1.7
+
+Prüfstand: 06.10.2026, Python 3.12 unter Linux.
+
+- 286 automatisierte Tests erfolgreich; Code- und Formatprüfung erfolgreich.
+  JavaScript- und Installer-Syntax geprüft. Bestehende Rechte-, Eigentümer-,
+  Pfad-, Favicon- und Auftragsprüfungen bleiben erfolgreich.
+- Fallback mit JSON und XML geprüft: nicht verfügbarer Settings-Endpunkt,
+  fehlende Einstellung und ungültiger Standardpfad. Ein oder mehrere angebotene
+  Ordner, unsortierte Reihenfolge und doppelte Einträge berücksichtigt.
+  Der erste alphabetisch sortierte Ordner ist ausgewählt, seine Dateien sind
+  geladen und `movielist` erhält dessen Pfad ausdrücklich.
+- Konfigurierter Standard hat weiterhin Vorrang, auch ohne Bookmark. Manuelle
+  Ordnerauswahl und automatische Aktualisierung behalten den angezeigten Pfad.
+  Ohne angebotene Ordner erscheint eine klare Fehlermeldung; kein impliziter
+  Zugriff auf den zuletzt lokal geöffneten Ordner.
+- Browserprüfung mit verzögerten JSON-/XML-Antworten bei 390 und 1440 Pixeln
+  Breite: vier Fallback-Ansichten erfolgreich. Sofortiger Ladehinweis,
+  anschließend ausgewählter erster Ordner und dessen Aufnahmen; keine
+  horizontale Überbreite, JavaScript-Fehler, Dialoge oder Schreibaufträge.
+- Im Browser zusätzlich Ordnerwechsel, Neuladen, Filter und automatische
+  Größenaktualisierung geprüft. Neue Bookmarks ändern die aktive Auswahl erst
+  beim frischen Menüaufruf. Ein wieder lesbarer Standard wird dann bevorzugt.
+  Fehler bei fehlender Ordnerliste und Fallback ohne JavaScript ebenfalls geprüft.
+- Wheel und Quelldistribution gebaut. Installiertes Wheel startet mit Version
+  1.1.7 und Schema `0005`; Login, Ladevorlagen, Assets, Favicon, Standardordner
+  und Ordner-Fallback erfolgreich. Erneute Initialisierung erhält Schlüssel,
+  geänderten Port und Aufnahmezeitlimit von 90 Sekunden.
+- Installations- und Git-ZIP entpackt und dateiweise verglichen. Paketbau aus
+  dem finalen Installations-ZIP hat identische Inhalte zum geprüften Paketbau.
+  Keine Betriebsdaten oder Zugangsdaten enthalten.
+- Sauberer Branch `main`, annotierter Tag `v1.1.7`, acht unveränderte bisherige
+  Tags, `git fsck`, Klonen und gewöhnlicher lokaler Push geprüft. Alle
+  Archivdateien und Git-Objekte weiterhin ohne die entfernten Netzwerkbeispiele.
+- Die Prüfung verwendet simulierte Receiver. GitHub-Push und GitHub-CI wurden
+  nicht ausgeführt; Receiverkonfigurationen und Aufnahmedateien auf der
+  eingesetzten Hardware wurden aus dieser Entwicklungsumgebung nicht geändert.
+
+## Änderungen 1.1.7
+
+- Bei unbekanntem Standard automatisch den ersten angebotenen Ordner laden.
+- Meldung bei fehlendem Standard an eine ebenfalls fehlende Ordnerliste angepasst.
+- Keine Änderung am Datenbankschema, an Abhängigkeiten oder Receiveraufträgen.
+
+## Prüfung von Version 1.1.6
 
 Prüfstand: 06.10.2026, Python 3.12 unter Linux.
 

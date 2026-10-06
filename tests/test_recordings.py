@@ -252,16 +252,22 @@ def test_initial_recording_page_loads_the_displayed_receiver_default(
 
 @pytest.mark.parametrize("xml", [False, True])
 @pytest.mark.parametrize("single_root", [False, True])
-def test_unknown_recording_default_requires_explicit_folder_without_guessing(
-    setup, xml, single_root
+@pytest.mark.parametrize("default_error", ["unavailable", "missing", "invalid"])
+def test_unknown_recording_default_loads_first_offered_folder(
+    setup, xml, single_root, default_error
 ):
     _, _, app = setup
     box = MovieReceiver(xml=xml)
     usb = "/media/usb/"
     filename = usb + "USB-Nachrichten.ts"
-    box.paths = [usb] if single_root else [ROOT, usb]
+    box.paths = [usb] if single_root else [usb, ROOT, usb]
     box.default_path = usb
-    box.movies = [movie_row(filename=filename, serviceref="1:0:0:0:0:0:0:0:0:0:" + filename)]
+    first_path = usb if single_root else ROOT
+    first_filename = first_path + "Erster Ordner.ts"
+    box.movies = [
+        movie_row(filename=first_filename, serviceref="1:0:0:0:0:0:0:0:0:0:" + first_filename),
+        movie_row(filename=filename, serviceref="1:0:0:0:0:0:0:0:0:0:" + filename),
+    ]
     movie_directories = []
 
     def transport(request):
@@ -269,9 +275,26 @@ def test_unknown_recording_default_requires_explicit_folder_without_guessing(
         if box.xml and request.url.path.startswith("/api/"):
             return box(request)
         if method == "getlocations" and not box.xml:
-            return httpx.Response(200, json={"locations": box.paths})
+            return httpx.Response(200, json={"locations": box.paths, "default": usb})
         if method == "settings":
-            return httpx.Response(404)
+            if default_error == "unavailable":
+                return httpx.Response(404)
+            if box.xml:
+                root = Element("e2settings")
+                if default_error == "invalid":
+                    row = SubElement(root, "e2setting")
+                    SubElement(row, "e2settingname").text = "config.usage.default_path"
+                    SubElement(row, "e2settingvalue").text = "<default>"
+                return httpx.Response(200, content=tostring(root))
+            return httpx.Response(
+                200,
+                json={
+                    "settings": [["config.usage.default_path", "<default>"]]
+                    if default_error == "invalid"
+                    else []
+                },
+            )
+        assert method != "getcurrlocation"
         if method == "movielist":
             movie_directories.append(request.url.params.get("dirname"))
         return box(request)
@@ -281,15 +304,44 @@ def test_unknown_recording_default_requires_explicit_folder_without_guessing(
         login(client, "user", "User-123")
         page = client.get("/aufnahmen")
         assert page.status_code == 200
-        assert "Standardaufnahmeordner konnte nicht ermittelt werden" in page.text
-        assert 'value="" disabled selected>Ordner auswählen' in page.text
-        assert "USB-Nachrichten.ts" not in page.text
-        assert movie_directories == []
+        assert "Standardaufnahmeordner konnte nicht ermittelt werden" not in page.text
+        assert f'value="{first_path}" selected' in page.text
+        assert "Erster Ordner.ts" in page.text
+        assert movie_directories == [first_path]
+        refreshed = client.get(
+            "/aufnahmen",
+            params={"directory": first_path, "live_receiver": "1"},
+            headers={"X-Live-Refresh": "1"},
+        )
+        assert refreshed.status_code == 200 and "Erster Ordner.ts" in refreshed.text
         selected = client.get("/aufnahmen", params={"directory": usb})
         assert selected.status_code == 200
         assert 'value="/media/usb/" selected' in selected.text
         assert "USB-Nachrichten.ts" in selected.text
-        assert movie_directories == [usb]
+        assert movie_directories == [first_path, first_path, usb]
+        assert not box.writes
+
+
+@pytest.mark.parametrize("xml", [False, True])
+def test_unknown_default_without_offered_folders_does_not_load_an_implicit_path(setup, xml):
+    _, _, app = setup
+    box = MovieReceiver(xml=xml)
+    box.paths = []
+
+    def transport(request):
+        method = request.url.path.rsplit("/", 1)[-1]
+        if method == "settings":
+            return httpx.Response(404)
+        assert method not in {"movielist", "getcurrlocation"}
+        return box(request)
+
+    app.state.client_factory = partial(OpenWebifClient, transport=httpx.MockTransport(transport))
+    with TestClient(app) as client:
+        login(client, "user", "User-123")
+        page = client.get("/aufnahmen")
+        assert page.status_code == 200
+        assert "Es sind keine auswählbaren Aufnahmepfade verfügbar." in page.text
+        assert 'value="" disabled selected>Keine Aufnahmepfade verfügbar' in page.text
         assert not box.writes
 
 
