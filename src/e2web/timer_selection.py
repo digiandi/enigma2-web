@@ -4,6 +4,9 @@ from fastapi import HTTPException
 
 from e2web.openwebif import ReceiverError
 from e2web.recordings import directory_path
+from e2web.timers import service_key
+
+COPY_SOURCE = "__timer_source__"
 
 
 def service_flags(reference):
@@ -34,6 +37,48 @@ def bouquet_services(client, groups, group):
     if group not in {row["reference"] for row in groups}:
         raise HTTPException(409, "Das Bouquet ist nicht mehr verfügbar. Timerformular neu öffnen.")
     return [row for row in client.services(group) if recordable_service(row["reference"])]
+
+
+def copy_selection(client, timer):
+    source = {"reference": timer.reference, "name": timer.channel or "Sender aus Timer"}
+    source_group = {"reference": COPY_SOURCE, "name": "Sender aus Timer", "medium": "source"}
+    try:
+        groups = timer_bouquets(client)
+    except ReceiverError:
+        groups = []
+    selection = {"bouquets": [*groups, source_group], "group": COPY_SOURCE, "services": [source]}
+    for group in groups:
+        try:
+            services = bouquet_services(client, groups, group["reference"])
+        except ReceiverError:
+            break
+        if any(service_key(row["reference"]) == service_key(timer.reference) for row in services):
+            selection.update(
+                group=group["reference"],
+                services=[
+                    {**row, "reference": timer.reference}
+                    if service_key(row["reference"]) == service_key(timer.reference)
+                    else row
+                    for row in services
+                ],
+            )
+            break
+    return selection
+
+
+def selection_services(client, payload, group, *, groups=None):
+    reference = payload["settings"]["sRef"]
+    if payload.get("copying") and group == COPY_SOURCE:
+        return [{"reference": reference, "name": payload["channel"] or "Sender aus Timer"}]
+    services = bouquet_services(client, timer_bouquets(client) if groups is None else groups, group)
+    if payload.get("copying"):
+        services = [
+            {**row, "reference": reference}
+            if service_key(row["reference"]) == service_key(reference)
+            else row
+            for row in services
+        ]
+    return services
 
 
 def timer_paths(client, listing, *, preferred=""):

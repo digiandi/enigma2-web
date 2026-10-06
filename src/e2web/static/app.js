@@ -217,7 +217,9 @@ function initializeTimerSelection(root = document) {
         const url = new URL("/timer/channels", location.origin);
         url.searchParams.set("receiver_id", form.dataset.receiverId);
         url.searchParams.set("bouquet", group);
-        const response = await fetch(url, {cache: "no-store", signal: currentController.signal});
+        const headers = form.hasAttribute("data-timer-copy")
+          ? {"X-Timer-Action": form.querySelector('[name="action_token"]').value} : {};
+        const response = await fetch(url, {cache: "no-store", headers, signal: currentController.signal});
         if (response.redirected) { location.assign(response.url); return; }
         if (!response.ok) throw new Error("Die Senderliste konnte nicht geladen werden. Bitte das Bouquet erneut auswählen.");
         const data = await response.json();

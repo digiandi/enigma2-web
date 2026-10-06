@@ -1,14 +1,14 @@
-# Enigma2 Timer 1.1.7
+# Enigma2 Timer 1.1.8
 
 Eigenständige, zentral betriebene Webanwendung im Stil von AWAS 3.0.7.
 AWAS und seine Datenbank werden nicht verändert.
 
-Version 1.1.7 öffnet Aufnahmen im konfigurierten Standardaufnahmeordner des
-Receivers. Kann dieser nicht ermittelt werden, wird automatisch der erste
-Eintrag der alphabetisch sortierten Ordnerliste ausgewählt und geladen. Seiten mit
-Receiver-Abfragen erscheinen sofort mit „Lade Daten von Receiver...“ und
-übernehmen die vollständige Antwort anschließend. Die seit 1.1.2 bereinigte
-Git-Historie wird mit einem gewöhnlichen neuen Release-Commit fortgesetzt.
+Version 1.1.8 ergänzt **Kopieren** bei anstehenden Timern. Der Button öffnet
+**Timer erstellen** mit den Daten der Vorlage; vor dem Speichern bleiben die
+Felder anpassbar. Erst **Timer speichern** legt einen neuen Timer an, ohne die
+Vorlage zu verändern. Seiten mit Receiver-Abfragen erscheinen weiterhin sofort
+mit „Lade Daten von Receiver...“. Die seit 1.1.2 bereinigte Git-Historie wird
+mit einem gewöhnlichen neuen Release-Commit fortgesetzt.
 Installation und Update: [INSTALL.md](INSTALL.md). GitHub: [GITHUB.md](GITHUB.md).
 [Release-Hinweise](RELEASE_NOTES.md), [Versionsverlauf](CHANGELOG.md),
 [Prüfbericht](VERIFICATION.md) und [Herkunfts-/Lizenzhinweise](NOTICE.md).
@@ -70,6 +70,8 @@ Implementiert:
 - Aufnahme-Timer direkt im Timerbereich sowie aus Senderliste und EPG anlegen, bearbeiten, deaktivieren
   und löschen; Vor-/Nachlauf aus dem EPG und beliebige Wochentagswiederholungen;
 - Bearbeiten auch laufender Timer und von Timern über die ältere XML-Schnittstelle;
+- anstehende Timer mit **Kopieren** als vollständig vorausgefüllten Entwurf öffnen;
+  neuer Timer mit eigenem Ersteller, Wiederholung, Aufnahmepfad und Receiveroptionen;
 - Aufnahmelisten mit direkt ausgewähltem Receiver-Standardpfad und Unterordnern
   in einer gemeinsamen Ordnerauswahl ohne separate Unterordnerbuttons;
   AWAS-Spaltenfolge, Datum/Uhrzeit und Laufzeit, separate Dateinamenzeile mit
@@ -147,7 +149,7 @@ des Administrators. Er benötigt Python 3.12+, `python3-venv`, `rsync` und
 Zugang zum Python-Paketindex. Diese Systempakete bei Bedarf zuvor installieren.
 Es werden weder nginx-Konfigurationen aktiviert noch vorhandene AWAS-Dateien
 verändert. Der Nutzer hat die Erstinstallation und nginx-Anbindung für Version
-0.1.0 auf Ubuntu bestätigt. Die Timer- und Aufnahmefunktionen von 1.1.7 wurden mit
+0.1.0 auf Ubuntu bestätigt. Die Timer- und Aufnahmefunktionen von 1.1.8 wurden mit
 simulierten Receivern geprüft; die Prüfung an der tatsächlichen Hardware steht noch aus.
 
 Pfade:
@@ -239,7 +241,8 @@ sprechenden Ersteller-Tag mit dem Benutzernamen, beispielsweise
 `e2web-owner-digiandi` oder `e2web-owner-thomas.meyer`. Derselbe Tag gilt für
 alle Sender und Receiver eines Kontos. Die Anwendung erzeugt keine weiteren
 Tags. Bei wiederkehrenden Timern bleibt der Tag erhalten; zusätzliche vorhandene
-Receiver-Tags bleiben beim Bearbeiten erhalten. OpenWebif übernimmt die Tags in
+Receiver-Tags bleiben beim Bearbeiten und Kopieren erhalten. Beim Kopieren wird
+der Ersteller-Tag durch den des angemeldeten Kontos ersetzt. OpenWebif übernimmt die Tags in
 die Aufnahmemetadaten, sodass eine Aufnahme ihrem Ersteller auch nach dem Entfernen
 des Timers zugeordnet bleibt.
 
@@ -289,6 +292,9 @@ das. Administratoren dürfen alle Timer bearbeiten/löschen und alle beendeten
 Aufnahmen löschen. Alle freigegebenen Inhalte bleiben unabhängig vom Ersteller
 sichtbar und Aufnahmen herunterladbar. Eigentümer werden vor Schreibaufträgen
 serverseitig erneut geprüft; ausgeblendete Buttons allein reichen dafür nicht.
+Mit Schreibrechten können auch fremde sichtbare anstehende Timer als Vorlage
+kopiert werden, da dabei ein eigener neuer Timer entsteht. Leserechte erlauben
+kein Kopieren.
 
 Bestehende oder direkt am Receiver erstellte Einträge ohne gültigen Ersteller-Tag
 bleiben ausschließlich durch Administratoren veränderbar. Dasselbe gilt, wenn
@@ -458,6 +464,24 @@ Einträgen bleiben beide Bereiche mit einem kurzen Hinweis sichtbar. Vorbereitet
 und deaktivierte Timer stehen unter Anstehend; erledigte Timer bleiben in einem
 aufklappbaren Verlauf. Innerhalb der Bereiche wird nach Beginn sortiert.
 Beschreibungen stehen direkt unter dem Namen; leere Beschreibungen entfallen.
+
+Bei anstehenden Timern steht **Kopieren** zwischen **Bearbeiten** und **Löschen**.
+Der Button öffnet **Timer erstellen** mit Sender, Name, Beschreibung, Beginn,
+Ende, Wiederholung, Aufnahmepfad und deaktiviertem Zustand der Vorlage.
+Timerart und Endaktion werden übernommen und sind in diesem Entwurf ebenfalls
+anpassbar. Zusätzliche vom Receiver gelieferte Optionen und gewöhnliche Tags
+bleiben erhalten. Ist der Sender in einem Bouquet vorhanden, ist dieses
+vorausgewählt; andernfalls bleibt der ursprüngliche Sender unter **Timer-Vorlage →
+Sender aus Timer** auswählbar. TV- und Radio-Sender lassen sich über die normale
+Bouquetauswahl ändern.
+
+Öffnen oder Abbrechen des Entwurfs schreibt nichts auf den Receiver. Erst
+**Timer speichern** legt einen eigenständigen Timer mit dem Ersteller-Tag des
+angemeldeten Benutzers an; die Vorlage wird nicht bearbeitet oder gelöscht.
+Ein bereits vorhandener Timer mit demselben Sender und Zeitraum wird als
+Duplikat gemeldet. Der kopierte Entwurf bleibt dann zum Anpassen geöffnet,
+ebenso bei einer Konfliktmeldung des Receivers. Laufende und erledigte Timer
+haben keinen Kopierbutton.
 
 Nur unter laufenden Timern steht eine eigene Dateizeile in derselben Monospace-Schrift
 wie unter Aufnahmen: Dateiname links und Dateigröße rechts. Laufende
@@ -659,21 +683,21 @@ Ordner und ihre Unterordner werden akzeptiert. Es wird keine bestimmte
 Symlinkbeziehung vorausgesetzt und kein fremder Wunschpfad zur Prüfung geladen.
 Nach erfolgreichem Löschen bleibt die aktuelle Aufnahmeliste erreichbar.
 
-## Update von 0.1.x bis 1.1.6 auf 1.1.7
+## Update von 0.1.x bis 1.1.7 auf 1.1.8
 
 Das neue Paket auf den Ubuntu-Server übertragen, entpacken und aus dem neuen
 Projektverzeichnis den Installer erneut ausführen. Als root:
 
 ```bash
-unzip enigma2-web-v1.1.7.zip
-cd enigma2-web-v1.1.7
+unzip enigma2-web-v1.1.8.zip
+cd enigma2-web-v1.1.8
 bash scripts/install.sh
 curl --retry 10 --retry-delay 1 --retry-connrefused http://127.0.0.1:8081/health
 ```
 
 Der Installer hält den laufenden Dienst während des Updates an und startet ihn
 anschließend wieder. Der Health-Aufruf wartet bei Bedarf auf den Dienststart.
-Die erwartete Antwort enthält `"version":"1.1.7"`.
+Die erwartete Antwort enthält `"version":"1.1.8"`.
 
 Die vorhandenen Benutzer, Receiver, Passwörter, Sitzungen, die Konfiguration
 und der Verschlüsselungsschlüssel werden weiterverwendet. Ein Administrator
@@ -682,7 +706,7 @@ standardmäßig wird Port 8081 verwendet. Bei einem anderen Port den Health-Aufr
 entsprechend anpassen. In der vorhandenen nginx-Site das Lesezeitlimit auf
 300 Sekunden erhöhen (siehe nächsten Abschnitt); der Installer verändert nginx nicht.
 
-Die Datenbank wird automatisch auf Revision `0005` migriert. Von 0.8.0 bis 1.1.6 auf 1.1.7 ist keine neue Schemaänderung nötig. Vorhandene Konten,
+Die Datenbank wird automatisch auf Revision `0005` migriert. Von 0.8.0 bis 1.1.7 auf 1.1.8 ist keine neue Schemaänderung nötig. Vorhandene Konten,
 Receiverzuordnungen, Sitzungen, Audit-Ereignisse und alte Eigentümerkennungen
 bleiben erhalten. Die neue Migration ergänzt sprechende Ersteller-Tags für alle
 vorhandenen Konten. Frühere Revisionen ergänzen weiterhin Eigentümerkennungen,
@@ -718,8 +742,8 @@ Danach als root:
 nginx -t && systemctl reload nginx
 ```
 
-CSS und JavaScript verwenden URLs wie `/static/app.css?v=1.1.7`.
-Das Favicon verwendet ebenfalls eine versionierte URL: `/favicon.ico?v=1.1.7`.
+CSS und JavaScript verwenden URLs wie `/static/app.css?v=1.1.8`.
+Das Favicon verwendet ebenfalls eine versionierte URL: `/favicon.ico?v=1.1.8`.
 Der Browser lädt sie dadurch unter derselben HTTPS-Adresse wie die Seite.
 Das verhindert HTTP-Asset-URLs und Mixed Content bei einer HTTPS-Verbindung
 zum Proxy. Der Proxy-Header ist weiterhin für sichere Sitzungscookies wichtig.
@@ -775,7 +799,7 @@ Receiver dienen jetzt der weiteren Kompatibilitätsprüfung.
 
 ## Favicon und Lesezeichen
 
-Alle Seiten verweisen auf `/favicon.ico?v=1.1.7`. Das Icon ist ohne Anmeldung
+Alle Seiten verweisen auf `/favicon.ico?v=1.1.8`. Das Icon ist ohne Anmeldung
 mit dem Inhaltstyp `image/vnd.microsoft.icon` erreichbar und enthält das
 vorhandene Logo in 16, 32 und 48 Pixeln. Auch die statischen Icon-Dateien
 dürfen einen Tag lang gespeichert werden (`Cache-Control: public, max-age=86400`).

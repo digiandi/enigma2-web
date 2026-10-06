@@ -9,12 +9,26 @@ from fastapi import HTTPException, Request
 from starlette.concurrency import run_in_threadpool
 
 from e2web.openwebif import ReceiverError, TimerOutcomeUnknown
-from e2web.ownership import can_manage, create_marker, owner_name, readable_tags, require_manage
+from e2web.ownership import (
+    PREFIX,
+    can_manage,
+    create_marker,
+    owner_name,
+    readable_tags,
+    require_manage,
+)
 from e2web.receiver_actions import ReceiverActions
 from e2web.recordings import duration_label
 from e2web.security import now
 from e2web.timer_files import timer_files
-from e2web.timer_selection import bouquet_services, recordable_service, timer_bouquets, timer_paths
+from e2web.timer_selection import (
+    bouquet_services,
+    copy_selection,
+    recordable_service,
+    selection_services,
+    timer_bouquets,
+    timer_paths,
+)
 from e2web.timers import WEEKDAYS, local_timestamp, service_key
 
 
@@ -89,8 +103,8 @@ def register_timer_pages(app, config, *, render, selected_receiver, check_csrf, 
         if selection and values:
             selection = {**selection, "group": values["bouquet"]}
             try:
-                selection["services"] = bouquet_services(
-                    client_for(receiver), selection["bouquets"], values["bouquet"]
+                selection["services"] = selection_services(
+                    client_for(receiver), payload, values["bouquet"], groups=selection["bouquets"]
                 )
             except (ReceiverError, HTTPException):
                 selection["services"] = []
@@ -103,6 +117,8 @@ def register_timer_pages(app, config, *, render, selected_receiver, check_csrf, 
             "end_fold": "",
             "directory": settings["dirname"],
             "disabled": settings["disabled"] == "1",
+            "justplay": settings["justplay"] == "1",
+            "afterevent": settings["afterevent"],
             "weekdays": [str(n) for n in range(7) if int(settings["repeated"]) & (1 << n)],
             "before": "0",
             "after": "0",
@@ -115,6 +131,7 @@ def register_timer_pages(app, config, *, render, selected_receiver, check_csrf, 
             receiver=receiver,
             action_token=raw,
             editing="identity" in payload,
+            copying=bool(payload.get("copying")),
             channel=payload["channel"],
             selection=selection,
             values=defaults if values is None else values,
@@ -160,9 +177,12 @@ def register_timer_pages(app, config, *, render, selected_receiver, check_csrf, 
                         "owner_name": owner_name(request, receiver, timer, timer=True),
                         "channel_details": channels.describe(timer.reference, timer.channel),
                         "can_manage": can_manage(request, receiver, timer, timer=True),
+                        "can_copy": timer.state not in {2, 3}
+                        and app.state.can_write_receiver(request, receiver),
                         "begin": datetime.fromtimestamp(timer.begin, timezone),
                         "end": datetime.fromtimestamp(timer.end, timezone),
                         "edit_url": action_url("/timer/edit", receiver, timer),
+                        "copy_url": action_url("/timer/new", receiver, timer) + "&copy=1",
                         "duration": duration_label(
                             max(0, min(now(), timer.end) - timer.begin)
                             if timer.state == 2
@@ -232,6 +252,32 @@ def register_timer_pages(app, config, *, render, selected_receiver, check_csrf, 
             raise HTTPException(400, "Ungültiger Sender.")
         try:
             client = client_for(receiver)
+            if "copy" in request.query_params:
+                if request.query_params["copy"] != "1":
+                    raise HTTPException(400, "Ungültige Kopierauswahl.")
+                listing = client.timer_list()
+                timer = find_timer(listing.timers, query_identity(request))
+                if timer.state in {2, 3}:
+                    raise HTTPException(409, "Nur anstehende Timer können kopiert werden.")
+                if not recordable_service(timer.reference):
+                    raise HTTPException(400, "Bitte einen aufnehmbaren Sender auswählen.")
+                locations, directory = timer_paths(client, listing, preferred=timer.directory)
+                payload = {
+                    "copying": True,
+                    "channel": timer.channel,
+                    "selection": copy_selection(client, timer),
+                    "locations": locations,
+                    "settings": {
+                        **timer.settings,
+                        "dirname": directory,
+                        "tags": " ".join(
+                            tag for tag in timer.tags.split() if not tag.startswith(PREFIX)
+                        ),
+                    },
+                }
+                return form_page(
+                    request, receiver, payload, issue(request, receiver, "add", payload)
+                )
             event_info = None
             selection = None
             if "event_id" in request.query_params:
@@ -339,6 +385,13 @@ def register_timer_pages(app, config, *, render, selected_receiver, check_csrf, 
         group = request.query_params.get("bouquet", "")
         try:
             client = client_for(receiver)
+            raw = request.headers.get("X-Timer-Action")
+            if raw:
+                action = get_action(request, raw, {"add"})
+                payload = json.loads(action.payload)
+                if action.receiver_id != receiver.id or not payload.get("copying"):
+                    raise HTTPException(403, "Ungültiger Kopierentwurf.")
+                return {"services": selection_services(client, payload, group)}
             groups = timer_bouquets(client)
             return {"services": bouquet_services(client, groups, group)}
         except ReceiverError as exc:
@@ -390,12 +443,14 @@ def register_timer_pages(app, config, *, render, selected_receiver, check_csrf, 
                 "end_fold",
                 "bouquet",
                 "reference",
+                "afterevent",
             )
         }
         if payload.get("selection"):
             values["bouquet"] = str(form.get("bouquet", payload["selection"]["group"]))
             values["reference"] = str(form.get("reference", payload["settings"]["sRef"]))
         values["disabled"] = form.get("disabled") == "on"
+        values["justplay"] = form.get("justplay") == "on"
         values["weekdays"] = [str(day) for day in form.getlist("weekdays")]
         try:
             name, description = values["name"].strip(), values["description"].strip()
@@ -406,6 +461,14 @@ def register_timer_pages(app, config, *, render, selected_receiver, check_csrf, 
             ):
                 raise ValueError("Die Beschreibung darf höchstens 4000 Zeichen enthalten.")
             settings = payload["settings"]
+            if payload.get("copying"):
+                if values["afterevent"] not in {"0", "1", "2", "3"}:
+                    raise ValueError("Bitte eine gültige Aktion nach Timerende auswählen.")
+                settings = {
+                    **settings,
+                    "justplay": "1" if values["justplay"] else "0",
+                    "afterevent": values["afterevent"],
+                }
             if payload.get("selection") and not recordable_service(values["reference"]):
                 raise ValueError("Bitte einen aufnehmbaren Sender auswählen.")
             begin = local_timestamp(
@@ -478,8 +541,7 @@ def register_timer_pages(app, config, *, render, selected_receiver, check_csrf, 
             client = client_for(receiver)
             listing = client.timer_list()
             if payload.get("selection"):
-                groups = timer_bouquets(client)
-                services = bouquet_services(client, groups, values["bouquet"])
+                services = selection_services(client, payload, values["bouquet"])
                 selected = next(
                     (row for row in services if row["reference"] == values["reference"]), None
                 )
@@ -507,9 +569,18 @@ def register_timer_pages(app, config, *, render, selected_receiver, check_csrf, 
                     and t.end == int(params["end"])
                     for t in listing.timers
                 ):
-                    raise HTTPException(
-                        409, "Ein Timer mit diesem Sender und Zeitraum existiert bereits."
-                    )
+                    message = "Ein Timer mit diesem Sender und Zeitraum existiert bereits."
+                    if payload.get("copying"):
+                        return form_page(
+                            request,
+                            receiver,
+                            payload,
+                            issue(request, receiver, "add", payload),
+                            values=values,
+                            error=message,
+                            status=409,
+                        )
+                    raise HTTPException(409, message)
                 if payload.get("event"):
                     event = payload["event"]
                     if not any(
@@ -523,7 +594,12 @@ def register_timer_pages(app, config, *, render, selected_receiver, check_csrf, 
                 require_manage(request, receiver, timer, timer=True)
                 params["tags"] = readable_tags(request, receiver, timer)
             else:
-                params["tags"] = create_marker(request)
+                marker = create_marker(request)
+                params["tags"] = " ".join(
+                    [payload["settings"]["tags"], marker]
+                    if payload.get("copying") and payload["settings"]["tags"]
+                    else [marker]
+                )
             result = client.write_timer(method, params, xml=listing.xml)
             outcome = "success" if result.success else "rejected"
             if result.success:

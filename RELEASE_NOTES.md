@@ -1,11 +1,28 @@
-# Enigma2 Timer 1.1.7
+# Enigma2 Timer 1.1.8
 
-Release: 06.10.2026 · Git-Tag: `v1.1.7` · Datenbankschema: `0005`
+Release: 06.10.2026 · Git-Tag: `v1.1.8` · Datenbankschema: `0005`
 
 Zentrale Timer- und Aufnahmen-Verwaltung für mehrere Enigma2-Receiver über
 OpenWebif oder das ältere XML-WebInterface, mit deutscher Oberfläche im AWAS-Stil.
 
-## Neu in 1.1.7
+## Neu in 1.1.8
+
+- **Timer kopieren:** Bei anstehenden Timern steht **Kopieren** zwischen
+  **Bearbeiten** und **Löschen**. Der Button öffnet **Timer erstellen** mit den
+  Daten der Vorlage. Alle Formularfelder lassen sich vor dem Speichern ändern.
+- **Übernommene Daten:** Sender, Name, Beschreibung, Beginn/Ende, Wiederholung,
+  Aufnahmepfad und deaktivierter Zustand. Timerart und Endaktion sind im
+  kopierten Entwurf ebenfalls einstellbar; Receiver-Zusatzoptionen bleiben erhalten.
+- **Eigenständige Kopie:** Erst **Timer speichern** sendet einen Erstellauftrag.
+  Die Vorlage bleibt unverändert. Der neue Timer gehört dem angemeldeten Benutzer;
+  gewöhnliche Tags bleiben erhalten, alte Ersteller-Tags werden ersetzt.
+- **Berechtigungen und Fehler:** Schreibrechte sind nötig. Laufende und erledigte
+  Timer sind ausgeschlossen. Bei Duplikat oder Receiverkonflikt bleibt der Entwurf
+  zum Anpassen geöffnet. JSON, XML, Ladeanzeige und JavaScript-Fallback unterstützt.
+- **Update:** Keine neue Migration oder Abhängigkeit; Schema weiterhin `0005`.
+  Vorhandene Konten, Konfiguration und Schlüssel bleiben erhalten.
+
+## Aufnahmeordner-Fallback seit 1.1.7
 
 - **Aufnahmen:** Kann der konfigurierte Standardaufnahmeordner nicht ermittelt
   werden, wird automatisch der erste Eintrag der alphabetisch sortierten
@@ -116,7 +133,7 @@ OpenWebif oder das ältere XML-WebInterface, mit deutscher Oberfläche im AWAS-S
 ## Enthalten
 
 - Senderlisten mit TV-/Radio-Bouquets und Anbietern sowie EPG pro Sender.
-- Timer erstellen, bearbeiten, deaktivieren und löschen; wiederkehrende Termine
+- Timer erstellen, bearbeiten, kopieren, deaktivieren und löschen; wiederkehrende Termine
   und Vor-/Nachlauf aus dem EPG.
 - Aufnahmen mit Ordnerauswahl, Dateigröße, Status, Ersteller und Downloads.
 - Benutzer-/Receiververwaltung mit Standardreceiver und getrennten Lese-/Schreibrechten.
@@ -125,29 +142,30 @@ OpenWebif oder das ältere XML-WebInterface, mit deutscher Oberfläche im AWAS-S
   Rückstellung nach fünf Sekunden.
 - Sprechende Ersteller-Tags, manuell am Receiver verwendbar; alte Kennungen bleiben gültig.
 - systemd-Installer, nginx-Vorlage und HTTPS-Betrieb hinter einem vorhandenen Proxy.
-- GitHub-Unterlagen mit CI-Workflow und vorbereiteter Git-Historie samt `v1.1.7`.
+- GitHub-Unterlagen mit CI-Workflow und vorbereiteter Git-Historie samt `v1.1.8`.
 
 ## Installation und Update
 
-Das Installationspaket `enigma2-web-v1.1.7.zip` entpacken und im enthaltenen
+Das Installationspaket `enigma2-web-v1.1.8.zip` entpacken und im enthaltenen
 Projektverzeichnis als root `bash scripts/install.sh` ausführen.
 Bei Neuinstallation danach einen Administrator anlegen und `e2web` aktivieren;
 bei vorhandener Installation werden Konten, Receiver, Konfiguration, Datenbank
 und Schlüssel weiterverwendet. Einzelheiten: [INSTALL.md](INSTALL.md).
 
-Das Update von 0.8.0 bis 1.1.6 auf 1.1.7 benötigt keine neue Schemaänderung
+Das Update von 0.8.0 bis 1.1.7 auf 1.1.8 benötigt keine neue Schemaänderung
 und verändert keine Timer oder Aufnahmedateien auf Receivern. Vorhandene
 Konfiguration, einschließlich eines geänderten Ports, wird erhalten.
 
 ## Prüfung
 
-286 automatisierte Tests einschließlich der Standardordner-, Fallback- und Ladeanzeige-
-Regressionen. Code-/Formatprüfung, Paketbau und Start des gebauten Wheels.
-Browserprüfung des Fallbacks mit verzögerten JSON-/XML-Antworten auf mobilen
-und breiten Ansichten, Ordnerwechseln, Filtern und automatischer Aktualisierung.
-Die bisherigen Favicon-, Rechte-, Eigentümer- und Pfadprüfungen bleiben erfolgreich.
-Bisherige bereinigte Git-Tags unverändert und sämtliche Git-Objekte weiterhin
-frei von den entfernten Netzwerkbeispielen. Einzelheiten: [VERIFICATION.md](VERIFICATION.md).
+310 automatisierte Tests einschließlich 24 neuer Timer-Kopierprüfungen für
+JSON und XML. Code-/Formatprüfung, Paketbau und Start des gebauten Wheels.
+Browserprüfung der Kopierbuttons, vorausgefüllten und anpassbaren Entwürfe,
+Bouquetwechsel, Duplikatmeldung und ausdrücklichen Speicherung auf mobilen,
+mittleren und breiten Ansichten. Die bisherigen Favicon-, Rechte-, Eigentümer-,
+Standardordner- und Pfadprüfungen bleiben erfolgreich. Bisherige bereinigte
+Git-Tags unverändert und sämtliche Git-Objekte weiterhin frei von den entfernten
+Netzwerkbeispielen. Einzelheiten: [VERIFICATION.md](VERIFICATION.md).
 
 Das Installationspaket enthält keine Betriebsdaten oder Zugangsdaten. Für die
 Prüfung an der eingesetzten Hardware steht nach Installation der Verbindungstest
@@ -155,10 +173,10 @@ in der Receiververwaltung zur Verfügung.
 
 ## GitHub
 
-`enigma2-web-git-v1.1.7.zip` enthält das vorbereitete Repository mit Branch `main`
-und Tag `v1.1.7`. Alle bisherigen bereinigten Tags einschließlich `v1.1.6`
+`enigma2-web-git-v1.1.8.zip` enthält das vorbereitete Repository mit Branch `main`
+und Tag `v1.1.8`. Alle bisherigen bereinigten Tags einschließlich `v1.1.7`
 bleiben auf ihren bisherigen Ständen. Nach der abgeschlossenen Bereinigung
-genügt ein gewöhnlicher Push von `main` und `v1.1.7`; der vorige Tag `v1.1.6`
+genügt ein gewöhnlicher Push von `main` und `v1.1.8`; der vorige Tag `v1.1.7`
 kann dabei mit übertragen werden, falls er noch nicht auf GitHub vorhanden ist.
 Quellstand und Installationspaket sind identisch.
 Anleitung: [GITHUB.md](GITHUB.md). Lizenz- und Herkunftsangaben: [NOTICE.md](NOTICE.md).

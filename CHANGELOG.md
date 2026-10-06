@@ -1,5 +1,21 @@
 # Versionsverlauf
 
+## 1.1.8 – 06.10.2026
+
+- Bei anstehenden Timern **Kopieren** zwischen **Bearbeiten** und **Löschen**
+  ergänzen. Öffnet **Timer erstellen** mit den übernommenen Daten der Vorlage.
+- Sender, Titel, Beschreibung, Zeiten, Wiederholung, Aufnahmepfad und
+  deaktivierten Zustand übernehmen; Timerart und Endaktion im Entwurf anpassbar.
+- Receiver-Zusatzoptionen und gewöhnliche Tags erhalten. Die Kopie erhält
+  beim Speichern den Ersteller-Tag des angemeldeten Benutzers.
+- Eigenständiger Erstellauftrag erst beim Speichern; Vorlage unverändert.
+  Bei Duplikat oder Receiverkonflikt bleibt der Entwurf korrigierbar.
+- Kopieren setzt Schreibrechte voraus; laufende und erledigte Timer ausschließen.
+  JSON, XML, sofortige Ladeanzeige und Bedienung ohne JavaScript berücksichtigen.
+- Vorhandenen Ladeanzeige-Test an die tatsächliche Timeridentität binden,
+  damit eine Sekundengrenze während der Anmeldung keinen Scheinkonflikt erzeugt.
+- Keine neue Migration oder Abhängigkeit; Datenbankschema weiterhin `0005`.
+
 ## 1.1.7 – 06.10.2026
 
 - Bei unbekanntem Standardaufnahmeordner automatisch den ersten Eintrag der

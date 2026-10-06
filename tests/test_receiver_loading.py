@@ -17,11 +17,11 @@ from e2web.db import Grant, TimerAction, User
 from e2web.openwebif import OpenWebifClient, ReceiverError
 
 
-def page_url(path):
+def page_url(path, timer=None):
     if path == "/epg":
         return path + "?" + urlencode({"reference": REFERENCE, "name": "Das Erste HD"})
     if path == "/timer/edit":
-        return existing_url(path, timer_row())
+        return existing_url(path, timer or timer_row())
     return path
 
 
@@ -59,7 +59,7 @@ def test_data_request_delivers_the_complete_authorized_page(setup, xml, path):
     with TestClient(app) as client:
         login(client, "user", "User-123")
         page = client.get(
-            page_url(path),
+            page_url(path, box.timers[0]),
             headers={"Accept": "text/html", "X-Receiver-Data": "1", "X-Receiver-Id": "1"},
         )
         assert page.status_code == 200

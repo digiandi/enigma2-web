@@ -1,4 +1,58 @@
-# Prüfung von Version 1.1.7
+# Prüfung von Version 1.1.8
+
+Prüfstand: 06.10.2026, Python 3.12 unter Linux.
+
+- 310 automatisierte Tests erfolgreich, darunter 24 neue Kopierprüfungen.
+  Code- und Formatprüfung sowie JavaScript- und Installer-Syntax erfolgreich.
+  Bestehende Rechte-, Eigentümer-, Pfad-, Standardordner- und Faviconprüfungen
+  bleiben erfolgreich. Der Ladeanzeige-Test verwendet jetzt dieselbe Timeridentität
+  wie der simulierte Receiver, auch bei einer Sekundengrenze während der Anmeldung.
+- JSON und XML: TV- und Radio-Sender, Name, mehrzeilige Beschreibung,
+  sekundengenaue Zeiten, Wiederholung, deaktivierter Zustand und eigener
+  Aufnahmepfad korrekt vorausgefüllt. Timerart und Endaktion anpassbar;
+  vom jeweiligen Receiver gelieferte Zusatzoptionen bleiben erhalten.
+- Speichern erstellt einen unabhängigen `timeradd`-Auftrag mit genau einem
+  aktuellen Ersteller-Tag; gewöhnliche Tags bleiben erhalten, ursprüngliche
+  Ersteller-Tags entfallen. Keine Änderungsparameter, keine Mutation der Vorlage
+  und kein erneutes Senden durch Wiederverwendung eines Formularauftrags.
+- Schreibrechte erlauben das Kopieren sichtbarer fremder Vorlagen. Leserechte,
+  widerrufene Freigaben, andere Sitzungen, falsche Receiver und ungültige Sender
+  werden serverseitig geprüft. Laufende, erledigte, entfernte oder mehrdeutige
+  Vorlagen öffnen keinen Kopierentwurf. Ein bereits geöffneter Entwurf bleibt
+  nach Entfernen seiner Vorlage ein eigenständiger Erstellauftrag.
+- Duplikat- und Receiverkonfliktmeldungen erhalten den anpassbaren Entwurf.
+  Sender außerhalb von Bouquets bleiben über die an den Entwurf gebundene
+  ursprüngliche Auswahl verfügbar. Zeitumstellung und Sekunden bleiben erhalten.
+- Browserprüfung mit verzögerten JSON-/XML-Antworten bei 390, 1024 und 1440
+  Pixeln Breite: sechs Ansichten der Timerliste und des kopierten Formulars.
+  Buttonfolge Bearbeiten/Kopieren/Löschen; sofortige Ladeanzeige, korrekt
+  vorausgefüllte Felder, Abbrechen ohne Schreibauftrag und keine horizontale
+  Überbreite der Seite. Mobile Buttons stehen in derselben Reihenfolge untereinander.
+- Im Browser nach Duplikatmeldung Sender/Bouquet, Titel, Beschreibung, Beginn,
+  Ende, Wiederholung, Pfad, Deaktivierung, Timerart und Endaktion geändert.
+  Je JSON-/XML-Receiver genau ein Erstellauftrag, Vorlage unverändert.
+  Keine JavaScript-Fehler oder Dialoge. Kopierformular ohne JavaScript geladen.
+- Wheel und Quelldistribution gebaut. Installiertes Wheel startet mit Version
+  1.1.8 und Schema `0005`; Login, Assets, Favicon, Ladevorlagen, Standardordner,
+  Ordner-Fallback und Timerkopie geprüft. Erneute Initialisierung erhält Schlüssel,
+  geänderten Port und Aufnahmezeitlimit von 90 Sekunden.
+- Installations- und Git-ZIP entpackt und dateiweise verglichen. Paketbau aus
+  dem finalen Installations-ZIP hat identische Inhalte zum geprüften Paketbau.
+  Keine Betriebsdaten oder Zugangsdaten enthalten.
+- Sauberer Branch `main`, annotierter Tag `v1.1.8`, neun unveränderte bisherige
+  Tags, `git fsck`, Klonen und gewöhnlicher lokaler Push geprüft. Alle
+  Archivdateien und Git-Objekte weiterhin ohne die entfernten Netzwerkbeispiele.
+- Die Prüfung verwendet simulierte Receiver. GitHub-Push und GitHub-CI wurden
+  nicht ausgeführt; Receiverkonfigurationen und Aufnahmedateien auf der
+  eingesetzten Hardware wurden aus dieser Entwicklungsumgebung nicht geändert.
+
+## Änderungen 1.1.8
+
+- Anstehende Timer als vorausgefüllten neuen Entwurf kopieren.
+- Eigenständiger Erstellauftrag mit Erstellerzuordnung und unveränderter Vorlage.
+- Keine neue Migration oder Abhängigkeit; Schema weiterhin `0005`.
+
+## Prüfung von Version 1.1.7
 
 Prüfstand: 06.10.2026, Python 3.12 unter Linux.
 
