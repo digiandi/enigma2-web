@@ -1,4 +1,4 @@
-# Enigma2 Timer 1.1.8 installieren
+# Enigma2 Timer 1.1.9 installieren
 
 Voraussetzungen: Ubuntu/Debian mit systemd, Python 3.12 oder neuer, `python3-venv`,
 `rsync` und `unzip`. Der Server muss die Receiver erreichen können. Der Installer
@@ -9,6 +9,11 @@ den Standardport 8081. Ein anderer Port wird in `/etc/e2web/e2web.toml` mit
 `port = 8082` eingestellt; danach den Dienst neu starten und sowohl den
 nginx-Zielport als auch die Health-Abfragen entsprechend anpassen. Beim Update
 bleibt ein bereits geänderter Port erhalten.
+
+Standardmäßig ist `host = "0.0.0.0"` gesetzt. Die Anwendung lauscht damit auf
+allen IPv4-Adressen des Servers und ist direkt unter `http://SERVER-IP:8081`
+erreichbar. Das gilt sowohl für die Installationsvorlage als auch für eine mit
+`e2web init` neu erzeugte Konfiguration und eine Konfiguration ohne `host`-Eintrag.
 
 ## Neuinstallation
 
@@ -24,8 +29,8 @@ Die angezeigte Python-Version muss mindestens 3.12 sein. Anschließend das
 Installationspaket auf den Server übertragen und entpacken:
 
 ```bash
-unzip enigma2-web-v1.1.8.zip
-cd enigma2-web-v1.1.8
+unzip enigma2-web-v1.1.9.zip
+cd enigma2-web-v1.1.9
 bash scripts/install.sh
 runuser -u e2web-service -- /opt/e2web/.venv/bin/e2web \
   --config /etc/e2web/e2web.toml create-admin
@@ -49,8 +54,8 @@ gestopptem Webdienst oder mit einer konsistenten SQLite-Sicherung.
 Das neue Paket in einen neuen Ordner entpacken und als root ausführen:
 
 ```bash
-unzip enigma2-web-v1.1.8.zip
-cd enigma2-web-v1.1.8
+unzip enigma2-web-v1.1.9.zip
+cd enigma2-web-v1.1.9
 bash scripts/install.sh
 curl --retry 10 --retry-delay 1 --retry-connrefused \
   http://127.0.0.1:8081/health
@@ -65,16 +70,34 @@ das Update keine Timer oder Aufnahmedateien verändert.
 Erwartete Antwort:
 
 ```json
-{"status":"ok","version":"1.1.8"}
+{"status":"ok","version":"1.1.9"}
 ```
 
 Nach dem Update die Browserseite neu laden. Vorher geöffnete Timerformulare neu
 öffnen, damit Version und Formularauftrag übereinstimmen.
 
+Für die neue Bindung in einer vorhandenen Installation den `host`-Eintrag in
+`/etc/e2web/e2web.toml` auf folgenden Wert setzen:
+
+```toml
+host = "0.0.0.0"
+```
+
+Danach den Dienst neu starten und die Bindung prüfen:
+
+```bash
+systemctl restart e2web
+ss -ltnp 'sport = :8081'
+```
+
+Die Ausgabe soll `0.0.0.0:8081` anzeigen. Bei einem eigenen Port entsprechend
+anpassen. Der Installer erhält vorhandene Konfigurationswerte.
+
 ## Vorhandenes nginx verwenden
 
-Die Anwendung lauscht intern auf `127.0.0.1:8081`. Der Installer verändert keine
-nginx-Konfiguration. Einen vorhandenen passenden HTTPS-Serverblock weiterverwenden
+Die Anwendung lauscht standardmäßig auf `0.0.0.0:8081`, einschließlich der lokalen
+Adresse `127.0.0.1`. nginx kann daher weiter `127.0.0.1:8081` als Ziel verwenden.
+Der Installer verändert keine nginx-Konfiguration. Einen vorhandenen passenden HTTPS-Serverblock weiterverwenden
 oder in einen eigenen Serverblock den Inhalt von `deploy/nginx-location.conf`
 übernehmen:
 

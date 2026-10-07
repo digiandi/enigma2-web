@@ -22,7 +22,7 @@ def initialize(path: Path) -> None:
         fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
         with os.fdopen(fd, "w") as destination:
             destination.write(
-                'data_dir = "data"\nhost = "127.0.0.1"\nport = 8081\n'
+                'data_dir = "data"\nhost = "0.0.0.0"\nport = 8081\n'
                 "session_hours = 12\ncookie_secure = false\n"
                 'receiver_timeout = 8.0\nrecording_timeout = 90.0\ntimezone = "Europe/Berlin"\n'
             )

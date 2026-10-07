@@ -1,4 +1,41 @@
-# Prüfung von Version 1.1.8
+# Prüfung von Version 1.1.9
+
+Prüfstand: 07.10.2026, Python 3.12 unter Linux.
+
+- 310 automatisierte Tests erfolgreich. Code- und Formatprüfung sowie
+  JavaScript- und Installer-Syntax erfolgreich.
+- Echter CLI-Start geprüft mit von `e2web init` erzeugter Konfiguration,
+  Konfiguration ohne `host` und Installationsvorlage. Alle drei Fälle binden
+  an `0.0.0.0`; der tatsächlich geöffnete TCP-Listener wurde geprüft.
+- HTTP-Health- und Login-Abfragen über `127.0.0.1` und die zusätzliche lokale
+  IPv4-Adresse `127.0.0.2` erfolgreich. Eine ausdrücklich konfigurierte Bindung
+  an `127.0.0.1` lässt sich weiterhin verwenden; der zweite Zugriff bleibt
+  dann erwartungsgemäß unerreichbar. Die Prüfumgebung hat keine weitere IPv4-
+  Netzwerkschnittstelle; der Zugriff von einem anderen Rechner wurde nicht ausgeführt.
+- Erneute Initialisierung erhält ausdrücklich gesetzte Bindung, geänderten Port,
+  Konfigurationsdatei und Schlüssel. Port weiterhin standardmäßig 8081,
+  Aufnahmezeitlimit 90 Sekunden, Datenbankschema `0005`.
+- Wheel und Quelldistribution gebaut. Installiertes Wheel startet mit Version
+  1.1.9 und Release-Datum 07.10.2026; dieselben CLI-Bindungsprüfungen erfolgreich.
+  Login, Assets, Favicon, Ladevorlagen, Standardordner, Ordner-Fallback und
+  eigenständige Timerkopie mit simuliertem Receiver geprüft.
+- Installations- und Git-ZIP entpackt und dateiweise verglichen. Paketbau aus
+  dem finalen Installations-ZIP hat identische Inhalte zum geprüften Paketbau.
+  Keine Betriebsdaten oder Zugangsdaten enthalten.
+- Sauberer Branch `main`, annotierter Tag `v1.1.9`, zehn unveränderte bisherige
+  Tags, `git fsck`, Klonen und gewöhnlicher lokaler Push geprüft. Alle
+  Archivdateien und Git-Objekte weiterhin ohne die entfernten Netzwerkbeispiele.
+- GitHub-Push und GitHub-CI wurden nicht ausgeführt; die bestehende Installation
+  auf dem Ubuntu-Server wurde aus dieser Entwicklungsumgebung nicht geändert.
+
+## Änderungen 1.1.9
+
+- Standardbindung in Programm, Konfigurations-Fallback, `e2web init` und
+  Installationsvorlage auf `0.0.0.0` umstellen.
+- Direkten Aufruf über die Server-IP und Änderung vorhandener Konfigurationen
+  dokumentieren. Keine neue Migration oder Abhängigkeit.
+
+## Prüfung von Version 1.1.8
 
 Prüfstand: 06.10.2026, Python 3.12 unter Linux.
 

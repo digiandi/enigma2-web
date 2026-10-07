@@ -10,7 +10,7 @@ from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 @dataclass(frozen=True)
 class Config:
     data_dir: Path
-    host: str = "127.0.0.1"
+    host: str = "0.0.0.0"
     port: int = 8081
     session_hours: int = 12
     cookie_secure: bool = False
@@ -40,7 +40,7 @@ def load_config(path: Path | None = None) -> Config:
         data_dir = path.parent / data_dir
     config = Config(
         data_dir=data_dir.resolve(),
-        host=str(values.get("host", "127.0.0.1")),
+        host=str(values.get("host", "0.0.0.0")),
         port=int(values.get("port", 8081)),
         session_hours=int(values.get("session_hours", 12)),
         cookie_secure=bool(values.get("cookie_secure", False)),

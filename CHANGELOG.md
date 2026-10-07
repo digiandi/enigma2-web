@@ -1,5 +1,14 @@
 # Versionsverlauf
 
+## 1.1.9 – 07.10.2026
+
+- Standardbindung auf `0.0.0.0` setzen: alle IPv4-Adressen des Servers.
+- Programmvorgabe, Konfiguration ohne `host`-Eintrag, `e2web init` und
+  Installationsvorlage einheitlich umstellen.
+- Direkten Aufruf über die Server-IP und Umstellung vorhandener Konfigurationen
+  dokumentieren. Port bleibt standardmäßig 8081.
+- Keine neue Migration oder Abhängigkeit; Datenbankschema weiterhin `0005`.
+
 ## 1.1.8 – 06.10.2026
 
 - Bei anstehenden Timern **Kopieren** zwischen **Bearbeiten** und **Löschen**

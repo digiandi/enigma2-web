@@ -1,14 +1,14 @@
-# Enigma2 Timer 1.1.8
+# Enigma2 Timer 1.1.9
 
 Eigenständige, zentral betriebene Webanwendung im Stil von AWAS 3.0.7.
 AWAS und seine Datenbank werden nicht verändert.
 
-Version 1.1.8 ergänzt **Kopieren** bei anstehenden Timern. Der Button öffnet
-**Timer erstellen** mit den Daten der Vorlage; vor dem Speichern bleiben die
-Felder anpassbar. Erst **Timer speichern** legt einen neuen Timer an, ohne die
-Vorlage zu verändern. Seiten mit Receiver-Abfragen erscheinen weiterhin sofort
-mit „Lade Daten von Receiver...“. Die seit 1.1.2 bereinigte Git-Historie wird
-mit einem gewöhnlichen neuen Release-Commit fortgesetzt.
+Version 1.1.9 setzt `host = "0.0.0.0"` als Standard. Die Anwendung lauscht
+damit auf allen IPv4-Adressen des Servers. Dies gilt für Neuinstallationen,
+`e2web init` und Konfigurationen ohne `host`-Eintrag. Eine vorhandene Konfiguration
+lässt sich mit demselben Eintrag umstellen; anschließend den Dienst neu starten.
+Die seit 1.1.2 bereinigte Git-Historie wird mit einem gewöhnlichen neuen
+Release-Commit fortgesetzt.
 Installation und Update: [INSTALL.md](INSTALL.md). GitHub: [GITHUB.md](GITHUB.md).
 [Release-Hinweise](RELEASE_NOTES.md), [Versionsverlauf](CHANGELOG.md),
 [Prüfbericht](VERIFICATION.md) und [Herkunfts-/Lizenzhinweise](NOTICE.md).
@@ -114,7 +114,8 @@ e2web create-admin
 e2web serve
 ```
 
-Öffnen: <http://127.0.0.1:8081>. Der erste Administrator wird interaktiv erstellt;
+Öffnen auf dem Server: <http://127.0.0.1:8081>; von einem anderen Rechner aus
+`http://SERVER-IP:8081`. Der erste Administrator wird interaktiv erstellt;
 es gibt keine Standardzugangsdaten und keine öffentliche Registrierung.
 Unter **Receiver** eine Box hinzufügen und **Verbindung testen** drücken.
 
@@ -149,7 +150,7 @@ des Administrators. Er benötigt Python 3.12+, `python3-venv`, `rsync` und
 Zugang zum Python-Paketindex. Diese Systempakete bei Bedarf zuvor installieren.
 Es werden weder nginx-Konfigurationen aktiviert noch vorhandene AWAS-Dateien
 verändert. Der Nutzer hat die Erstinstallation und nginx-Anbindung für Version
-0.1.0 auf Ubuntu bestätigt. Die Timer- und Aufnahmefunktionen von 1.1.8 wurden mit
+0.1.0 auf Ubuntu bestätigt. Die Timer- und Aufnahmefunktionen von 1.1.9 wurden mit
 simulierten Receivern geprüft; die Prüfung an der tatsächlichen Hardware steht noch aus.
 
 Pfade:
@@ -162,7 +163,20 @@ Pfade:
 | Datenbank | `/var/lib/e2web/e2web.db` |
 | Verschlüsselungsschlüssel | `/var/lib/e2web/receiver.key` |
 | Dienst | `e2web.service` |
-| Interner Port | `127.0.0.1:8081` |
+| Standardbindung und Port | `0.0.0.0:8081` (alle IPv4-Adressen) |
+
+Die Bindung steht in `/etc/e2web/e2web.toml`:
+
+```toml
+host = "0.0.0.0"
+port = 8081
+```
+
+Nach einer Änderung `systemctl restart e2web` ausführen. Mit
+`ss -ltnp 'sport = :8081'` die Bindung prüfen; bei einem anderen Port die Abfrage
+entsprechend anpassen. Neu erzeugte Konfigurationen verwenden `0.0.0.0`.
+Beim Update bleiben ausdrücklich gespeicherte Werte erhalten; eine vorhandene
+Bindung lässt sich durch Ändern des `host`-Eintrags umstellen.
 
 Für nginx ist `deploy/nginx-location.conf` eine Vorlage für den Inhalt eines
 eigenen Serverblocks. Hostname und vorhandene HTTPS-Zertifikate werden im
@@ -683,21 +697,21 @@ Ordner und ihre Unterordner werden akzeptiert. Es wird keine bestimmte
 Symlinkbeziehung vorausgesetzt und kein fremder Wunschpfad zur Prüfung geladen.
 Nach erfolgreichem Löschen bleibt die aktuelle Aufnahmeliste erreichbar.
 
-## Update von 0.1.x bis 1.1.7 auf 1.1.8
+## Update von 0.1.x bis 1.1.8 auf 1.1.9
 
 Das neue Paket auf den Ubuntu-Server übertragen, entpacken und aus dem neuen
 Projektverzeichnis den Installer erneut ausführen. Als root:
 
 ```bash
-unzip enigma2-web-v1.1.8.zip
-cd enigma2-web-v1.1.8
+unzip enigma2-web-v1.1.9.zip
+cd enigma2-web-v1.1.9
 bash scripts/install.sh
 curl --retry 10 --retry-delay 1 --retry-connrefused http://127.0.0.1:8081/health
 ```
 
 Der Installer hält den laufenden Dienst während des Updates an und startet ihn
 anschließend wieder. Der Health-Aufruf wartet bei Bedarf auf den Dienststart.
-Die erwartete Antwort enthält `"version":"1.1.8"`.
+Die erwartete Antwort enthält `"version":"1.1.9"`.
 
 Die vorhandenen Benutzer, Receiver, Passwörter, Sitzungen, die Konfiguration
 und der Verschlüsselungsschlüssel werden weiterverwendet. Ein Administrator
@@ -706,7 +720,7 @@ standardmäßig wird Port 8081 verwendet. Bei einem anderen Port den Health-Aufr
 entsprechend anpassen. In der vorhandenen nginx-Site das Lesezeitlimit auf
 300 Sekunden erhöhen (siehe nächsten Abschnitt); der Installer verändert nginx nicht.
 
-Die Datenbank wird automatisch auf Revision `0005` migriert. Von 0.8.0 bis 1.1.7 auf 1.1.8 ist keine neue Schemaänderung nötig. Vorhandene Konten,
+Die Datenbank wird automatisch auf Revision `0005` migriert. Von 0.8.0 bis 1.1.8 auf 1.1.9 ist keine neue Schemaänderung nötig. Vorhandene Konten,
 Receiverzuordnungen, Sitzungen, Audit-Ereignisse und alte Eigentümerkennungen
 bleiben erhalten. Die neue Migration ergänzt sprechende Ersteller-Tags für alle
 vorhandenen Konten. Frühere Revisionen ergänzen weiterhin Eigentümerkennungen,
@@ -742,8 +756,8 @@ Danach als root:
 nginx -t && systemctl reload nginx
 ```
 
-CSS und JavaScript verwenden URLs wie `/static/app.css?v=1.1.8`.
-Das Favicon verwendet ebenfalls eine versionierte URL: `/favicon.ico?v=1.1.8`.
+CSS und JavaScript verwenden URLs wie `/static/app.css?v=1.1.9`.
+Das Favicon verwendet ebenfalls eine versionierte URL: `/favicon.ico?v=1.1.9`.
 Der Browser lädt sie dadurch unter derselben HTTPS-Adresse wie die Seite.
 Das verhindert HTTP-Asset-URLs und Mixed Content bei einer HTTPS-Verbindung
 zum Proxy. Der Proxy-Header ist weiterhin für sichere Sitzungscookies wichtig.
@@ -799,7 +813,7 @@ Receiver dienen jetzt der weiteren Kompatibilitätsprüfung.
 
 ## Favicon und Lesezeichen
 
-Alle Seiten verweisen auf `/favicon.ico?v=1.1.8`. Das Icon ist ohne Anmeldung
+Alle Seiten verweisen auf `/favicon.ico?v=1.1.9`. Das Icon ist ohne Anmeldung
 mit dem Inhaltstyp `image/vnd.microsoft.icon` erreichbar und enthält das
 vorhandene Logo in 16, 32 und 48 Pixeln. Auch die statischen Icon-Dateien
 dürfen einen Tag lang gespeichert werden (`Cache-Control: public, max-age=86400`).

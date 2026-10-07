@@ -1,11 +1,22 @@
-# Enigma2 Timer 1.1.8
+# Enigma2 Timer 1.1.9
 
-Release: 06.10.2026 · Git-Tag: `v1.1.8` · Datenbankschema: `0005`
+Release: 07.10.2026 · Git-Tag: `v1.1.9` · Datenbankschema: `0005`
 
 Zentrale Timer- und Aufnahmen-Verwaltung für mehrere Enigma2-Receiver über
 OpenWebif oder das ältere XML-WebInterface, mit deutscher Oberfläche im AWAS-Stil.
 
-## Neu in 1.1.8
+## Neu in 1.1.9
+
+- **Standardbindung:** `host = "0.0.0.0"` für alle IPv4-Adressen des Servers.
+  Gilt für die Programmvorgabe, Konfigurationen ohne `host`, `e2web init` und
+  die Installationsvorlage. Direkter Aufruf unter `http://SERVER-IP:8081`.
+- **Vorhandene Installation:** In `/etc/e2web/e2web.toml` den `host`-Eintrag auf
+  `"0.0.0.0"` setzen und `systemctl restart e2web` ausführen. Vorhandene
+  Konfigurationswerte werden beim Update erhalten. Einzelheiten: [INSTALL.md](INSTALL.md).
+- **Update:** Port weiterhin standardmäßig 8081; keine neue Migration oder
+  Abhängigkeit. Schema `0005`, Konten, Receiver und Schlüssel bleiben erhalten.
+
+## Timer kopieren seit 1.1.8
 
 - **Timer kopieren:** Bei anstehenden Timern steht **Kopieren** zwischen
   **Bearbeiten** und **Löschen**. Der Button öffnet **Timer erstellen** mit den
@@ -142,30 +153,29 @@ OpenWebif oder das ältere XML-WebInterface, mit deutscher Oberfläche im AWAS-S
   Rückstellung nach fünf Sekunden.
 - Sprechende Ersteller-Tags, manuell am Receiver verwendbar; alte Kennungen bleiben gültig.
 - systemd-Installer, nginx-Vorlage und HTTPS-Betrieb hinter einem vorhandenen Proxy.
-- GitHub-Unterlagen mit CI-Workflow und vorbereiteter Git-Historie samt `v1.1.8`.
+- GitHub-Unterlagen mit CI-Workflow und vorbereiteter Git-Historie samt `v1.1.9`.
 
 ## Installation und Update
 
-Das Installationspaket `enigma2-web-v1.1.8.zip` entpacken und im enthaltenen
+Das Installationspaket `enigma2-web-v1.1.9.zip` entpacken und im enthaltenen
 Projektverzeichnis als root `bash scripts/install.sh` ausführen.
 Bei Neuinstallation danach einen Administrator anlegen und `e2web` aktivieren;
 bei vorhandener Installation werden Konten, Receiver, Konfiguration, Datenbank
 und Schlüssel weiterverwendet. Einzelheiten: [INSTALL.md](INSTALL.md).
 
-Das Update von 0.8.0 bis 1.1.7 auf 1.1.8 benötigt keine neue Schemaänderung
+Das Update von 0.8.0 bis 1.1.8 auf 1.1.9 benötigt keine neue Schemaänderung
 und verändert keine Timer oder Aufnahmedateien auf Receivern. Vorhandene
 Konfiguration, einschließlich eines geänderten Ports, wird erhalten.
 
 ## Prüfung
 
-310 automatisierte Tests einschließlich 24 neuer Timer-Kopierprüfungen für
-JSON und XML. Code-/Formatprüfung, Paketbau und Start des gebauten Wheels.
-Browserprüfung der Kopierbuttons, vorausgefüllten und anpassbaren Entwürfe,
-Bouquetwechsel, Duplikatmeldung und ausdrücklichen Speicherung auf mobilen,
-mittleren und breiten Ansichten. Die bisherigen Favicon-, Rechte-, Eigentümer-,
-Standardordner- und Pfadprüfungen bleiben erfolgreich. Bisherige bereinigte
-Git-Tags unverändert und sämtliche Git-Objekte weiterhin frei von den entfernten
-Netzwerkbeispielen. Einzelheiten: [VERIFICATION.md](VERIFICATION.md).
+310 automatisierte Tests, Code-/Formatprüfung, JavaScript-/Installer-Syntax,
+Paketbau und Start des gebauten Wheels. Echter CLI-Start mit erzeugter Konfiguration,
+Konfiguration ohne `host` und der Installationsvorlage: gebunden an `0.0.0.0`,
+HTTP-Abfragen über `127.0.0.1` und eine zweite lokale IPv4-Adresse erfolgreich. Ausdrücklich
+konfigurierte Bindung und Port bei erneuter Initialisierung erhalten. Bisherige
+bereinigte Git-Tags unverändert und sämtliche Git-Objekte weiterhin frei von den
+entfernten Netzwerkbeispielen. Einzelheiten: [VERIFICATION.md](VERIFICATION.md).
 
 Das Installationspaket enthält keine Betriebsdaten oder Zugangsdaten. Für die
 Prüfung an der eingesetzten Hardware steht nach Installation der Verbindungstest
@@ -173,10 +183,10 @@ in der Receiververwaltung zur Verfügung.
 
 ## GitHub
 
-`enigma2-web-git-v1.1.8.zip` enthält das vorbereitete Repository mit Branch `main`
-und Tag `v1.1.8`. Alle bisherigen bereinigten Tags einschließlich `v1.1.7`
+`enigma2-web-git-v1.1.9.zip` enthält das vorbereitete Repository mit Branch `main`
+und Tag `v1.1.9`. Alle bisherigen bereinigten Tags einschließlich `v1.1.8`
 bleiben auf ihren bisherigen Ständen. Nach der abgeschlossenen Bereinigung
-genügt ein gewöhnlicher Push von `main` und `v1.1.8`; der vorige Tag `v1.1.7`
+genügt ein gewöhnlicher Push von `main` und `v1.1.9`; der vorige Tag `v1.1.8`
 kann dabei mit übertragen werden, falls er noch nicht auf GitHub vorhanden ist.
 Quellstand und Installationspaket sind identisch.
 Anleitung: [GITHUB.md](GITHUB.md). Lizenz- und Herkunftsangaben: [NOTICE.md](NOTICE.md).
