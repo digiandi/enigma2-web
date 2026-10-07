@@ -1,12 +1,13 @@
-# Enigma2 Timer 1.1.10
+# Enigma2 Timer 1.1.11
 
 Eigenständige, zentral betriebene Webanwendung im Stil von AWAS 3.0.7.
 AWAS und seine Datenbank werden nicht verändert.
 
-Version 1.1.10 zeigt auf der Seite **Aufnahmen** direkt neben der Ordnerauswahl
-**Freier Speicherplatz** für den zugeordneten Datenträger. Fehlt eine verlässliche
-Angabe, steht dort **unbekannt**. Der Wert folgt der Ordnerauswahl und der
-bestehenden automatischen Aktualisierung alle fünf Sekunden.
+Version 1.1.11 zeigt auf der Seite **Aufnahmen** direkt neben der Ordnerauswahl
+für jede Receiver-Festplatte den freien Speicher und den Modellnamen. Mehrere
+Festplatten stehen bündig untereinander. JSON und das ältere XML-WebInterface
+werden unterstützt; eine Zuordnung zum ausgewählten Ordner ist nicht erforderlich.
+Fehlt eine Speicherangabe, steht dort **unbekannt**.
 Die seit 1.1.2 bereinigte Git-Historie wird mit einem gewöhnlichen neuen
 Release-Commit fortgesetzt.
 Installation und Update: [INSTALL.md](INSTALL.md). GitHub: [GITHUB.md](GITHUB.md).
@@ -76,8 +77,8 @@ Implementiert:
   in einer gemeinsamen Ordnerauswahl ohne separate Unterordnerbuttons;
   AWAS-Spaltenfolge, Datum/Uhrzeit und Laufzeit, separate Dateinamenzeile mit
   Dateigröße; Download, Löschung und Schutz laufender Aufnahmen;
-- freier Speicherplatz direkt neben der Aufnahmeordnerauswahl; bei fehlender
-  Zuordnung oder nicht verfügbarer Speicherangabe **unbekannt**;
+- freier Speicherplatz mit Festplattenname direkt neben der Aufnahmeordnerauswahl;
+  alle gemeldeten Festplatten bündig untereinander, bei fehlender Angabe **unbekannt**;
 - laufende Aufnahmen in Timern und Aufnahmelisten orange wie bei AWAS (`#fde7dc`);
 - 90 Sekunden Lesezeitlimit für Aufnahmelisten und Downloads zum HDD-Anlauf;
 - alle Löschbuttons mit zwei Klicks: zunächst „Wirklich löschen?“ auf rotem
@@ -152,7 +153,7 @@ des Administrators. Er benötigt Python 3.12+, `python3-venv`, `rsync` und
 Zugang zum Python-Paketindex. Diese Systempakete bei Bedarf zuvor installieren.
 Es werden weder nginx-Konfigurationen aktiviert noch vorhandene AWAS-Dateien
 verändert. Der Nutzer hat die Erstinstallation und nginx-Anbindung für Version
-0.1.0 auf Ubuntu bestätigt. Die Timer- und Aufnahmefunktionen von 1.1.10 wurden mit
+0.1.0 auf Ubuntu bestätigt. Die Timer- und Aufnahmefunktionen von 1.1.11 wurden mit
 simulierten Receivern geprüft; die Prüfung an der tatsächlichen Hardware steht noch aus.
 
 Pfade:
@@ -635,23 +636,33 @@ Die Liste aktualisiert sich alle fünf Sekunden; deshalb entfällt der Button
 
 
 **Freier Speicherplatz** steht direkt rechts neben dem Ordner-Dropdown, auch
-auf schmalen Bildschirmen. Die Angabe wird beim Ordnerwechsel und zusammen mit
-der Liste alle fünf Sekunden neu geladen. Sie stammt aus den Feldern `mount`
-und `free` von `/api/deviceinfo`; es wird der am genauesten passende gemeldete
-Einhängepunkt verwendet. Unterordner desselben Dateisystems teilen dessen freien
-Speicher. Die Angabe beschreibt den vom Receiver gemeldeten verfügbaren Speicher,
-keine Schätzung aus den sichtbaren Dateigrößen.
+auf schmalen Bildschirmen. Jede gemeldete Festplatte erhält eine eigene, bündig
+beginnende Zeile, beispielsweise **Freier Speicherplatz: 660.884 GB (WD(My Passport 0748))**.
+Die Angaben gehören zu den Datenträgern des ausgewählten Receivers und bleiben
+beim Ordnerwechsel dieselben. Sie werden zusammen mit der Aufnahmeliste alle
+fünf Sekunden erneuert.
 
-Fehlende oder widersprüchliche Mountangaben, unbekannte Einheiten, negative Werte
-und Fehler der Speicherabfrage ergeben **unbekannt**. Für XML-Antworten ist keine
-Mountzuordnung implementiert; auch hier erscheint **unbekannt**. Unbestätigte
-Symlinkpfade werden nicht gleichgesetzt. Die Speicherabfrage verwendet das
-Aufnahme-Lesezeitlimit von standardmäßig 90 Sekunden; ein Fehler dieser optionalen
-Abfrage lässt die Aufnahmeliste und ihre zulässigen Aktionen verfügbar.
-Es werden ausschließlich der passende Mountpfad und sein freier Speicher für die
-Anzeige ausgewertet; weitere Geräteinformationen werden nicht ausgegeben oder
-in der Datenbank gespeichert. Feldreferenz:
-[OpenWebif-Geräteinformationen](https://github.com/E2OpenPlugins/e2openplugin-OpenWebif/blob/master/plugin/controllers/models/info.py).
+Die Abfrage liest die Festplattenliste aus `/api/deviceinfo` (`hdd`, `model`,
+`free`) oder beim XML-Fallback aus `/web/deviceinfo`
+(`e2deviceinfo/e2hdds/e2hdd`, `e2model`, `e2free`). Ein Einhängepunkt oder eine
+Ordnerzuordnung ist nicht nötig. Die Mountprüfung aus 1.1.10 entfällt vollständig.
+Die Anzeige verwendet den gemeldeten freien Speicher, keine Schätzung aus den
+sichtbaren Dateien. GB-Werte erscheinen mit bis zu drei Nachkommastellen;
+andere bekannte Einheiten werden passend zur Receiver-Umrechnung mit 1024 in GB
+umgerechnet. Ein positiver Wert unter 0.001 GB erscheint als **<0.001 GB**.
+
+Fehlende, negative oder unlesbare Speicherwerte ergeben **unbekannt**, wobei der
+Festplattenname erhalten bleibt. Ohne gemeldete Festplattenliste erscheint eine
+allgemeine Zeile **Freier Speicherplatz: unbekannt**. Ein fehlender Modellname
+wird als **Unbekannte Festplatte** angezeigt. Ungültige Einträge verdecken keine
+anderen lesbaren Festplatten. Die Speicherabfrage verwendet das Aufnahme-
+Lesezeitlimit von standardmäßig 90 Sekunden; ein Fehler dieser optionalen Abfrage
+lässt die Aufnahmeliste und ihre zulässigen Aktionen verfügbar.
+Weitere Geräteinformationen werden nicht ausgegeben oder in der Datenbank gespeichert.
+Feldreferenzen:
+[OpenWebif-Geräteinformationen](https://github.com/E2OpenPlugins/e2openplugin-OpenWebif/blob/master/plugin/controllers/models/info.py),
+[OpenWebif-XML](https://github.com/E2OpenPlugins/e2openplugin-OpenWebif/blob/master/plugin/controllers/views/web/deviceinfo.tmpl)
+und [älteres WebInterface-XML](https://github.com/oe-alliance/enigma2-plugins/blob/master/webinterface/src/web/deviceinfo.xml).
 
 Die Tabelle entspricht AWAS: **Aufnahme, Sender, Receiver, Beginn, Dauer, Status**.
 Der Dateiname steht in einer eigenen Zeile am unteren Rand in derselben
@@ -718,21 +729,21 @@ Ordner und ihre Unterordner werden akzeptiert. Es wird keine bestimmte
 Symlinkbeziehung vorausgesetzt und kein fremder Wunschpfad zur Prüfung geladen.
 Nach erfolgreichem Löschen bleibt die aktuelle Aufnahmeliste erreichbar.
 
-## Update von 0.1.x bis 1.1.9 auf 1.1.10
+## Update von 0.1.x bis 1.1.10 auf 1.1.11
 
 Das neue Paket auf den Ubuntu-Server übertragen, entpacken und aus dem neuen
 Projektverzeichnis den Installer erneut ausführen. Als root:
 
 ```bash
-unzip enigma2-web-v1.1.10.zip
-cd enigma2-web-v1.1.10
+unzip enigma2-web-v1.1.11.zip
+cd enigma2-web-v1.1.11
 bash scripts/install.sh
 curl --retry 10 --retry-delay 1 --retry-connrefused http://127.0.0.1:8081/health
 ```
 
 Der Installer hält den laufenden Dienst während des Updates an und startet ihn
 anschließend wieder. Der Health-Aufruf wartet bei Bedarf auf den Dienststart.
-Die erwartete Antwort enthält `"version":"1.1.10"`.
+Die erwartete Antwort enthält `"version":"1.1.11"`.
 
 Die vorhandenen Benutzer, Receiver, Passwörter, Sitzungen, die Konfiguration
 und der Verschlüsselungsschlüssel werden weiterverwendet. Ein Administrator
@@ -741,7 +752,7 @@ standardmäßig wird Port 8081 verwendet. Bei einem anderen Port den Health-Aufr
 entsprechend anpassen. In der vorhandenen nginx-Site das Lesezeitlimit auf
 300 Sekunden erhöhen (siehe nächsten Abschnitt); der Installer verändert nginx nicht.
 
-Die Datenbank wird automatisch auf Revision `0005` migriert. Von 0.8.0 bis 1.1.9 auf 1.1.10 ist keine neue Schemaänderung nötig. Vorhandene Konten,
+Die Datenbank wird automatisch auf Revision `0005` migriert. Von 0.8.0 bis 1.1.10 auf 1.1.11 ist keine neue Schemaänderung nötig. Vorhandene Konten,
 Receiverzuordnungen, Sitzungen, Audit-Ereignisse und alte Eigentümerkennungen
 bleiben erhalten. Die neue Migration ergänzt sprechende Ersteller-Tags für alle
 vorhandenen Konten. Frühere Revisionen ergänzen weiterhin Eigentümerkennungen,
@@ -777,8 +788,8 @@ Danach als root:
 nginx -t && systemctl reload nginx
 ```
 
-CSS und JavaScript verwenden URLs wie `/static/app.css?v=1.1.10`.
-Das Favicon verwendet ebenfalls eine versionierte URL: `/favicon.ico?v=1.1.10`.
+CSS und JavaScript verwenden URLs wie `/static/app.css?v=1.1.11`.
+Das Favicon verwendet ebenfalls eine versionierte URL: `/favicon.ico?v=1.1.11`.
 Der Browser lädt sie dadurch unter derselben HTTPS-Adresse wie die Seite.
 Das verhindert HTTP-Asset-URLs und Mixed Content bei einer HTTPS-Verbindung
 zum Proxy. Der Proxy-Header ist weiterhin für sichere Sitzungscookies wichtig.
@@ -834,7 +845,7 @@ Receiver dienen jetzt der weiteren Kompatibilitätsprüfung.
 
 ## Favicon und Lesezeichen
 
-Alle Seiten verweisen auf `/favicon.ico?v=1.1.10`. Das Icon ist ohne Anmeldung
+Alle Seiten verweisen auf `/favicon.ico?v=1.1.11`. Das Icon ist ohne Anmeldung
 mit dem Inhaltstyp `image/vnd.microsoft.icon` erreichbar und enthält das
 vorhandene Logo in 16, 32 und 48 Pixeln. Auch die statischen Icon-Dateien
 dürfen einen Tag lang gespeichert werden (`Cache-Control: public, max-age=86400`).

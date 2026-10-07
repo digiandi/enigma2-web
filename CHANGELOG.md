@@ -1,5 +1,17 @@
 # Versionsverlauf
 
+## 1.1.11 – 07.10.2026
+
+- Speicheranzeige auf **Aufnahmen** korrigieren: alle vom Receiver gemeldeten
+  Festplatten mit freiem Speicher in GB und Modellname anzeigen.
+- Strenge Zuordnung zum Aufnahmeordner entfernen; fehlende Mountangaben
+  verhindern keine Anzeige mehr. JSON und ältere XML-Festplattenliste auslesen.
+- Format **Freier Speicherplatz: x GB (Festplattenname)**; mehrere Festplatten
+  jeweils in einer eigenen, am selben linken Rand beginnenden Zeile.
+- Fehlende Speicherwerte weiterhin als **unbekannt** kennzeichnen. Modellname
+  und andere lesbare Festplatten erhalten; automatische Aktualisierung beibehalten.
+- Keine neue Migration oder Abhängigkeit; Datenbankschema weiterhin `0005`.
+
 ## 1.1.10 – 07.10.2026
 
 - Freien Speicherplatz direkt rechts neben der Ordnerauswahl auf **Aufnahmen**

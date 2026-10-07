@@ -475,10 +475,12 @@ body { display: flex; flex-direction: column; }
 .timer-heading .list-filter { flex: 1 1 180px; width: 180px; }
 .timer-heading .receiver-selection { flex: 0 1 auto; }
 .timer-heading .receiver-selection select { flex-basis: 23rem; width: 23rem; }
-.recording-toolbar form { flex: 1 1 490px; max-width: 800px; min-width: 0; }
+.recording-toolbar form { flex: 1 1 650px; min-width: 0; }
+.recording-toolbar label { align-self: flex-start; padding-top: .75rem; }
 .recording-toolbar select { min-width: 0; }
-.recording-directory-row { display: flex; align-items: center; flex: 1; gap: .8rem; min-width: 0; }
-.recording-free-space { flex: 0 0 auto; color: var(--muted); font-size: .82rem; line-height: 1.4; white-space: nowrap; }
+.recording-directory-row { display: flex; align-items: flex-start; flex: 1; gap: .8rem; min-width: 0; }
+.recording-storage { display: flex; flex-direction: column; flex: 0 1 26rem; gap: .3rem; min-width: 0; max-width: 65%; padding-top: .7rem; }
+.recording-free-space { display: block; color: var(--muted); font-size: .82rem; line-height: 1.4; overflow-wrap: anywhere; }
 .recording-free-space strong { font-weight: 600; white-space: nowrap; }
 .recording-toolbar .list-filter { flex: 0 1 230px; margin-left: auto; }
 .timer-table tbody tr[hidden], .recording-table tbody tr[hidden], .channel-table tbody tr[hidden] { display: none; }
@@ -492,7 +494,9 @@ body { display: flex; flex-direction: column; }
   .timer-heading .receiver-selection { flex-basis: 100%; width: 100%; }
   .timer-heading .list-filter { flex-basis: 120px; width: auto; }
   .recording-toolbar form { flex-basis: 100%; width: 100%; flex-direction: column; align-items: stretch; }
+  .recording-toolbar label { padding-top: 0; }
   .recording-directory-row { width: 100%; gap: .6rem; }
-  .recording-free-space { max-width: 7.5rem; font-size: .75rem; white-space: normal; }
+  .recording-storage { flex-basis: 11rem; max-width: 55%; }
+  .recording-free-space { font-size: .75rem; }
   .recording-toolbar .list-filter { flex-basis: 100%; width: 100%; margin: 0; }
 }

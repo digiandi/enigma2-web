@@ -1,4 +1,64 @@
-# Prüfung von Version 1.1.10
+# Prüfung von Version 1.1.11
+
+Prüfstand: 07.10.2026, Python 3.12 unter Linux.
+
+- 344 automatisierte Tests erfolgreich, darunter 34 Speicherplatzprüfungen.
+  Code- und Formatprüfung sowie JavaScript- und Installer-Syntax erfolgreich.
+- JSON-`deviceinfo` mit `hdd` und XML-`deviceinfo` mit `e2hdds/e2hdd` geprüft.
+  Beide Formate liefern alle Festplatten mit Modell und freiem Speicher auch ohne
+  Einhängepunkt oder Ordnerzuordnung. Zusätzliche Tuner-Modellnamen werden nicht
+  als Festplatten gelesen.
+- Werte einschließlich `660.884 GB`, `0 MB`, Dezimalkomma und anderer
+  unterstützter Einheiten geprüft; Ausgabe in GB mit höchstens drei
+  Nachkommastellen. Fehlende, negative oder unlesbare Werte ergeben pro Festplatte
+  **unbekannt**, ohne andere lesbare Festplatten auszublenden. Fehlende Modellnamen
+  und fehlende bzw. ungültige Festplattenlisten ebenfalls geprüft.
+- HTTP-Fehler, Zeitüberschreitung und ungültige JSON-/XML-Antworten der optionalen
+  Speicherabfrage lassen Aufnahmeliste, Download und zulässiges Löschen verfügbar.
+  Speicherabfrage mit Aufnahme-Lesezeitlimit von standardmäßig 90 Sekunden.
+- Browserprüfung mit JSON und XML bei 320, 390, 768, 1024 und 1440 Pixeln Breite:
+  zwanzig Ansichten mit einer bzw. zwei Festplatten. Anzeige direkt rechts neben
+  dem Ordner-Dropdown, jede Festplatte in einer eigenen Zeile mit gleicher linker
+  Position. Mobil darf der Text innerhalb der Zeile umbrechen; keine horizontale
+  Überbreite. Desktop- und Mobilansicht zusätzlich visuell geprüft.
+- Ordnerwechsel zwischen HDD, USB und Netzwerkpfad im Browser geprüft. Alle
+  Festplatten bleiben unabhängig vom gewählten Ordner sichtbar. Die automatische
+  Fünf-Sekunden-Aktualisierung erneuert die Werte; Filtertext und Fokus bleiben
+  erhalten. Teilweise und vollständig unbekannte Angaben sowie der direkte
+  Aufruf ohne JavaScript geprüft. Keine JavaScript-Fehler oder Dialoge.
+- Verzögerte Speicherantworten erhalten den sofortigen Seitenrahmen mit Ladehinweis.
+  Für die Speicheranzeige wurde kein Receiver-Schreibauftrag ausgeführt.
+- Wheel und Quelldistribution gebaut. Installiertes Wheel startet mit Version
+  1.1.11 und Release-Datum 07.10.2026. CLI-Initialisierung erhält Schlüssel,
+  geänderten Port und Zeitlimit; Schema `0005`. Login, Assets, Favicon,
+  Seitenrahmen, Standardordner, Ordner-Fallback, JSON-/XML-Festplattenanzeige,
+  Download und eigenständige Timerkopie geprüft.
+- Installations- und Git-ZIP entpackt und dateiweise verglichen. Paketbau aus
+  dem finalen Installations-ZIP hat identische Inhalte zum geprüften Paketbau.
+  Keine Betriebsdaten oder Zugangsdaten enthalten.
+- Sauberer Branch `main`, annotierter Tag `v1.1.11`, zwölf unveränderte bisherige
+  Tags, `git fsck`, Klonen und gewöhnlicher lokaler Push geprüft. Alle
+  Archivdateien und Git-Objekte weiterhin ohne die entfernten Netzwerkbeispiele.
+- Die Prüfung verwendet simulierte Receiver. Hardwareprüfung, GitHub-Push und
+  GitHub-CI wurden nicht ausgeführt; die bestehende Ubuntu-Installation wurde
+  nicht geändert.
+
+## Änderungen 1.1.11
+
+- Freier Speicher und Festplattenname für alle vom Receiver gemeldeten Festplatten.
+- Die Ordner- und Mountzuordnung aus 1.1.10 entfällt. JSON und ältere XML-
+  Festplattenlisten werden gelesen; mehrere Anzeigen beginnen bündig untereinander.
+- Automatische Aktualisierung und mobile Darstellung. Keine neue Migration
+  oder Abhängigkeit; Datenbankschema weiterhin `0005`.
+
+Primäre Feldreferenzen:
+[OpenWebif-Geräteinformationen](https://github.com/E2OpenPlugins/e2openplugin-OpenWebif/blob/master/plugin/controllers/models/info.py),
+[WebInterface-XML](https://github.com/oe-alliance/enigma2-plugins/blob/master/webinterface/src/web/deviceinfo.xml),
+[WebInterface-Festplattenwerte](https://github.com/oe-alliance/enigma2-plugins/blob/master/webinterface/src/WebComponents/Sources/Hdd.py).
+Feldnamen und Speicherformat wurden am primären Quellcode geprüft;
+kein Quellcode dieser Projekte wird eingebunden.
+
+## Prüfung von Version 1.1.10
 
 Prüfstand: 07.10.2026, Python 3.12 unter Linux.
 

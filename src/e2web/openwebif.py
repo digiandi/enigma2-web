@@ -3,6 +3,7 @@ from __future__ import annotations
 import html
 import re
 from dataclasses import dataclass
+from decimal import Decimal
 from urllib.parse import urlsplit
 
 import httpx
@@ -52,6 +53,12 @@ class EpgEvent:
     @property
     def end(self) -> int:
         return self.begin + self.duration
+
+
+@dataclass(frozen=True)
+class StorageDisk:
+    model: str
+    free_space: str | None
 
 
 def plain_text(value) -> str:
@@ -309,40 +316,49 @@ class OpenWebifClient:
             ) from None
         return paths.pop()
 
-    def recording_free_space(self, directory: str) -> str | None:
-        try:
-            directory = directory_path(directory)
-        except ValueError:
-            return None
+    def storage_disks(self) -> list[StorageDisk]:
         data, xml = self._request("deviceinfo", {}, recording=True)
-        # Only the JSON model has verified mount fields for folder matching.
-        # Never assign a receiver's first disk to every recording directory.
-        if xml or not isinstance(data, dict) or data.get("result") is False:
-            return None
-        disks = data.get("hdd")
-        if not isinstance(disks, list):
-            return None
-        matches = []
-        for disk in disks:
-            if not isinstance(disk, dict):
+        if xml:
+            if data.tag != "e2deviceinfo":
+                raise ReceiverError("Die Antwort enthält keine Geräteinformationen.")
+            rows = [
+                {"model": row.findtext("e2model"), "free": row.findtext("e2free")}
+                for row in data.findall("e2hdds/e2hdd")
+            ]
+        else:
+            rows = self._rows(data, "hdd", "Festplattenliste")
+        disks = []
+        for row in rows:
+            if not isinstance(row, dict):
                 continue
             try:
-                mount = directory_path(disk.get("mount"))
-            except ValueError:
-                continue
-            if not directory.startswith(mount):
-                continue
-            free = disk.get("free")
-            free = " ".join(free.split()) if isinstance(free, str) else ""
-            if not re.fullmatch(r"\d+(?:[.,]\d+)? (?:B|[KMGTPE]i?B)", free, re.IGNORECASE):
-                free = None
-            matches.append((mount, free))
-        if not matches:
+                model = " ".join(plain_text(row.get("model")).split())
+            except ReceiverError:
+                model = ""
+            disks.append(
+                StorageDisk(
+                    model or "Unbekannte Festplatte", self._disk_free_space(row.get("free"))
+                )
+            )
+        return disks
+
+    @staticmethod
+    def _disk_free_space(value) -> str | None:
+        if not isinstance(value, str):
             return None
-        # A nested filesystem takes precedence even when its free space is unknown.
-        length = max(len(mount) for mount, _ in matches)
-        values = {free for mount, free in matches if len(mount) == length}
-        return values.pop() if len(values) == 1 else None
+        match = re.fullmatch(
+            r"(\d{1,16}(?:[.,]\d{1,9})?)\s*(B|[KMGT]i?B)", value.strip(), re.IGNORECASE
+        )
+        if not match:
+            return None
+        amount = Decimal(match[1].replace(",", "."))
+        unit = match[2].upper().replace("I", "")
+        # OpenWebif and legacy Hdd use 1024 between MB and GB.
+        exponent = {"B": -3, "KB": -2, "MB": -1, "GB": 0, "TB": 1}[unit]
+        gigabytes = amount * (Decimal(1024) ** exponent)
+        if 0 < gigabytes < Decimal("0.001"):
+            return "<0.001 GB"
+        return format(gigabytes, ".3f").rstrip("0").rstrip(".") + " GB"
 
     def open_recording(self, filename, range_header=None):
         if (

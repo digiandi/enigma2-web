@@ -9,7 +9,7 @@
     <label for="recording-directory">Ordner</label>
     <div class="recording-directory-row">
       <select id="recording-directory" name="directory" data-auto-submit>{% if not directory %}<option value="" disabled selected>{{ 'Ordner auswählen' if directory_choices else 'Keine Aufnahmepfade verfügbar' }}</option>{% endif %}{% for path in directory_choices %}<option value="{{ path }}" {% if directory == path %}selected{% endif %}>{{ path }}</option>{% endfor %}{% if directory and directory not in directory_choices %}<option value="{{ directory }}" selected>{{ directory }}</option>{% endif %}</select>
-      <span class="recording-free-space">Freier Speicherplatz: <strong>{{ free_space or 'unbekannt' }}</strong></span>
+      <span class="recording-storage">{% for disk in storage_disks %}<span class="recording-free-space">Freier Speicherplatz: <strong>{{ disk.free_space or 'unbekannt' }}</strong> ({{ disk.model }})</span>{% else %}<span class="recording-free-space">Freier Speicherplatz: <strong>unbekannt</strong></span>{% endfor %}</span>
     </div>
   </form>
   <input type="search" id="recording-filter" class="list-filter" placeholder="Liste filtern" aria-label="Liste filtern" data-table-filter="recording-rows" autocomplete="off">

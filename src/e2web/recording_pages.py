@@ -81,7 +81,7 @@ def register_recording_pages(app, config, *, render, selected_receiver, check_cs
         receiver = selected_receiver(request)
         entries, directory_choices, directory, error = [], [], "", None
         status_error = None
-        free_space = None
+        storage_disks = []
         if receiver:
             client = app.state.client_factory(receiver, config)
             app.state.channel_catalog.view(receiver, client)
@@ -190,7 +190,7 @@ def register_recording_pages(app, config, *, render, selected_receiver, check_cs
                 for item, raw in zip(deletable, tokens, strict=True):
                     item["delete_token"] = raw
                 try:
-                    free_space = client.recording_free_space(directory)
+                    storage_disks = client.storage_disks()
                 except ReceiverError:
                     pass  # Optional storage information must not hide the recordings.
             except ReceiverError as exc:
@@ -201,7 +201,7 @@ def register_recording_pages(app, config, *, render, selected_receiver, check_cs
             entries=entries,
             directory=directory,
             directory_choices=directory_choices,
-            free_space=free_space,
+            storage_disks=storage_disks,
             timezone=config.timezone,
             error=action_error or error or status_error,
             list_failed=bool(error),

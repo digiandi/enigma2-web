@@ -1,9 +1,9 @@
-# Version 1.1.10 auf GitHub bereitstellen
+# Version 1.1.11 auf GitHub bereitstellen
 
-Das Git-Paket `enigma2-web-git-v1.1.10.zip` enthält den vollständigen Quellstand
-als vorbereitetes Repository mit Branch `main` und annotiertem Tag `v1.1.10`.
-Es setzt den bereinigten Stand 1.1.9 mit einem neuen Release-Commit fort.
-Die vorhandenen Tags bis einschließlich `v1.1.9` bleiben auf
+Das Git-Paket `enigma2-web-git-v1.1.11.zip` enthält den vollständigen Quellstand
+als vorbereitetes Repository mit Branch `main` und annotiertem Tag `v1.1.11`.
+Es setzt den bereinigten Stand 1.1.10 mit einem neuen Release-Commit fort.
+Die vorhandenen Tags bis einschließlich `v1.1.10` bleiben auf
 ihren bisherigen bereinigten Ständen. Für dieses Update genügt ein normaler Push.
 Die Autorenkennung lautet `Enigma2 Timer Release <release@localhost>`.
 Das Paket enthält noch kein Remote.
@@ -18,7 +18,7 @@ git status --short --branch
 git log -2 --oneline
 git remote add origin https://github.com/digiandi/enigma2-web.git
 git push -u origin main
-git push origin v1.1.9 v1.1.10
+git push origin v1.1.10 v1.1.11
 git ls-remote origin refs/heads/main "refs/tags/v1.*"
 ```
 
@@ -30,20 +30,20 @@ Zugangsdaten gehören nicht in die Remote-URL.
 Eigene zusätzliche Commits auf GitHub müssen vor dem Push berücksichtigt werden.
 Ein normaler Push bricht ab, wenn der neue Stand die dortige Historie nicht fortsetzt.
 Die vorhandenen Release-Tags werden nicht verschoben. Der Push enthält auch
-`v1.1.9`, falls dieser Tag noch nicht hochgeladen wurde. Ist er bereits mit
+`v1.1.10`, falls dieser Tag noch nicht hochgeladen wurde. Ist er bereits mit
 derselben Kennung vorhanden, bleibt er unverändert.
 
 ## Einmalige Bereinigung aus Version 1.1.2
 
 Die Entfernung privater Netzwerkbeispiele aus älteren Releases erfolgte mit
 Version 1.1.2. Wer diese Umstellung bereits abgeschlossen hat, verwendet für
-1.1.10 ausschließlich die normalen Update-Befehle oben.
+1.1.11 ausschließlich die normalen Update-Befehle oben.
 
 Das weiterhin enthaltene `scripts/github-bereinigen.ps1` ist das Hilfsmittel für
 die einmalige Umstellung auf 1.1.2. Es prüft genau diesen Release-Stand und
 ist kein allgemeines Update-Skript für spätere Versionen. Bei einem noch
 unbereinigten Repository zuerst das Git-Paket 1.1.2 samt damaliger Anleitung
-verwenden und anschließend mit Version 1.1.10 fortsetzen.
+verwenden und anschließend mit Version 1.1.11 fortsetzen.
 
 Alte hochgeladene ZIP-Dateien an GitHub-Releases zusätzlich entfernen oder durch
 bereinigte Pakete ersetzen. Heruntergeladene Kopien und Forks werden durch
@@ -63,16 +63,16 @@ Das Git-Paket vollständig entpacken und im Projektordner ausführen;
 ```powershell
 git remote add origin https://github.com/OWNER/enigma2-web.git
 git push -u origin main
-git push origin v1.0.0 v1.1.0 v1.1.1 v1.1.2 v1.1.3 v1.1.4 v1.1.5 v1.1.6 v1.1.7 v1.1.8 v1.1.9 v1.1.10
+git push origin v1.0.0 v1.1.0 v1.1.1 v1.1.2 v1.1.3 v1.1.4 v1.1.5 v1.1.6 v1.1.7 v1.1.8 v1.1.9 v1.1.10 v1.1.11
 ```
 
 Für ein leeres Repository ist das Bereinigungsskript nicht erforderlich.
 
 ## Release veröffentlichen
 
-Unter **Releases** einen Release für Tag `v1.1.10` mit Titel **Enigma2 Timer 1.1.10**
+Unter **Releases** einen Release für Tag `v1.1.11` mit Titel **Enigma2 Timer 1.1.11**
 erstellen. `RELEASE_NOTES.md` als Beschreibung verwenden und
-`enigma2-web-v1.1.10.zip` als Installationspaket anhängen. Git-Tag und Installationspaket
+`enigma2-web-v1.1.11.zip` als Installationspaket anhängen. Git-Tag und Installationspaket
 enthalten denselben Quellstand.
 
 ## Prüfungen und weitere Versionen

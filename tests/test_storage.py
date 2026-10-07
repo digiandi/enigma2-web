@@ -1,5 +1,6 @@
 import re
 from functools import partial
+from xml.etree.ElementTree import Element, SubElement, tostring
 
 import httpx
 import pytest
@@ -12,99 +13,118 @@ from test_recordings import ROOT, MovieReceiver, movie_row
 from e2web.openwebif import OpenWebifClient
 
 
-@pytest.mark.parametrize(
-    ("directory", "disks", "expected"),
-    [
-        (ROOT, [{"mount": "/media/hdd", "free": "120.4 GB"}], "120.4 GB"),
-        (ROOT + "Serien/", [{"mount": "/media/hdd/", "free": "0 MB"}], "0 MB"),
-        ("/media/usb/", [{"mount": "/media/usb", "free": "42,5 GB"}], "42,5 GB"),
-        ("/media/usb2/", [{"mount": "/media/usb", "free": "42 GB"}], None),
-        ("/media/net/Archiv/", [{"mount": "/media/hdd", "free": "42 GB"}], None),
-        ("/hdd/movie/", [{"mount": "/media/hdd", "free": "42 GB"}], None),
-        (
-            ROOT + "Archiv/",
-            [
-                {"mount": "/media/hdd", "free": "42 GB"},
-                {"mount": ROOT + "Archiv", "free": "12 GB"},
-            ],
-            "12 GB",
-        ),
-        (
-            ROOT + "Archiv/",
-            [
-                {"mount": "/media/hdd", "free": "42 GB"},
-                {"mount": ROOT + "Archiv", "free": "-1 MB"},
-            ],
-            None,
-        ),
-        (
-            ROOT,
-            [{"mount": "/media/hdd", "free": "42 GB"}, {"mount": "/media/hdd", "free": "12 GB"}],
-            None,
-        ),
-        (ROOT, [{"model": "Disk", "capacity": "500 GB", "free": "42 GB"}], None),
-        (ROOT, [{"mount": "/media/hdd/../usb", "free": "42 GB"}], None),
-    ],
-)
-def test_storage_matches_the_folder_filesystem_without_guessing(
-    tmp_path, directory, disks, expected
-):
+@pytest.mark.parametrize("xml", [False, True])
+def test_all_receiver_disks_are_read_without_mount_or_folder_information(tmp_path, xml):
     seen = []
 
     def api(request):
         seen.append(request)
-        assert request.method == "GET" and request.url.path == "/api/deviceinfo"
-        assert not request.url.query
-        return httpx.Response(200, json={"hdd": disks})
+        assert request.method == "GET" and not request.url.query
+        if xml and request.url.path.startswith("/api/"):
+            return httpx.Response(404)
+        if xml:
+            return httpx.Response(
+                200,
+                text="<e2deviceinfo><e2frontends><e2frontend><e2model>Tuner</e2model>"
+                "</e2frontend></e2frontends><e2hdds><e2hdd>"
+                "<e2model>WD(My Passport 0748)</e2model><e2capacity>2000.365 GB</e2capacity>"
+                "<e2free>660.884 GB</e2free></e2hdd><e2hdd>"
+                "<e2model>USB-SSD</e2model><e2capacity>500 GB</e2capacity>"
+                "<e2free>42 GB</e2free></e2hdd></e2hdds></e2deviceinfo>",
+            )
+        return httpx.Response(
+            200,
+            json={
+                "hdd": [
+                    {
+                        "model": "WD(My Passport 0748)",
+                        "capacity": "2000.365 GB",
+                        "free": "660.884 GB",
+                    },
+                    {"model": "USB-SSD", "capacity": "500 GB", "free": "42 GB"},
+                ]
+            },
+        )
 
-    client = adapter(tmp_path, api)
-    assert client.recording_free_space(directory) == expected
-    assert len(seen) == 1
-    assert seen[0].extensions["timeout"]["read"] == 90
+    disks = adapter(tmp_path, api).storage_disks()
+    assert [(disk.model, disk.free_space) for disk in disks] == [
+        ("WD(My Passport 0748)", "660.884 GB"),
+        ("USB-SSD", "42 GB"),
+    ]
+    assert [request.url.path for request in seen] == (
+        ["/api/deviceinfo", "/web/deviceinfo"] if xml else ["/api/deviceinfo"]
+    )
+    assert all(request.extensions["timeout"]["read"] == 90 for request in seen)
 
 
 @pytest.mark.parametrize(
-    "free", [None, "", "-1 MB", "unknown", "NaN GB", 123, True, "<b>12 GB</b>"]
+    ("free", "expected"),
+    [
+        ("660.884 GB", "660.884 GB"),
+        ("42,5 GB", "42.5 GB"),
+        ("0 MB", "0 GB"),
+        ("512 MB", "0.5 GB"),
+        ("1 TB", "1024 GB"),
+        ("2 GiB", "2 GB"),
+        ("1 KB", "<0.001 GB"),
+        (None, None),
+        ("", None),
+        ("-1 MB", None),
+        ("unknown", None),
+        ("NaN GB", None),
+        (123, None),
+        (True, None),
+        ("<b>12 GB</b>", None),
+    ],
 )
-def test_unavailable_or_invalid_free_space_is_unknown(tmp_path, free):
+def test_free_space_in_gb_and_unknown_values(tmp_path, free, expected):
     client = adapter(
         tmp_path,
-        lambda request: httpx.Response(200, json={"hdd": [{"mount": "/media/hdd", "free": free}]}),
+        lambda request: httpx.Response(200, json={"hdd": [{"model": "Disk", "free": free}]}),
     )
-    assert client.recording_free_space(ROOT) is None
+    disks = client.storage_disks()
+    assert len(disks) == 1 and disks[0].model == "Disk"
+    assert disks[0].free_space == expected
 
 
-@pytest.mark.parametrize("payload", [{}, {"hdd": None}, {"hdd": {}}, {"hdd": [None]}, []])
-def test_missing_storage_information_is_unknown(tmp_path, payload):
-    client = adapter(tmp_path, lambda request: httpx.Response(200, json=payload))
-    assert client.recording_free_space(ROOT) is None
-
-
-def test_legacy_xml_without_mount_information_is_unknown(tmp_path):
-    seen = []
-
+@pytest.mark.parametrize("xml", [False, True])
+def test_partial_disk_information_keeps_other_disks_visible(tmp_path, xml):
     def api(request):
-        seen.append(request.url.path)
-        if request.url.path.startswith("/api/"):
+        if xml and request.url.path.startswith("/api/"):
             return httpx.Response(404)
+        if xml:
+            return httpx.Response(
+                200,
+                text="<e2deviceinfo><e2hdds><e2hdd><e2model>Disk</e2model><e2free>-1 MB</e2free>"
+                "</e2hdd><e2hdd><e2model>Disk</e2model><e2free>12 GB</e2free></e2hdd>"
+                "<e2hdd><e2free>8 GB</e2free></e2hdd></e2hdds></e2deviceinfo>",
+            )
         return httpx.Response(
             200,
-            text="<e2deviceinfo><e2hddlist><e2hdd><e2model>Disk</e2model>"
-            "<e2capacity>500 GB</e2capacity><e2free>120 GB</e2free>"
-            "</e2hdd></e2hddlist></e2deviceinfo>",
+            json={
+                "hdd": [
+                    {"model": "Disk", "free": "-1 MB"},
+                    None,
+                    {"model": "Disk", "free": "12 GB"},
+                    {"free": "8 GB"},
+                ]
+            },
         )
 
-    assert adapter(tmp_path, api).recording_free_space(ROOT) is None
-    assert seen == ["/api/deviceinfo", "/web/deviceinfo"]
+    assert [(disk.model, disk.free_space) for disk in adapter(tmp_path, api).storage_disks()] == [
+        ("Disk", None),
+        ("Disk", "12 GB"),
+        ("Unbekannte Festplatte", "8 GB"),
+    ]
 
 
 class StorageReceiver(MovieReceiver):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, *, xml=False):
+        super().__init__(xml=xml)
         self.storage = {
             "hdd": [
-                {"mount": "/media/hdd", "free": "120.4 GB"},
-                {"mount": "/media/usb", "free": "42 GB"},
+                {"model": "WD(My Passport 0748)", "free": "660.884 GB"},
+                {"model": "USB-SSD", "free": "42 GB"},
             ]
         }
         self.storage_failure = None
@@ -118,59 +138,89 @@ class StorageReceiver(MovieReceiver):
         )
 
     def __call__(self, request):
-        if request.url.path == "/api/deviceinfo":
+        if request.url.path in {"/api/deviceinfo", "/web/deviceinfo"}:
             self.requests.append((request.method, request.url.path, request.url.host))
+            if self.xml and request.url.path.startswith("/api/"):
+                return httpx.Response(404)
             if self.storage_failure == "timeout":
                 raise httpx.ReadTimeout("private receiver address", request=request)
             if self.storage_failure == "malformed":
                 return httpx.Response(200, text="<html>Bad response</html>")
             if self.storage_failure:
                 return httpx.Response(self.storage_failure)
+            if self.xml:
+                root = Element("e2deviceinfo")
+                disks = SubElement(root, "e2hdds")
+                for disk in self.storage.get("hdd", []):
+                    row = SubElement(disks, "e2hdd")
+                    for key in ("model", "free"):
+                        if disk.get(key) is not None:
+                            SubElement(row, "e2" + key).text = str(disk[key])
+                return httpx.Response(200, content=tostring(root))
             return httpx.Response(200, json=self.storage)
         return super().__call__(request)
 
 
-def free_space(page):
-    return re.search(r'class="recording-free-space">.*?<strong>(.*?)</strong>', page.text).group(1)
+def free_spaces(page):
+    return re.findall(r'class="recording-free-space">.*?<strong>(.*?)</strong>', page.text)
 
 
-def test_recording_page_updates_space_on_refresh_and_folder_change(setup):
+@pytest.mark.parametrize("xml", [False, True])
+def test_recording_page_updates_every_disk_independently_of_folder(setup, xml):
     _, _, app = setup
-    box = StorageReceiver()
+    box = StorageReceiver(xml=xml)
     app.state.client_factory = partial(OpenWebifClient, transport=httpx.MockTransport(box))
     with TestClient(app) as client:
         login(client, "user", "User-123")
         page = client.get("/aufnahmen")
-        assert page.status_code == 200 and free_space(page) == "120.4 GB"
+        assert page.status_code == 200 and free_spaces(page) == ["660.884 GB", "42 GB"]
+        assert "(WD(My Passport 0748))" in page.text and "(USB-SSD)" in page.text
         assert (
             page.text.index('id="recording-directory"')
-            < page.text.index('class="recording-free-space"')
+            < page.text.index('class="recording-storage"')
             < page.text.index('id="recording-filter"')
         )
-        box.storage["hdd"][0]["free"] = "119.8 GB"
+        box.storage["hdd"][0]["free"] = "659.123 GB"
         page = client.get(
             "/aufnahmen", params={"live_receiver": "1"}, headers={"X-Live-Refresh": "1"}
         )
-        assert free_space(page) == "119.8 GB"
-        page = client.get("/aufnahmen", params={"directory": "/media/usb/"})
-        assert free_space(page) == "42 GB" and "Musik.ts" in page.text
-        page = client.get("/aufnahmen", params={"directory": "/media/net/Archiv/"})
-        assert free_space(page) == "unbekannt" and "Keine Aufnahmen" in page.text
+        assert free_spaces(page) == ["659.123 GB", "42 GB"]
+        for directory in ("/media/usb/", "/media/net/Archiv/"):
+            page = client.get("/aufnahmen", params={"directory": directory})
+            assert free_spaces(page) == ["659.123 GB", "42 GB"]
+        box.storage["hdd"][0]["free"] = "-1 MB"
+        page = client.get("/aufnahmen")
+        assert free_spaces(page) == ["unbekannt", "42 GB"]
+        assert "(WD(My Passport 0748))" in page.text
     assert not box.writes
 
 
+@pytest.mark.parametrize("xml", [False, True])
 @pytest.mark.parametrize("failure", [503, 401, "timeout", "malformed"])
-def test_storage_failure_keeps_recordings_and_actions_available(setup, failure):
+def test_storage_failure_keeps_recordings_and_actions_available(setup, xml, failure):
     _, _, app = setup
-    box = StorageReceiver()
+    box = StorageReceiver(xml=xml)
     box.storage_failure = failure
     app.state.client_factory = partial(OpenWebifClient, transport=httpx.MockTransport(box))
     with TestClient(app) as client:
         login(client, "admin", "Admin-123")
         page = client.get("/aufnahmen")
-        assert page.status_code == 200 and free_space(page) == "unbekannt"
+        assert page.status_code == 200 and free_spaces(page) == ["unbekannt"]
         assert "Tagesschau" in page.text and "Herunterladen" in page.text
         assert 'action="/aufnahmen/delete"' in page.text
         assert "Aufnahmeliste nicht erreichbar" not in page.text
         assert "private receiver address" not in page.text
     assert not box.writes
+
+
+@pytest.mark.parametrize("payload", [{}, {"hdd": None}, {"hdd": {}}, {"hdd": []}, []])
+def test_missing_disk_list_is_unknown_in_the_page(setup, payload):
+    _, _, app = setup
+    box = StorageReceiver()
+    box.storage = payload
+    app.state.client_factory = partial(OpenWebifClient, transport=httpx.MockTransport(box))
+    with TestClient(app) as client:
+        login(client, "user", "User-123")
+        page = client.get("/aufnahmen")
+        assert page.status_code == 200 and free_spaces(page) == ["unbekannt"]
+        assert "Tagesschau" in page.text
