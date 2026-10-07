@@ -1,4 +1,45 @@
-# Prüfung von Version 1.1.11
+# Prüfung von Version 1.1.12
+
+Prüfstand: 07.10.2026, Python 3.12 unter Linux.
+
+- 344 automatisierte Tests erfolgreich. Code- und Formatprüfung sowie
+  Installer-Syntax erfolgreich.
+- Browservergleich der Ordnerauswahl mit der bisherigen flexiblen Breite bei
+  320, 390, 720, 768, 1024 und 1440 Pixeln Bildschirmbreite. JSON und XML,
+  jeweils eine und zwei Festplatten: 24 Ansichten geprüft.
+- Über 720 Pixeln beträgt die Feldbreite 50 Prozent des bisherigen Werts
+  innerhalb der Rundung auf Bildschirm-Teilpixel. Bei 1440 Pixeln beispielsweise
+  277,23 statt 554,50 Pixel. Bis einschließlich 720 Pixel bleibt die bisherige
+  mobile Breite erhalten.
+- Festplattenangaben beginnen weiterhin direkt rechts neben dem Dropdown und
+  bei mehreren Festplatten am gleichen linken Rand untereinander. Keine
+  horizontale Überbreite. Desktop- und Mobilansicht zusätzlich visuell geprüft.
+- Ordnerwechsel, automatische Aktualisierung, Filtertext und Fokus, Ladeanzeige,
+  teilweise und vollständig unbekannter Speicher sowie Aufruf ohne JavaScript
+  im Browser geprüft. Keine JavaScript-Fehler, Dialoge oder Receiver-Schreibaufträge
+  für diese Darstellung.
+- Wheel und Quelldistribution gebaut. Installiertes Wheel startet mit Version
+  1.1.12 und Release-Datum 07.10.2026. CLI-Initialisierung erhält Schlüssel,
+  geänderten Port und Aufnahmezeitlimit von 90 Sekunden; Schema `0005`.
+  Login, Assets, Favicon, Seitenrahmen, Standardordner, Ordner-Fallback,
+  JSON-/XML-Festplattenanzeige, Download und eigenständige Timerkopie geprüft.
+- Installations- und Git-ZIP entpackt und dateiweise verglichen. Paketbau aus
+  dem finalen Installations-ZIP hat identische Inhalte zum geprüften Paketbau.
+  Keine Betriebsdaten oder Zugangsdaten enthalten.
+- Sauberer Branch `main`, annotierter Tag `v1.1.12`, dreizehn unveränderte bisherige
+  Tags, `git fsck`, Klonen und gewöhnlicher lokaler Push geprüft. Alle
+  Archivdateien und Git-Objekte weiterhin ohne die entfernten Netzwerkbeispiele.
+- Hardwareprüfung, GitHub-Push und GitHub-CI wurden nicht ausgeführt; die
+  bestehende Ubuntu-Installation wurde nicht geändert. Receiver-Antworten sind
+  in dieser Prüfung simuliert.
+
+## Änderungen 1.1.12
+
+- Ordnerauswahl auf größeren Bildschirmen gegenüber 1.1.11 auf die Hälfte verkleinern.
+- Mobile Feldbreite und bündige Festplattenangaben beibehalten.
+- Keine neue Migration oder Abhängigkeit; Datenbankschema weiterhin `0005`.
+
+## Prüfung von Version 1.1.11
 
 Prüfstand: 07.10.2026, Python 3.12 unter Linux.
 

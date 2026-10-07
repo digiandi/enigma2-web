@@ -1,5 +1,13 @@
 # Versionsverlauf
 
+## 1.1.12 – 07.10.2026
+
+- Ordnerauswahl auf **Aufnahmen** bei mehr als 720 Pixeln Bildschirmbreite auf
+  die Hälfte der Breite aus 1.1.11 reduzieren.
+- Mobile Breite beibehalten. Festplattenangaben bleiben direkt rechts neben
+  dem Dropdown und beginnen bei mehreren Festplatten bündig untereinander.
+- Keine neue Migration oder Abhängigkeit; Datenbankschema weiterhin `0005`.
+
 ## 1.1.11 – 07.10.2026
 
 - Speicheranzeige auf **Aufnahmen** korrigieren: alle vom Receiver gemeldeten

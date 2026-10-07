@@ -1,10 +1,12 @@
-# Enigma2 Timer 1.1.11
+# Enigma2 Timer 1.1.12
 
 Eigenständige, zentral betriebene Webanwendung im Stil von AWAS 3.0.7.
 AWAS und seine Datenbank werden nicht verändert.
 
-Version 1.1.11 zeigt auf der Seite **Aufnahmen** direkt neben der Ordnerauswahl
-für jede Receiver-Festplatte den freien Speicher und den Modellnamen. Mehrere
+Version 1.1.12 halbiert auf größeren Bildschirmen die Breite der Ordnerauswahl
+auf **Aufnahmen** gegenüber 1.1.11. Auf Mobilbildschirmen bis 720 Pixel Breite
+bleibt die bisherige Feldbreite erhalten. Direkt neben der Ordnerauswahl werden
+für jede Receiver-Festplatte der freie Speicher und der Modellname angezeigt. Mehrere
 Festplatten stehen bündig untereinander. JSON und das ältere XML-WebInterface
 werden unterstützt; eine Zuordnung zum ausgewählten Ordner ist nicht erforderlich.
 Fehlt eine Speicherangabe, steht dort **unbekannt**.
@@ -153,7 +155,7 @@ des Administrators. Er benötigt Python 3.12+, `python3-venv`, `rsync` und
 Zugang zum Python-Paketindex. Diese Systempakete bei Bedarf zuvor installieren.
 Es werden weder nginx-Konfigurationen aktiviert noch vorhandene AWAS-Dateien
 verändert. Der Nutzer hat die Erstinstallation und nginx-Anbindung für Version
-0.1.0 auf Ubuntu bestätigt. Die Timer- und Aufnahmefunktionen von 1.1.11 wurden mit
+0.1.0 auf Ubuntu bestätigt. Die Timer- und Aufnahmefunktionen von 1.1.12 wurden mit
 simulierten Receivern geprüft; die Prüfung an der tatsächlichen Hardware steht noch aus.
 
 Pfade:
@@ -635,6 +637,8 @@ Die Liste aktualisiert sich alle fünf Sekunden; deshalb entfällt der Button
 **Neu laden**.
 
 
+Das Ordner-Dropdown ist auf Bildschirmen über 720 Pixel Breite seit 1.1.12 halb
+so breit wie in 1.1.11. Mobil bleibt die bisherige Breite erhalten.
 **Freier Speicherplatz** steht direkt rechts neben dem Ordner-Dropdown, auch
 auf schmalen Bildschirmen. Jede gemeldete Festplatte erhält eine eigene, bündig
 beginnende Zeile, beispielsweise **Freier Speicherplatz: 660.884 GB (WD(My Passport 0748))**.
@@ -729,21 +733,21 @@ Ordner und ihre Unterordner werden akzeptiert. Es wird keine bestimmte
 Symlinkbeziehung vorausgesetzt und kein fremder Wunschpfad zur Prüfung geladen.
 Nach erfolgreichem Löschen bleibt die aktuelle Aufnahmeliste erreichbar.
 
-## Update von 0.1.x bis 1.1.10 auf 1.1.11
+## Update von 0.1.x bis 1.1.11 auf 1.1.12
 
 Das neue Paket auf den Ubuntu-Server übertragen, entpacken und aus dem neuen
 Projektverzeichnis den Installer erneut ausführen. Als root:
 
 ```bash
-unzip enigma2-web-v1.1.11.zip
-cd enigma2-web-v1.1.11
+unzip enigma2-web-v1.1.12.zip
+cd enigma2-web-v1.1.12
 bash scripts/install.sh
 curl --retry 10 --retry-delay 1 --retry-connrefused http://127.0.0.1:8081/health
 ```
 
 Der Installer hält den laufenden Dienst während des Updates an und startet ihn
 anschließend wieder. Der Health-Aufruf wartet bei Bedarf auf den Dienststart.
-Die erwartete Antwort enthält `"version":"1.1.11"`.
+Die erwartete Antwort enthält `"version":"1.1.12"`.
 
 Die vorhandenen Benutzer, Receiver, Passwörter, Sitzungen, die Konfiguration
 und der Verschlüsselungsschlüssel werden weiterverwendet. Ein Administrator
@@ -752,7 +756,7 @@ standardmäßig wird Port 8081 verwendet. Bei einem anderen Port den Health-Aufr
 entsprechend anpassen. In der vorhandenen nginx-Site das Lesezeitlimit auf
 300 Sekunden erhöhen (siehe nächsten Abschnitt); der Installer verändert nginx nicht.
 
-Die Datenbank wird automatisch auf Revision `0005` migriert. Von 0.8.0 bis 1.1.10 auf 1.1.11 ist keine neue Schemaänderung nötig. Vorhandene Konten,
+Die Datenbank wird automatisch auf Revision `0005` migriert. Von 0.8.0 bis 1.1.11 auf 1.1.12 ist keine neue Schemaänderung nötig. Vorhandene Konten,
 Receiverzuordnungen, Sitzungen, Audit-Ereignisse und alte Eigentümerkennungen
 bleiben erhalten. Die neue Migration ergänzt sprechende Ersteller-Tags für alle
 vorhandenen Konten. Frühere Revisionen ergänzen weiterhin Eigentümerkennungen,
@@ -788,8 +792,8 @@ Danach als root:
 nginx -t && systemctl reload nginx
 ```
 
-CSS und JavaScript verwenden URLs wie `/static/app.css?v=1.1.11`.
-Das Favicon verwendet ebenfalls eine versionierte URL: `/favicon.ico?v=1.1.11`.
+CSS und JavaScript verwenden URLs wie `/static/app.css?v=1.1.12`.
+Das Favicon verwendet ebenfalls eine versionierte URL: `/favicon.ico?v=1.1.12`.
 Der Browser lädt sie dadurch unter derselben HTTPS-Adresse wie die Seite.
 Das verhindert HTTP-Asset-URLs und Mixed Content bei einer HTTPS-Verbindung
 zum Proxy. Der Proxy-Header ist weiterhin für sichere Sitzungscookies wichtig.
@@ -845,7 +849,7 @@ Receiver dienen jetzt der weiteren Kompatibilitätsprüfung.
 
 ## Favicon und Lesezeichen
 
-Alle Seiten verweisen auf `/favicon.ico?v=1.1.11`. Das Icon ist ohne Anmeldung
+Alle Seiten verweisen auf `/favicon.ico?v=1.1.12`. Das Icon ist ohne Anmeldung
 mit dem Inhaltstyp `image/vnd.microsoft.icon` erreichbar und enthält das
 vorhandene Logo in 16, 32 und 48 Pixeln. Auch die statischen Icon-Dateien
 dürfen einen Tag lang gespeichert werden (`Cache-Control: public, max-age=86400`).

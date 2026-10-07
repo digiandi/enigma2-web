@@ -1,11 +1,19 @@
-# Enigma2 Timer 1.1.11
+# Enigma2 Timer 1.1.12
 
-Release: 07.10.2026 · Git-Tag: `v1.1.11` · Datenbankschema: `0005`
+Release: 07.10.2026 · Git-Tag: `v1.1.12` · Datenbankschema: `0005`
 
 Zentrale Timer- und Aufnahmen-Verwaltung für mehrere Enigma2-Receiver über
 OpenWebif oder das ältere XML-WebInterface, mit deutscher Oberfläche im AWAS-Stil.
 
-## Neu in 1.1.11
+## Neu in 1.1.12
+
+- **Schmalere Ordnerauswahl:** Das Dropdown auf **Aufnahmen** ist bei mehr als
+  720 Pixeln Bildschirmbreite halb so breit wie in 1.1.11. Mobil bleibt die
+  bisherige Breite erhalten. Die Festplattenangaben stehen weiterhin direkt
+  daneben und beginnen bündig untereinander.
+- **Update:** Keine Konfigurationsänderung, neue Migration oder Abhängigkeit nötig.
+
+## Festplattenanzeige seit 1.1.11
 
 - **Festplattenanzeige korrigiert:** Die strenge Zuordnung zum Aufnahmeordner
   entfällt. Auch ohne gemeldeten Einhängepunkt werden alle Festplatten des
@@ -168,24 +176,24 @@ OpenWebif oder das ältere XML-WebInterface, mit deutscher Oberfläche im AWAS-S
   Rückstellung nach fünf Sekunden.
 - Sprechende Ersteller-Tags, manuell am Receiver verwendbar; alte Kennungen bleiben gültig.
 - systemd-Installer, nginx-Vorlage und HTTPS-Betrieb hinter einem vorhandenen Proxy.
-- GitHub-Unterlagen mit CI-Workflow und vorbereiteter Git-Historie samt `v1.1.11`.
+- GitHub-Unterlagen mit CI-Workflow und vorbereiteter Git-Historie samt `v1.1.12`.
 
 ## Installation und Update
 
-Das Installationspaket `enigma2-web-v1.1.11.zip` entpacken und im enthaltenen
+Das Installationspaket `enigma2-web-v1.1.12.zip` entpacken und im enthaltenen
 Projektverzeichnis als root `bash scripts/install.sh` ausführen.
 Bei Neuinstallation danach einen Administrator anlegen und `e2web` aktivieren;
 bei vorhandener Installation werden Konten, Receiver, Konfiguration, Datenbank
 und Schlüssel weiterverwendet. Einzelheiten: [INSTALL.md](INSTALL.md).
 
-Das Update von 0.8.0 bis 1.1.10 auf 1.1.11 benötigt keine neue Schemaänderung
+Das Update von 0.8.0 bis 1.1.11 auf 1.1.12 benötigt keine neue Schemaänderung
 und verändert keine Timer oder Aufnahmedateien auf Receivern. Vorhandene
 Konfiguration, einschließlich eines geänderten Ports, wird erhalten.
 
 ## Prüfung
 
 344 automatisierte Tests, Code-/Formatprüfung, JavaScript-/Installer-Syntax,
-Browserprüfung mit JSON- und XML-Receivern bei fünf Bildschirmbreiten, Paketbau
+Browserprüfung mit JSON- und XML-Receivern bei sechs Bildschirmbreiten, Paketbau
 und Start des installierten Wheels; Prüfergebnisse stehen in
 [VERIFICATION.md](VERIFICATION.md).
 Die Speicherabfrage wurde mit simulierten Receivern und anhand der primären
@@ -195,10 +203,10 @@ oder Zugangsdaten.
 
 ## GitHub
 
-`enigma2-web-git-v1.1.11.zip` enthält das vorbereitete Repository mit Branch `main`
-und Tag `v1.1.11`. Alle bisherigen bereinigten Tags einschließlich `v1.1.10`
+`enigma2-web-git-v1.1.12.zip` enthält das vorbereitete Repository mit Branch `main`
+und Tag `v1.1.12`. Alle bisherigen bereinigten Tags einschließlich `v1.1.11`
 bleiben auf ihren bisherigen Ständen. Ein gewöhnlicher Push von `main` und
-`v1.1.11` genügt; der vorige Tag `v1.1.10` kann dabei mit übertragen werden,
+`v1.1.12` genügt; der vorige Tag `v1.1.11` kann dabei mit übertragen werden,
 falls er noch nicht auf GitHub vorhanden ist. Quellstand und Installationspaket
 sind identisch. Anleitung: [GITHUB.md](GITHUB.md).
 Lizenz- und Herkunftsangaben: [NOTICE.md](NOTICE.md).
