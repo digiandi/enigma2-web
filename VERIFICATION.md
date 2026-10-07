@@ -1,4 +1,57 @@
-# Prüfung von Version 1.1.9
+# Prüfung von Version 1.1.10
+
+Prüfstand: 07.10.2026, Python 3.12 unter Linux.
+
+- 340 automatisierte Tests erfolgreich, darunter 30 neue Speicherplatzprüfungen.
+  Code- und Formatprüfung sowie JavaScript- und Installer-Syntax erfolgreich.
+- Speicherplatz aus JSON-`deviceinfo` geprüft: mehrere Datenträger, Unterordner,
+  ein verschachtelter Einhängepunkt, ähnliche Pfadnamen, fehlende Mountangaben,
+  widersprüchliche Werte und nicht bestätigte Symlinkpfade.
+- Gültige Werte einschließlich `0 MB` bleiben sichtbar. Fehlende, negative,
+  unlesbare oder nicht zuordenbare Werte ergeben **unbekannt**. XML-Antworten
+  ohne implementierte Mountzuordnung ebenfalls. Es wird keine Dateigröße zur
+  Schätzung verwendet und kein erster Datenträger pauschal angenommen.
+- HTTP-Fehler, Zeitüberschreitung und ungültige Antworten der optionalen
+  Speicherabfrage lassen Aufnahmeliste, Download und zulässiges Löschen verfügbar.
+  Speicherabfrage mit Aufnahme-Lesezeitlimit von standardmäßig 90 Sekunden.
+- Browserprüfung bei 320, 390, 720, 768, 1024 und 1440 Pixeln Breite: zwölf
+  Ansichten mit bekanntem bzw. unbekanntem Speicher. Anzeige direkt rechts neben
+  dem Dropdown und vertikal mittig, auch mobil; keine horizontale Überbreite.
+  Desktop zeigt Beschriftung und Wert in einer Zeile, mobil darf der Text umbrechen.
+- Ordnerwechsel zwischen HDD, USB und nicht zuordenbarem Netzwerkpfad im Browser
+  geprüft. Freier Speicher folgt der Auswahl und der Fünf-Sekunden-Aktualisierung;
+  Filtertext und Fokus bleiben erhalten. Keine JavaScript-Fehler oder Dialoge.
+- Verzögerte Speicherantworten erhalten den sofortigen Seitenrahmen mit Ladehinweis.
+  Erster HTML-Aufruf in der Browserprüfung unter 0,1 Sekunden. Direkter Aufruf
+  ohne JavaScript zeigt ebenfalls den Speicherwert.
+- Wheel und Quelldistribution gebaut. Installiertes Wheel startet mit Version
+  1.1.10 und Release-Datum 07.10.2026. Initialisierung erhält Schlüssel, geänderten
+  Port und Zeitlimit; Schema `0005`. Login, Assets, Favicon, Seitenrahmen,
+  Standardordner, Ordner-Fallback, Speicheranzeige und eigenständige Timerkopie geprüft.
+- Installations- und Git-ZIP entpackt und dateiweise verglichen. Paketbau aus
+  dem finalen Installations-ZIP hat identische Inhalte zum geprüften Paketbau.
+  Keine Betriebsdaten oder Zugangsdaten enthalten.
+- Sauberer Branch `main`, annotierter Tag `v1.1.10`, elf unveränderte bisherige
+  Tags, `git fsck`, Klonen und gewöhnlicher lokaler Push geprüft. Alle
+  Archivdateien und Git-Objekte weiterhin ohne die entfernten Netzwerkbeispiele.
+- Die Prüfung verwendet simulierte Receiver; kein Receiver-Schreibauftrag für
+  die Speicheranzeige. Hardwareprüfung, GitHub-Push und GitHub-CI wurden nicht
+  ausgeführt; die bestehende Ubuntu-Installation wurde nicht geändert.
+
+## Änderungen 1.1.10
+
+- Freier Speicherplatz direkt neben der Ordnerauswahl auf **Aufnahmen**.
+- Ordnerbezogene Zuordnung mit JSON-Geräteinformationen; **unbekannt** bei
+  fehlender Zuordnung oder nicht verfügbarer Angabe.
+- Automatische Aktualisierung und mobile Darstellung. Keine neue Migration
+  oder Abhängigkeit; Datenbankschema weiterhin `0005`.
+
+Primäre Feldreferenz:
+[OpenWebif-Geräteinformationen](https://github.com/E2OpenPlugins/e2openplugin-OpenWebif/blob/master/plugin/controllers/models/info.py).
+Die Felder `hdd`, `mount` und `free` wurden am primären Quellcode geprüft;
+kein OpenWebif-Quellcode wird eingebunden.
+
+## Prüfung von Version 1.1.9
 
 Prüfstand: 07.10.2026, Python 3.12 unter Linux.
 

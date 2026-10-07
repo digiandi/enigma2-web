@@ -1,4 +1,4 @@
-# Enigma2 Timer 1.1.9 installieren
+# Enigma2 Timer 1.1.10 installieren
 
 Voraussetzungen: Ubuntu/Debian mit systemd, Python 3.12 oder neuer, `python3-venv`,
 `rsync` und `unzip`. Der Server muss die Receiver erreichen können. Der Installer
@@ -29,8 +29,8 @@ Die angezeigte Python-Version muss mindestens 3.12 sein. Anschließend das
 Installationspaket auf den Server übertragen und entpacken:
 
 ```bash
-unzip enigma2-web-v1.1.9.zip
-cd enigma2-web-v1.1.9
+unzip enigma2-web-v1.1.10.zip
+cd enigma2-web-v1.1.10
 bash scripts/install.sh
 runuser -u e2web-service -- /opt/e2web/.venv/bin/e2web \
   --config /etc/e2web/e2web.toml create-admin
@@ -54,8 +54,8 @@ gestopptem Webdienst oder mit einer konsistenten SQLite-Sicherung.
 Das neue Paket in einen neuen Ordner entpacken und als root ausführen:
 
 ```bash
-unzip enigma2-web-v1.1.9.zip
-cd enigma2-web-v1.1.9
+unzip enigma2-web-v1.1.10.zip
+cd enigma2-web-v1.1.10
 bash scripts/install.sh
 curl --retry 10 --retry-delay 1 --retry-connrefused \
   http://127.0.0.1:8081/health
@@ -70,7 +70,7 @@ das Update keine Timer oder Aufnahmedateien verändert.
 Erwartete Antwort:
 
 ```json
-{"status":"ok","version":"1.1.9"}
+{"status":"ok","version":"1.1.10"}
 ```
 
 Nach dem Update die Browserseite neu laden. Vorher geöffnete Timerformulare neu
@@ -134,7 +134,7 @@ verwenden. Unter **Benutzer** die Receiver sowie Lese-/Schreibrechte und
 Standardreceiver zuweisen. Administratoren haben Schreibrechte auf alle
 aktivierten Receiver.
 
-Für Aufnahmelisten und Downloads gilt standardmäßig ein Lesezeitlimit von
+Für Aufnahmelisten, Speicherplatzabfragen und Downloads gilt standardmäßig ein Lesezeitlimit von
 90 Sekunden, damit eine Festplatte anlaufen kann. Anzeigezeitzone ist
 standardmäßig `Europe/Berlin`. Weitere Konfiguration, Ersteller-Tags,
 Bedienhinweise und vollständige Deinstallation stehen in [README.md](README.md).

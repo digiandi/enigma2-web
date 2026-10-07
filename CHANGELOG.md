@@ -1,5 +1,17 @@
 # Versionsverlauf
 
+## 1.1.10 – 07.10.2026
+
+- Freien Speicherplatz direkt rechts neben der Ordnerauswahl auf **Aufnahmen**
+  anzeigen, auch mobil. Bei fehlender Angabe **unbekannt**.
+- JSON-Geräteinformationen über `deviceinfo` lesen und das ausgewählte Verzeichnis
+  dem am genauesten passenden gemeldeten Einhängepunkt zuordnen.
+- Ordnerwechsel und bestehende Fünf-Sekunden-Aktualisierung berücksichtigen.
+  Negative, widersprüchliche oder nicht zuordenbare Werte nicht anzeigen.
+- Speicherabfrage mit Aufnahmezeitlimit; bei Fehlern bleiben Dateien und Aktionen
+  verfügbar. XML ohne implementierte Mountzuordnung zeigt **unbekannt**.
+- Keine neue Migration oder Abhängigkeit; Datenbankschema weiterhin `0005`.
+
 ## 1.1.9 – 07.10.2026
 
 - Standardbindung auf `0.0.0.0` setzen: alle IPv4-Adressen des Servers.

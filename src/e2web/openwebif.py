@@ -309,6 +309,41 @@ class OpenWebifClient:
             ) from None
         return paths.pop()
 
+    def recording_free_space(self, directory: str) -> str | None:
+        try:
+            directory = directory_path(directory)
+        except ValueError:
+            return None
+        data, xml = self._request("deviceinfo", {}, recording=True)
+        # Only the JSON model has verified mount fields for folder matching.
+        # Never assign a receiver's first disk to every recording directory.
+        if xml or not isinstance(data, dict) or data.get("result") is False:
+            return None
+        disks = data.get("hdd")
+        if not isinstance(disks, list):
+            return None
+        matches = []
+        for disk in disks:
+            if not isinstance(disk, dict):
+                continue
+            try:
+                mount = directory_path(disk.get("mount"))
+            except ValueError:
+                continue
+            if not directory.startswith(mount):
+                continue
+            free = disk.get("free")
+            free = " ".join(free.split()) if isinstance(free, str) else ""
+            if not re.fullmatch(r"\d+(?:[.,]\d+)? (?:B|[KMGTPE]i?B)", free, re.IGNORECASE):
+                free = None
+            matches.append((mount, free))
+        if not matches:
+            return None
+        # A nested filesystem takes precedence even when its free space is unknown.
+        length = max(len(mount) for mount, _ in matches)
+        values = {free for mount, free in matches if len(mount) == length}
+        return values.pop() if len(values) == 1 else None
+
     def open_recording(self, filename, range_header=None):
         if (
             not filename.startswith("/")
