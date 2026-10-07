@@ -1,4 +1,53 @@
-# Prüfung von Version 1.1.12
+# Prüfung von Version 1.1.13
+
+Prüfstand: 07.10.2026, Python 3.12 unter Linux.
+
+- 344 automatisierte Tests erfolgreich. Code- und Formatprüfung sowie
+  Installer-Syntax erfolgreich.
+- Browserprüfung mit JSON und XML bei 320, 390, 720, 768, 1024, 1440 und
+  1920 Pixeln Bildschirmbreite. Jeweils eine, zwei, drei und fünf Festplatten:
+  56 Ansichten geprüft, einschließlich langer umgebrochener Modellnamen.
+- Ordnerauswahl und der sichtbare Inhalt des gesamten Speicherblocks haben
+  dieselbe vertikale Mitte innerhalb der Rundung auf Bildschirm-Teilpixel.
+  Maximale Abweichung weniger als 0,01 Pixel. In der gemeinsamen Zeile auch
+  Ordnerbeschriftung und Filterfeld geprüft; Auswahl und Filter ohne Abweichung.
+  Speicherzeilen bleiben bündig untereinander. Keine horizontale Überbreite.
+- Der Versatz aus 1.1.12 wurde mit dessen unveränderter CSS-Datei reproduziert:
+  bei zwei Festplatten und 1440 Pixeln 3,34 Pixel Unterschied zwischen den
+  Mittelpunkten von Auswahl und Filter. Neue Ausrichtung beseitigt den Versatz,
+  bei identischer Feldbreite. Desktop- und Mobilansichten zusätzlich visuell geprüft.
+- Auf schmalen Bildschirmen bleibt der bestehende responsive Umbruch erhalten.
+  Die mobile Ordnerbeschriftung bleibt links oberhalb der Auswahl; Dropdown und
+  mehrzeilige Speicherangaben sind weiterhin mittig zueinander ausgerichtet.
+- Automatische Aktualisierung von zwei auf fünf Festplatten richtet die Zeile
+  erneut korrekt aus. Ordnerwechsel, Filtertext und Fokus, Ladeanzeige,
+  unbekannter Speicher, Download-/Löschaktionen und Aufruf ohne JavaScript im
+  Browser geprüft. Keine JavaScript-Fehler, Dialoge oder Receiver-Schreibaufträge
+  für diese Darstellung.
+- Wheel und Quelldistribution gebaut. Installiertes Wheel startet mit Version
+  1.1.13 und Release-Datum 07.10.2026. CLI-Initialisierung erhält Schlüssel,
+  geänderten Port und Aufnahmezeitlimit von 90 Sekunden; Schema `0005`.
+  Login, Assets, Favicon, Seitenrahmen, Standardordner, Ordner-Fallback,
+  JSON-/XML-Festplattenanzeige, Download und eigenständige Timerkopie geprüft.
+- Installations- und Git-ZIP entpackt und dateiweise verglichen. Paketbau aus
+  dem finalen Installations-ZIP hat identische Inhalte zum geprüften Paketbau.
+  Keine Betriebsdaten oder Zugangsdaten enthalten.
+- Sauberer Branch `main`, annotierter Tag `v1.1.13`, vierzehn unveränderte bisherige
+  Tags, `git fsck`, Klonen und gewöhnlicher lokaler Push geprüft. Alle
+  Archivdateien und Git-Objekte weiterhin ohne die entfernten Netzwerkbeispiele.
+- Hardwareprüfung, GitHub-Push und GitHub-CI wurden nicht ausgeführt; die
+  bestehende Ubuntu-Installation wurde nicht geändert. Receiver-Antworten sind
+  in dieser Prüfung simuliert.
+
+## Änderungen 1.1.13
+
+- Ordnerbeschriftung, Dropdown, den gesamten Speicherblock und das Filterfeld
+  in der gemeinsamen Zeile vertikal mittig ausrichten.
+- Feste obere Abstände und den Versatz bei mehreren Festplatten entfernen.
+- Halbierte Desktopbreite und responsive Darstellung beibehalten.
+- Keine neue Migration oder Abhängigkeit; Datenbankschema weiterhin `0005`.
+
+## Prüfung von Version 1.1.12
 
 Prüfstand: 07.10.2026, Python 3.12 unter Linux.
 

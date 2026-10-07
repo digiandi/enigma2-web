@@ -1,5 +1,14 @@
 # Versionsverlauf
 
+## 1.1.13 – 07.10.2026
+
+- Ordnerbeschriftung, Ordnerauswahl, den gesamten Speicherblock und das Filterfeld
+  auf **Aufnahmen** in der gemeinsamen Zeile vertikal mittig ausrichten.
+- Versatz bei mehreren Festplatten beseitigen; feste obere Abstände entfernen.
+  Speicherzeilen bleiben bündig untereinander, die halbierte Desktopbreite und
+  das responsive mobile Layout bleiben erhalten.
+- Keine neue Migration oder Abhängigkeit; Datenbankschema weiterhin `0005`.
+
 ## 1.1.12 – 07.10.2026
 
 - Ordnerauswahl auf **Aufnahmen** bei mehr als 720 Pixeln Bildschirmbreite auf

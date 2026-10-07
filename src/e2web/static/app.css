@@ -476,10 +476,10 @@ body { display: flex; flex-direction: column; }
 .timer-heading .receiver-selection { flex: 0 1 auto; }
 .timer-heading .receiver-selection select { flex-basis: 23rem; width: 23rem; }
 .recording-toolbar form { flex: 1 1 650px; min-width: 0; }
-.recording-toolbar label { align-self: flex-start; padding-top: .75rem; }
+.recording-toolbar label { align-self: center; }
 .recording-toolbar select { flex: 0 1 calc((100% - min(26rem, 65%) - .8rem) / 2); min-width: 0; }
-.recording-directory-row { display: flex; align-items: flex-start; flex: 1; gap: .8rem; min-width: 0; }
-.recording-storage { display: flex; flex-direction: column; flex: 0 1 26rem; gap: .3rem; min-width: 0; max-width: 65%; padding-top: .7rem; }
+.recording-directory-row { display: flex; align-items: center; flex: 1; gap: .8rem; min-width: 0; }
+.recording-storage { display: flex; flex-direction: column; flex: 0 1 26rem; gap: .3rem; min-width: 0; max-width: 65%; }
 .recording-free-space { display: block; color: var(--muted); font-size: .82rem; line-height: 1.4; overflow-wrap: anywhere; }
 .recording-free-space strong { font-weight: 600; white-space: nowrap; }
 .recording-toolbar .list-filter { flex: 0 1 230px; margin-left: auto; }
@@ -494,7 +494,7 @@ body { display: flex; flex-direction: column; }
   .timer-heading .receiver-selection { flex-basis: 100%; width: 100%; }
   .timer-heading .list-filter { flex-basis: 120px; width: auto; }
   .recording-toolbar form { flex-basis: 100%; width: 100%; flex-direction: column; align-items: stretch; }
-  .recording-toolbar label { padding-top: 0; }
+  .recording-toolbar label { align-self: flex-start; }
   .recording-toolbar select { flex: 1; }
   .recording-directory-row { width: 100%; gap: .6rem; }
   .recording-storage { flex-basis: 11rem; max-width: 55%; }
