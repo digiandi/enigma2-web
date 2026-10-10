@@ -1,5 +1,13 @@
 # Versionsverlauf
 
+## 1.1.14 – 10.10.2026
+
+- Bouquet-, Anbieter- und Senderlisten auf die Breite von **Timer erstellen**
+  begrenzen: maximal 850 Pixel, mobil die verfügbare Seitenbreite.
+- README, Projekttexte und Code-Kommentare ohne Vergleiche mit anderen Projekten;
+  Hinweise zu bereitgestellten Quellen und deren Lizenz erhalten.
+- Keine neue Migration oder Abhängigkeit; Datenbankschema weiterhin `0005`.
+
 ## 1.1.13 – 07.10.2026
 
 - Ordnerbeschriftung, Ordnerauswahl, den gesamten Speicherblock und das Filterfeld

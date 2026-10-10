@@ -1,16 +1,14 @@
-# Enigma2 Timer 1.1.13
+# Enigma2 Timer 1.1.14
 
-Eigenständige, zentral betriebene Webanwendung im Stil von AWAS 3.0.7.
-AWAS und seine Datenbank werden nicht verändert.
+Eigenständige, zentral betriebene Webanwendung zur Timer- und
+Aufnahmen-Verwaltung für Enigma2-Receiver.
 
-Version 1.1.13 zentriert auf **Aufnahmen** die Ordnerbeschriftung, die
-Ordnerauswahl, den gesamten Speicherblock und das Filterfeld auf derselben
-horizontalen Mitte. Das gilt auch bei mehreren Festplatten und umgebrochenen
-Speicherangaben. Die seit 1.1.12 halbierte Desktopbreite der Ordnerauswahl
-bleibt erhalten; schmale Ansichten verwenden weiterhin das responsive Layout.
-Alle vom Receiver gemeldeten Festplatten stehen direkt neben der Ordnerauswahl
-bündig untereinander. JSON und das ältere XML-WebInterface werden unterstützt.
-Fehlt eine Speicherangabe, steht dort **unbekannt**.
+Version 1.1.14 begrenzt die Bouquet-, Anbieter- und Senderlisten auf die
+Breite des Formulars **Timer erstellen**: maximal 850 Pixel, auf schmalen
+Bildschirmen die verfügbare Seitenbreite. Sendernamen und Aktionen stehen
+dadurch auf großen Bildschirmen näher beieinander.
+Projekttexte und Kommentare beschreiben die eigenständige Anwendung
+ohne Vergleiche mit anderen Projekten.
 Die seit 1.1.2 bereinigte Git-Historie wird mit einem gewöhnlichen neuen
 Release-Commit fortgesetzt.
 Installation und Update: [INSTALL.md](INSTALL.md). GitHub: [GITHUB.md](GITHUB.md).
@@ -21,7 +19,7 @@ Installation und Update: [INSTALL.md](INSTALL.md). GitHub: [GITHUB.md](GITHUB.md
 
 Implementiert:
 
-- deutsche, responsive Oberfläche mit der tatsächlichen AWAS-Gestaltung:
+- deutsche, responsive Oberfläche:
   violette Kopfleiste, hellvioletter Hintergrund, orangefarbene Aktionen,
   digiandi-Logo, 90 % Seitenbreite und mobile Navigation;
 - Anmeldung und Abmeldung, Argon2id-Passwort-Hashes, serverseitige widerrufbare
@@ -32,13 +30,13 @@ Implementiert:
   löschen und Startpasswort zurücksetzen;
 - erzwungener Passwortwechsel für neu angelegte Konten bzw. nach Passwort-Reset;
 - Schutz des eigenen Administratorkontos und des letzten aktiven Administrators;
-- Benutzerübersicht mit „Letzte Anmeldung“ wie bei AWAS, einschließlich vorhandener Login-Zeitpunkte;
+- Benutzerübersicht mit „Letzte Anmeldung“, einschließlich vorhandener Login-Zeitpunkte;
 - Receiver-Rechte pro Benutzer: kein Zugriff, Lesen oder Lesen und Schreiben;
   zusätzlich Wahl eines Standardreceivers, serverseitig geprüft;
 - Receiver anlegen, bearbeiten, deaktivieren, löschen und testen;
 - alphabetische Receiver-Reihenfolge ohne manuelles Sortierfeld;
 - Eigentümerrechte: Benutzer ändern/löschen nur eigene Timer und Aufnahmen;
-- Erstellerangabe „von …“ bei jedem Timer und jeder Aufnahme wie bei AWAS;
+- Erstellerangabe „von …“ bei jedem Timer und jeder Aufnahme;
 - sprechende Ersteller-Tags wie `e2web-owner-digiandi`, auch manuell am Receiver verwendbar;
 - sofortiger Seitenrahmen mit Ladeanzeige bei Receiver-Abfragen;
 - automatische Aktualisierung von Timern und Aufnahmen alle fünf Sekunden;
@@ -54,13 +52,13 @@ Implementiert:
 - dezente Fußzeile mit Version, Release-Datum und Anzeigezeitzone;
 - Timer als Startseite; Menüfolge Timer, Sender, Aufnahmen, Receiver, Benutzer;
 - Receiver- und Benutzerverwaltung nur für Administratoren, mit orangefarbener
-  Überschrift „Administration“ wie bei AWAS;
+  Überschrift „Administration“;
 - Senderlisten für TV und Radio: Bouquets und Anbieter; Standardauswahl TV/Bouquets;
 - Sender in der Reihenfolge des Receivers, Gruppenüberschriften und Namensfilter;
 - Sender-EPG mit Datumsauswahl, Beginn/Ende, Dauer, laufender Sendung und
   aufklappbaren Sendungsdetails;
 - Timerliste mit Bereichen „Laufend (x)“ und „Anstehend (x)“, Dateinamen und
-  Dateigrößen ausschließlich bei laufenden Timern; AWAS-Spalten Aufnahme, Sender, Receiver, Start, Ende, Dauer und
+  Dateigrößen ausschließlich bei laufenden Timern; Spalten Aufnahme, Sender, Receiver, Start, Ende, Dauer und
   Status; direkt sichtbarer Beschreibung, Wiederholung und
   aufklappbarem Verlauf; ohne Beschreibung entfällt die entsprechende Zeile;
 - Haupttitel mit danebenstehendem aktivem Receiver ohne Doppelpunkt;
@@ -78,15 +76,15 @@ Implementiert:
   neuer Timer mit eigenem Ersteller, Wiederholung, Aufnahmepfad und Receiveroptionen;
 - Aufnahmelisten mit direkt ausgewähltem Receiver-Standardpfad und Unterordnern
   in einer gemeinsamen Ordnerauswahl ohne separate Unterordnerbuttons;
-  AWAS-Spaltenfolge, Datum/Uhrzeit und Laufzeit, separate Dateinamenzeile mit
+  Spalten Aufnahme, Sender, Receiver, Beginn, Dauer und Status; separate Dateinamenzeile mit
   Dateigröße; Download, Löschung und Schutz laufender Aufnahmen;
 - freier Speicherplatz mit Festplattenname direkt neben der Aufnahmeordnerauswahl;
   alle gemeldeten Festplatten bündig untereinander, bei fehlender Angabe **unbekannt**;
-- laufende Aufnahmen in Timern und Aufnahmelisten orange wie bei AWAS (`#fde7dc`);
+- laufende Aufnahmen in Timern und Aufnahmelisten orange (`#fde7dc`);
 - 90 Sekunden Lesezeitlimit für Aufnahmelisten und Downloads zum HDD-Anlauf;
 - alle Löschbuttons mit zwei Klicks: zunächst „Wirklich löschen?“ auf rotem
   Hintergrund, beim zweiten Klick innerhalb von fünf Sekunden ausführen; danach
-  automatisch zurücksetzen, genau wie AWAS; Ergebnis direkt in der jeweiligen Liste;
+  automatisch zurücksetzen; Ergebnis direkt in der jeweiligen Liste;
 - Empfang und Anzeige von Timerkonflikten, Erhalt vorhandener Zusatzoptionen,
   Schutz gegen doppelte Formularsendungen und Änderungen aus alten Browser-Tabs;
 - OpenWebif-JSON-Abfrage mit XML-Fallback bei fehlendem JSON-Endpunkt;
@@ -154,9 +152,9 @@ sudo systemctl enable --now e2web
 Der Installer stellt den Dienst bereit, startet ihn aber nicht vor der Anlage
 des Administrators. Er benötigt Python 3.12+, `python3-venv`, `rsync` und
 Zugang zum Python-Paketindex. Diese Systempakete bei Bedarf zuvor installieren.
-Es werden weder nginx-Konfigurationen aktiviert noch vorhandene AWAS-Dateien
-verändert. Der Nutzer hat die Erstinstallation und nginx-Anbindung für Version
-0.1.0 auf Ubuntu bestätigt. Die Timer- und Aufnahmefunktionen von 1.1.13 wurden mit
+Der Installer aktiviert keine nginx-Konfigurationen.
+Der Nutzer hat die Erstinstallation und nginx-Anbindung für Version
+0.1.0 auf Ubuntu bestätigt. Die Timer- und Aufnahmefunktionen von 1.1.14 wurden mit
 simulierten Receivern geprüft; die Prüfung an der tatsächlichen Hardware steht noch aus.
 
 Pfade:
@@ -247,7 +245,7 @@ Standardreceiver bleibt auswählbar.
 ### Letzte Anmeldung
 
 Die Benutzerübersicht zeigt Administratoren in der Spalte **Letzte Anmeldung**
-die letzte erfolgreiche Anmeldung jedes Kontos, wie bei AWAS im Format
+die letzte erfolgreiche Anmeldung jedes Kontos im Format
 `DD.MM.YYYY HH:MM` und in der konfigurierten Anzeigezeitzone (standardmäßig
 `Europe/Berlin`). Ohne erfolgreiche Anmeldung steht **Noch nie**.
 Die bereits vorhandenen erfolgreichen Login-Ereignisse werden berücksichtigt;
@@ -299,7 +297,7 @@ sprechenden Tag wie `e2web-owner-digiandi-konto-2`. Damit übernimmt es keine al
 Aufnahmen oder Rechte. Maßgeblich ist stets der im Benutzerformular angezeigte Tag.
 
 Bei jedem Timer und jeder Aufnahme steht unter dem Titel bzw. der Wiederholung
-klein und grau **von Anzeigename** wie bei AWAS. Die Anzeige verwendet ausschließlich
+klein und grau **von Anzeigename**. Die Anzeige verwendet ausschließlich
 die Zuordnung des Tags zur lokalen Benutzerdatenbank und bleibt auch für
 Leseberechtigte sichtbar. Nach Entfernen eines Timers bleibt der Ersteller seiner
 Aufnahmen erkennbar, wenn die Aufnahme-Tags erhalten sind. Ohne gültige Zuordnung
@@ -419,6 +417,9 @@ ihre Senderliste. Bei einem Sender führt **EPG anzeigen** direkt zu dessen
 Sendungen. Das EPG hat keinen eigenen Menüpunkt; der Bereich **Sender** bleibt
 während der EPG-Anzeige aktiv. **Zur Übersicht** steht bei geöffneten Senderlisten
 in derselben Auswahlzeile wie TV, Radio, Bouquets und Anbieter. Der Namensfilter verändert die Reihenfolge nicht.
+Bouquet-, Anbieter- und Senderlisten sind wie das Formular **Timer erstellen**
+maximal 850 Pixel breit und am linken Seitenrand ausgerichtet. Auf schmalen
+Bildschirmen nutzen sie die verfügbare Seitenbreite.
 Gruppenüberschriften haben keine EPG- oder Timeraktion.
 
 Die Anbieterübersicht nutzt `getservices` mit einer Enigma2-Abfrage
@@ -478,7 +479,7 @@ Die Kopfzeile enthält rechts neben der Überschrift zuerst die Receiverauswahl,
 dann **Liste filtern** und danach **Timer erstellen**. Auf schmalen Bildschirmen
 steht die Receiverauswahl über Filter und Button.
 
-**Timer** ist die Startseite. Die AWAS-Bereiche **Laufend (x)** und
+**Timer** ist die Startseite. Die Bereiche **Laufend (x)** und
 **Anstehend (x)** zeigen jeweils die Anzahl ihrer Einträge. Auch bei null
 Einträgen bleiben beide Bereiche mit einem kurzen Hinweis sichtbar. Vorbereitete
 und deaktivierte Timer stehen unter Anstehend; erledigte Timer bleiben in einem
@@ -561,10 +562,10 @@ beispielsweise kann ihr Ende verlängert werden. Welche Änderung während der
 Aufnahme wirksam wird, entscheidet der Receiver.
 
 Beim Löschen ändert der erste Klick den Button zu **Wirklich löschen?** und
-färbt ihn rot wie AWAS; erst der zweite Klick innerhalb von fünf Sekunden
+färbt ihn rot; erst der zweite Klick innerhalb von fünf Sekunden
 sendet den Auftrag. Nach fünf Sekunden ohne Bestätigung steht wieder **Löschen**
-auf dem Button. Code, Farben und Blinkverhalten entsprechen AWAS; bei reduzierter
-Bewegung bleibt der Button während der Bestätigung durchgehend rot. Es gibt kein Popup
+auf dem Button. Der Button blinkt während der Bestätigung; bei reduzierter
+Bewegung bleibt er durchgehend rot. Es gibt kein Popup
 und keine separate Bestätigungs- oder Ergebnisseite. Hinweise stehen direkt
 in der Timerliste. Die Bestätigung gilt für den angezeigten Receiver und Timer.
 Bei wiederkehrenden Timern wird die gesamte Serie entfernt. Eine laufende
@@ -673,13 +674,13 @@ Feldreferenzen:
 [OpenWebif-XML](https://github.com/E2OpenPlugins/e2openplugin-OpenWebif/blob/master/plugin/controllers/views/web/deviceinfo.tmpl)
 und [älteres WebInterface-XML](https://github.com/oe-alliance/enigma2-plugins/blob/master/webinterface/src/web/deviceinfo.xml).
 
-Die Tabelle entspricht AWAS: **Aufnahme, Sender, Receiver, Beginn, Dauer, Status**.
+Die Tabelle enthält die Spalten **Aufnahme, Sender, Receiver, Beginn, Dauer, Status**.
 Der Dateiname steht in einer eigenen Zeile am unteren Rand in derselben
 Monospace-Schrift, rechts daneben die Dateigröße. Laufende Dateien sind über
 beide Zeilen durchgehend orange. Datum/Uhrzeit verwenden `DD.MM.YYYY HH:MM`,
 Laufzeiten `HH:MM:SS`. Aufklappbare Sendungsdetails entfallen. Die Anzeigezeitzone,
 Version und das Release-Datum stehen ausschließlich in der Fußzeile.
-Die Erstellerzeile **von …** steht wie bei AWAS klein und grau unter dem Titel.
+Die Erstellerzeile **von …** steht klein und grau unter dem Titel.
 Der bisherige Hinweis „Zum Beenden den laufenden Timer öffnen.“ entfällt;
 laufende Dateien bleiben bis zum Beenden des Timers gegen Löschen geschützt.
 
@@ -738,21 +739,21 @@ Ordner und ihre Unterordner werden akzeptiert. Es wird keine bestimmte
 Symlinkbeziehung vorausgesetzt und kein fremder Wunschpfad zur Prüfung geladen.
 Nach erfolgreichem Löschen bleibt die aktuelle Aufnahmeliste erreichbar.
 
-## Update von 0.1.x bis 1.1.12 auf 1.1.13
+## Update von 0.1.x bis 1.1.13 auf 1.1.14
 
 Das neue Paket auf den Ubuntu-Server übertragen, entpacken und aus dem neuen
 Projektverzeichnis den Installer erneut ausführen. Als root:
 
 ```bash
-unzip enigma2-web-v1.1.13.zip
-cd enigma2-web-v1.1.13
+unzip enigma2-web-v1.1.14.zip
+cd enigma2-web-v1.1.14
 bash scripts/install.sh
 curl --retry 10 --retry-delay 1 --retry-connrefused http://127.0.0.1:8081/health
 ```
 
 Der Installer hält den laufenden Dienst während des Updates an und startet ihn
 anschließend wieder. Der Health-Aufruf wartet bei Bedarf auf den Dienststart.
-Die erwartete Antwort enthält `"version":"1.1.13"`.
+Die erwartete Antwort enthält `"version":"1.1.14"`.
 
 Die vorhandenen Benutzer, Receiver, Passwörter, Sitzungen, die Konfiguration
 und der Verschlüsselungsschlüssel werden weiterverwendet. Ein Administrator
@@ -761,7 +762,7 @@ standardmäßig wird Port 8081 verwendet. Bei einem anderen Port den Health-Aufr
 entsprechend anpassen. In der vorhandenen nginx-Site das Lesezeitlimit auf
 300 Sekunden erhöhen (siehe nächsten Abschnitt); der Installer verändert nginx nicht.
 
-Die Datenbank wird automatisch auf Revision `0005` migriert. Von 0.8.0 bis 1.1.12 auf 1.1.13 ist keine neue Schemaänderung nötig. Vorhandene Konten,
+Die Datenbank wird automatisch auf Revision `0005` migriert. Von 0.8.0 bis 1.1.13 auf 1.1.14 ist keine neue Schemaänderung nötig. Vorhandene Konten,
 Receiverzuordnungen, Sitzungen, Audit-Ereignisse und alte Eigentümerkennungen
 bleiben erhalten. Die neue Migration ergänzt sprechende Ersteller-Tags für alle
 vorhandenen Konten. Frühere Revisionen ergänzen weiterhin Eigentümerkennungen,
@@ -797,8 +798,8 @@ Danach als root:
 nginx -t && systemctl reload nginx
 ```
 
-CSS und JavaScript verwenden URLs wie `/static/app.css?v=1.1.13`.
-Das Favicon verwendet ebenfalls eine versionierte URL: `/favicon.ico?v=1.1.13`.
+CSS und JavaScript verwenden URLs wie `/static/app.css?v=1.1.14`.
+Das Favicon verwendet ebenfalls eine versionierte URL: `/favicon.ico?v=1.1.14`.
 Der Browser lädt sie dadurch unter derselben HTTPS-Adresse wie die Seite.
 Das verhindert HTTP-Asset-URLs und Mixed Content bei einer HTTPS-Verbindung
 zum Proxy. Der Proxy-Header ist weiterhin für sichere Sitzungscookies wichtig.
@@ -854,7 +855,7 @@ Receiver dienen jetzt der weiteren Kompatibilitätsprüfung.
 
 ## Favicon und Lesezeichen
 
-Alle Seiten verweisen auf `/favicon.ico?v=1.1.13`. Das Icon ist ohne Anmeldung
+Alle Seiten verweisen auf `/favicon.ico?v=1.1.14`. Das Icon ist ohne Anmeldung
 mit dem Inhaltstyp `image/vnd.microsoft.icon` erreichbar und enthält das
 vorhandene Logo in 16, 32 und 48 Pixeln. Auch die statischen Icon-Dateien
 dürfen einen Tag lang gespeichert werden (`Cache-Control: public, max-age=86400`).

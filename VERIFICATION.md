@@ -1,4 +1,49 @@
-# Prüfung von Version 1.1.13
+# Prüfung von Version 1.1.14
+
+Prüfstand: 10.10.2026, Python 3.12 unter Linux.
+
+- 344 automatisierte Tests erfolgreich. Code- und Formatprüfung sowie
+  JavaScript- und Installer-Syntax erfolgreich.
+- 44 Browseransichten mit JSON und XML: Bouquet-, Anbieter- und Senderlisten
+  bei 320, 390, 768, 1024, 1440 und 1920 Pixeln Bildschirmbreite. Radio und
+  Sender eines Anbieters zusätzlich auf Desktop und mobil geprüft.
+- Liste und Timerformular haben bei jeder geprüften Breite dieselbe gemessene
+  Breite: 300 Pixel bei 320, 370 bei 390, 691,19 bei 768 und maximal 850 Pixel
+  ab 1024 Pixeln Bildschirmbreite. Gemeinsamer linker Rand und keine horizontale
+  Überbreite. Lange Sendernamen und die zugehörigen Aktionen bleiben im Panel.
+- Listenfilter, leere Filterergebnisse, Navigation vom Bouquet zur Senderliste,
+  EPG-Links, Öffnen eines Timerentwurfs, Receiverwechsel, sofortige Ladeanzeige
+  und direkter Aufruf ohne JavaScript geprüft. Desktop- und Mobilansicht
+  zusätzlich visuell geprüft. Keine JavaScript-Fehler oder Dialoge; diese
+  Darstellungsprüfung sendet keine Schreibaufträge an Receiver.
+- Aktuelle README, Projekttexte und Code-Kommentare enthalten keine Nennung
+  des bisherigen Referenzprojekts. Herkunft bereitgestellter Quellen und
+  Lizenzhinweise bleiben dokumentiert.
+- Wheel und Quelldistribution gebaut. Installiertes Wheel startet mit Version
+  1.1.14 und Release-Datum 10.10.2026. CLI-Initialisierung erhält Schlüssel,
+  geänderten Port und Aufnahmezeitlimit von 90 Sekunden; Schema `0005`.
+  Login, Assets, Favicon, Seitenrahmen, Standardordner, Ordner-Fallback,
+  JSON-/XML-Festplattenanzeige, Download und eigenständige Timerkopie geprüft.
+- Installations- und Git-ZIP entpackt und dateiweise verglichen. Paketbau aus
+  dem finalen Installations-ZIP hat identische Inhalte zum geprüften Paketbau.
+  Keine Betriebsdaten oder Zugangsdaten enthalten.
+- Sauberer Branch `main`, annotierter Tag `v1.1.14`, fünfzehn unveränderte bisherige
+  Tags, `git fsck`, Klonen und gewöhnlicher lokaler Push geprüft. Alle
+  Archivdateien und Git-Objekte weiterhin ohne die entfernten Netzwerkbeispiele.
+  Die bisherige Git-Historie wird mit einem neuen Release-Commit fortgesetzt.
+- Hardwareprüfung, GitHub-Push und GitHub-CI wurden nicht ausgeführt; die
+  bestehende Ubuntu-Installation wurde nicht geändert. Receiver-Antworten sind
+  in dieser Prüfung simuliert.
+
+## Änderungen 1.1.14
+
+- Bouquet-, Anbieter- und Senderlisten teilen die Breitenvorgabe von
+  **Timer erstellen**: maximal 850 Pixel, sonst die verfügbare Seitenbreite.
+- Eigenständige Projektbeschreibung und direkte Funktionsbeschreibungen in
+  README, Projekttexten und Kommentaren.
+- Keine neue Migration oder Abhängigkeit; Datenbankschema weiterhin `0005`.
+
+## Prüfung von Version 1.1.13
 
 Prüfstand: 07.10.2026, Python 3.12 unter Linux.
 
@@ -640,7 +685,7 @@ Prüfstand: 04.10.2026, Python 3.12 unter Linux.
 
 ## Änderungen 0.7.3
 
-- Benutzerübersicht mit AWAS-Spalte „Letzte Anmeldung“ im Format
+- Benutzerübersicht mit Spalte „Letzte Anmeldung“ im Format
   `DD.MM.YYYY HH:MM`, in der konfigurierten Anzeigezeitzone, ohne erfolgreiche
   Anmeldung „Noch nie“. Bereits vorhandene erfolgreiche Login-Ereignisse werden
   berücksichtigt; jeweils der neueste Zeitpunkt pro Benutzer wird ausgewertet.
@@ -668,7 +713,7 @@ Prüfstand: 04.10.2026, Python 3.12 unter Linux.
   Laufende Aufnahmen bleiben einschließlich veralteter Löschaufträge gesperrt;
   es erscheint kein ersatzweiser Löschhinweis bei laufenden Aufnahmen.
 - Kleine graue Erstellerzeile „von Anzeigename“ bei jedem Timer und jeder Aufnahme,
-  unter Titel bzw. Wiederholung wie bei AWAS. Anzeige auch mit Leserechten sowie
+  unter Titel bzw. Wiederholung. Anzeige auch mit Leserechten sowie
   bei fremden Einträgen; direkte Erstellerzuordnung statt Titel-/Zeitvergleich.
 - Unbekannte, gefälschte, mehrdeutige oder anderen Geräten zugeordnete Kennungen
   zeigen „von unbekannt“. Ein gelöschtes und mit derselben ID neu angelegtes Konto
@@ -765,11 +810,11 @@ Die Quellen wurden für diese Korrektur gelesen; kein fremder Quellcode wird ein
 Im Browser geprüft:
 
 - Überschrift links, Receiverwahl rechts auf gleicher Höhe; direkte Umschaltung;
-- Timer im AWAS-Aufbau mit Aufnahme, Sender, Receiver, Start, Ende, Dauer, Status;
+- Timer mit Aufnahme, Sender, Receiver, Start, Ende, Dauer, Status;
   Beschreibung direkt sichtbar, bei leerer Beschreibung keine zusätzliche Zeile;
-- Aufnahmen im AWAS-Aufbau mit Aufnahme, Sender, Receiver, Beginn, Dauer, Status;
+- Aufnahmen mit Aufnahme, Sender, Receiver, Beginn, Dauer, Status;
   eigene Dateinamenzeile, Monospace-Schrift und Dateigröße rechts;
-- durchgehendes AWAS-Orange `#fde7dc` für laufende Timeraufnahmen und für beide
+- durchgehendes Orange `#fde7dc` für laufende Timeraufnahmen und für beide
   Zeilen eines laufenden Aufnahmeblocks, auch mobil;
 - Datum/Uhrzeit `DD.MM.YYYY HH:MM`, Dauer `HH:MM:SS`, keine Aufnahme-Sendungsdetails;
 - direkt ausgewählter echter Standardpfad, Unterordner und Ordnerwechsel;
@@ -780,7 +825,7 @@ Im Browser geprüft:
 - Löschen von Timern, Aufnahmen, Receivern und Benutzern mit exakt zwei Klicks;
   erster Klick sendet keinen POST, nach fünf Sekunden automatische Rückstellung;
   anschließender erster Klick bestätigt wieder, zweiter Klick sendet einen POST;
-- AWAS-Originalcode für die Bestätigung und seine Bestätigungsstile;
+- Blinkende rote Bestätigung;
   bei reduzierter Bewegung bleibt der bestätigende Button durchgehend rot;
 - Löschfehler unmittelbar in der weiterhin sichtbaren jeweiligen Liste;
 - Anlegen aus EPG mit Vor-/Nachlauf und Wochentagen, Bearbeiten laufender Timer

@@ -336,7 +336,7 @@ td small { margin-top: .15rem; color: var(--muted); }
   td { grid-template-columns: 7rem 1fr; }
 }
 
-/* Enigma2-specific controls; AWAS base styling above. */
+/* Controls for receiver selection and administration. */
 .receiver-bar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 2rem; }
 .receiver-bar form { max-width: 560px; width: 100%; }
 .receiver-bar label { font-weight: 700; font-size: .88rem; }
@@ -394,7 +394,7 @@ td small { margin-top: .15rem; color: var(--muted); }
 .recording-filename { margin-top: .45rem; overflow-wrap: anywhere; }
 .row-actions form { display: inline-flex; }
 .timer-table td > .badge { justify-self: start; }
-.timer-form-panel { width: min(850px, 100%); }
+.timer-form-panel, .catalog-panel { width: min(850px, 100%); }
 .timer-form-panel .form-grid { align-items: start; }
 .channel-copy { display: flex; flex-direction: column; align-items: flex-start; gap: .25rem; }
 .channel-copy > small { margin: 0; color: var(--muted); font-size: .73rem; font-weight: 400; line-height: 1.35; }

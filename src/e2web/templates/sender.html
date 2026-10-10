@@ -6,7 +6,7 @@
   {% include "receiver_selection.html" %}
 </div>
 {% include "catalog_navigation.html" %}
-<section class="panel table-panel">
+<section class="panel table-panel catalog-panel">
   <div class="catalog-heading">
     <div><h2>{{ section_title }}</h2></div>
     {% if rows %}<input type="search" id="channel-filter" class="list-filter" placeholder="{{ 'Listen filtern' if is_group_list else 'Sender filtern' }}" aria-label="{{ 'Listen filtern' if is_group_list else 'Sender filtern' }}" data-table-filter="channel-rows" autocomplete="off">{% endif %}
