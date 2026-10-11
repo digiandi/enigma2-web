@@ -1,5 +1,11 @@
 # Versionsverlauf
 
+## 1.1.18 – 11.10.2026
+
+- Button **Zur Timerliste** auch aus der Ladeansicht von **Timer erstellen**
+  entfernen, einschließlich Timerkopien und Entwürfen aus dem EPG.
+- Keine neue Migration oder Abhängigkeit; Datenbankschema weiterhin `0005`.
+
 ## 1.1.17 – 11.10.2026
 
 - Button **Zur Timerliste** aus der Überschrift von **Timer erstellen** entfernen,

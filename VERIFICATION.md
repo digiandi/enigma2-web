@@ -1,4 +1,48 @@
-# Prüfung von Version 1.1.17
+# Prüfung von Version 1.1.18
+
+Prüfstand: 11.10.2026, Python 3.12 unter Linux.
+
+- Fehler mit dem installierten Wheel von 1.1.17 reproduziert: Nach Klick auf
+  **Timer erstellen** erschien **Zur Timerliste** in der Ladeansicht, obwohl
+  der Button im fertig geladenen Formular bereits entfernt war.
+- 344 automatisierte Tests erfolgreich. Die vorhandenen Prüfungen für den
+  ersten HTML-Aufruf und die nachgeladene Antwort berücksichtigen nun den
+  Rücksprungbutton in beiden Zuständen. Code- und Formatprüfung,
+  JavaScript- und Installer-Syntax erfolgreich.
+- 16 gezielt verzögerte Ladeansichten und 16 vollständige Formularansichten
+  im Browser mit simulierten JSON- und XML-Receivern bei 390 und 1440 Pixeln:
+  direkte Timererstellung durch Klick, Timerkopie, EPG-Entwurf und Bearbeitung.
+  Während **Lade Daten von Receiver...** erscheint, fehlt **Zur Timerliste**
+  bei allen Erstellvarianten bereits. Bei Bearbeitung ist der Rücksprung vorhanden.
+- Vier erneut angezeigte Erstellformulare nach ungültigen Endzeiten geprüft.
+  Formularwerte, Fehlerhinweis und Aktionen bleiben bedienbar. Keine horizontal
+  überbreiten Seiten, JavaScript-Fehler, Dialoge oder Schreibaufträge an Receiver.
+  Bearbeitungs-Rücksprung zur Timerliste geprüft. Desktop- und Mobilansicht
+  der verzögerten Ladeanzeige zusätzlich visuell kontrolliert.
+- Wheel und Quelldistribution gebaut. Installiertes Wheel startet mit Version
+  1.1.18 und Release-Datum 11.10.2026. CLI-Initialisierung erhält Schlüssel,
+  geänderten Port und Aufnahmezeitlimit von 90 Sekunden; Schema `0005`.
+  Login, Assets, Favicon, Seitenrahmen, EPG-Standard-/Tagesansicht über JSON/XML,
+  Standardordner, Ordner-Fallback, Festplattenanzeige, Download und eigenständige
+  Timerkopie geprüft.
+- Installations- und Git-ZIP entpackt und dateiweise verglichen. Paketbau aus
+  dem finalen Installations-ZIP hat identische Inhalte zum geprüften Paketbau.
+  Keine Betriebsdaten oder Zugangsdaten enthalten.
+- Sauberer Branch `main`, annotierter Tag `v1.1.18`, achtzehn unveränderte bisherige
+  Tags, `git fsck`, Klonen und gewöhnlicher lokaler Push geprüft. Die Historie
+  setzt `v1.1.17` direkt fort; die verworfene Version `v1.1.15` ist nicht enthalten.
+  Alle Archivdateien und Git-Objekte weiterhin ohne die entfernten Netzwerkbeispiele.
+- Hardwareprüfung, GitHub-Push und GitHub-CI wurden nicht ausgeführt; die
+  bestehende Ubuntu-Installation wurde nicht geändert. Receiver-Antworten sind
+  in dieser Prüfung simuliert.
+
+## Änderungen 1.1.18
+
+- Button **Zur Timerliste** auch aus der Ladeansicht von **Timer erstellen**
+  entfernen, einschließlich Timerkopien und Entwürfen aus dem EPG.
+- Keine neue Migration oder Abhängigkeit; Datenbankschema weiterhin `0005`.
+
+## Prüfung von Version 1.1.17
 
 Prüfstand: 11.10.2026, Python 3.12 unter Linux.
 

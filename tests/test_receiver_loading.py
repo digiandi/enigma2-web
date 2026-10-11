@@ -45,6 +45,8 @@ def test_browser_navigation_renders_before_any_receiver_query(setup, path):
         assert 'data-receiver-id="1"' in page.text
         assert "load=direct" in page.text
         assert page.headers["cache-control"] == "no-store"
+        if path in {"/timer/new", "/timer/edit"}:
+            assert ("Zur Timerliste" in page.text) == (path == "/timer/edit")
     with Session(engine) as db:
         assert not list(db.scalars(select(TimerAction)))
 
@@ -69,6 +71,8 @@ def test_data_request_delivers_the_complete_authorized_page(setup, xml, path):
         assert "Aufnahmeliste nicht erreichbar" not in page.text
         assert "Timerentwurf konnte nicht geladen werden" not in page.text
         assert box.requests and not box.writes
+        if path in {"/timer/new", "/timer/edit"}:
+            assert ("Zur Timerliste" in page.text) == (path == "/timer/edit")
 
 
 def test_pending_data_cannot_use_another_receiver_or_a_revoked_session(setup):
