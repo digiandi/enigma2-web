@@ -1,4 +1,50 @@
-# Prüfung von Version 1.1.19
+# Prüfung von Version 1.1.20
+
+Prüfstand: 11.10.2026, Python 3.12 unter Linux.
+
+- 344 automatisierte Tests erfolgreich. Vorhandene Prüfungen des ersten HTML-Aufrufs
+  und der nachgeladenen Antwort erwarten **Zur Timerliste** jetzt auch bei der
+  Bearbeitung nicht mehr. Code- und Formatprüfung, JavaScript- und Installer-Syntax
+  erfolgreich.
+- Vier Timerlisten im Browser aus dem installierten Wheel mit simulierten JSON- und
+  XML-Receivern bei 390 und 1440 Pixeln: zwölf laufende, wiederkehrende und erledigte
+  Einträge zeigen Wiederholung und Anzeigename mit **|** als Trenner.
+  Aufnahmepfad bleibt sichtbar, die Beschreibung bleibt aus der Timerliste entfernt.
+- Acht gezielt verzögerte Bearbeitungs-Ladeansichten und acht vollständige
+  Bearbeitungsformulare für laufende und anstehende Timer bei beiden Breiten
+  und beiden Receiver-Schnittstellen geprüft: **Zur Timerliste** fehlt bereits
+  während **Lade Daten von Receiver...** erscheint und im fertigen Formular.
+- Acht erneut angezeigte Bearbeitungsformulare nach ungültigem Ende geprüft.
+  Kein **Zur Timerliste**; Name, Beschreibung und Fehlerhinweis bleiben erhalten.
+  **Timer speichern** bleibt bedienbar; **Abbrechen** führt zur Timerliste zurück.
+  Keine horizontal überbreiten Seiten, JavaScript-Fehler, Dialoge oder
+  Schreibaufträge an Receiver. Desktop-Timerliste, Bearbeitungs-Ladeansicht und
+  mobiles Bearbeitungsformular zusätzlich visuell kontrolliert.
+- Wheel und Quelldistribution gebaut. Installiertes Wheel startet mit Version
+  1.1.20 und Release-Datum 11.10.2026. CLI-Initialisierung erhält Schlüssel,
+  geänderten Port und Aufnahmezeitlimit von 90 Sekunden; Schema `0005`.
+  Login, Assets, Favicon, Seitenrahmen, EPG-Standard-/Tagesansicht über JSON/XML,
+  Standardordner, Ordner-Fallback, Festplattenanzeige, Download und eigenständige
+  Timerkopie geprüft.
+- Installations- und Git-ZIP entpackt und dateiweise verglichen. Paketbau aus
+  dem finalen Installations-ZIP hat identische Inhalte zum geprüften Paketbau.
+  Keine Betriebsdaten oder Zugangsdaten enthalten.
+- Sauberer Branch `main`, annotierter Tag `v1.1.20`, zwanzig unveränderte bisherige
+  Tags, `git fsck`, Klonen und gewöhnlicher lokaler Push geprüft. Die Historie
+  setzt `v1.1.19` direkt fort; die verworfene Version `v1.1.15` ist nicht enthalten.
+  Alle Archivdateien und Git-Objekte weiterhin ohne die entfernten Netzwerkbeispiele.
+- Hardwareprüfung, GitHub-Push und GitHub-CI wurden nicht ausgeführt; die
+  bestehende Ubuntu-Installation wurde nicht geändert. Receiver-Antworten sind
+  in dieser Prüfung simuliert.
+
+## Änderungen 1.1.20
+
+- Wiederholung und Ersteller in der Timerliste durch **|** statt **/** trennen.
+- **Zur Timerliste** auch bei **Timer bearbeiten** entfernen, einschließlich
+  Ladeansicht und erneut angezeigter Formulare nach Eingabefehlern.
+- Keine neue Migration oder Abhängigkeit; Datenbankschema weiterhin `0005`.
+
+## Prüfung von Version 1.1.19
 
 Prüfstand: 11.10.2026, Python 3.12 unter Linux.
 

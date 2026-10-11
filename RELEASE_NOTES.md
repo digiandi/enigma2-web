@@ -1,11 +1,19 @@
-# Enigma2 Timer 1.1.19
+# Enigma2 Timer 1.1.20
 
-Release: 11.10.2026 · Git-Tag: `v1.1.19` · Datenbankschema: `0005`
+Release: 11.10.2026 · Git-Tag: `v1.1.20` · Datenbankschema: `0005`
 
 Zentrale Timer- und Aufnahmen-Verwaltung für mehrere Enigma2-Receiver über
 OpenWebif oder das ältere XML-WebInterface, mit deutscher, responsiver Oberfläche.
 
-## Neu in 1.1.19
+## Neu in 1.1.20
+
+- **Timer:** Wiederholung und Ersteller mit **|** statt **/** trennen,
+  beispielsweise **Einmalig | von Anzeigename** oder **Mo, Mi | von Anzeigename**.
+- **Timer bearbeiten:** **Zur Timerliste** aus der Überschrift entfernen,
+  einschließlich Ladeansicht und erneut angezeigter Formulare nach Eingabefehlern.
+- **Update:** Keine Konfigurationsänderung, neue Migration oder Abhängigkeit nötig.
+
+## Timerliste seit 1.1.19
 
 - **Timer:** Bei allen Timern den tatsächlichen Aufnahmepfad anzeigen,
   einschließlich vorbereiteter, deaktivierter und erledigter Timer.
@@ -235,34 +243,34 @@ OpenWebif oder das ältere XML-WebInterface, mit deutscher, responsiver Oberflä
   Rückstellung nach fünf Sekunden.
 - Sprechende Ersteller-Tags, manuell am Receiver verwendbar; alte Kennungen bleiben gültig.
 - systemd-Installer, nginx-Vorlage und HTTPS-Betrieb hinter einem vorhandenen Proxy.
-- GitHub-Unterlagen mit CI-Workflow und vorbereiteter Git-Historie samt `v1.1.19`.
+- GitHub-Unterlagen mit CI-Workflow und vorbereiteter Git-Historie samt `v1.1.20`.
 
 ## Installation und Update
 
-Das Installationspaket `enigma2-web-v1.1.19.zip` entpacken und im enthaltenen
+Das Installationspaket `enigma2-web-v1.1.20.zip` entpacken und im enthaltenen
 Projektverzeichnis als root `bash scripts/install.sh` ausführen.
 Bei Neuinstallation danach einen Administrator anlegen und `e2web` aktivieren;
 bei vorhandener Installation werden Konten, Receiver, Konfiguration, Datenbank
 und Schlüssel weiterverwendet. Einzelheiten: [INSTALL.md](INSTALL.md).
 
-Das Update von 0.8.0 bis 1.1.18 auf 1.1.19 benötigt keine neue Schemaänderung
+Das Update von 0.8.0 bis 1.1.19 auf 1.1.20 benötigt keine neue Schemaänderung
 und verändert keine Timer oder Aufnahmedateien auf Receivern. Vorhandene
 Konfiguration, einschließlich eines geänderten Ports, wird erhalten.
 
 ## Prüfung
 
 344 automatisierte Tests, Code-/Formatprüfung, JavaScript-/Installer-Syntax,
-Browserprüfung der Timerliste mit JSON- und XML-Receivern auf Desktop und mobil,
-Wiederholungen, Aufnahmepfaden, Listenfilter und automatischer Aktualisierung
+Browserprüfung des Trenners und der Timerbearbeitung mit JSON- und XML-Receivern
+auf Desktop und mobil, einschließlich verzögerter Ladeansichten und Eingabefehler,
 sowie Paketbau und Start des installierten Wheels; Prüfergebnisse stehen in [VERIFICATION.md](VERIFICATION.md).
 Das Installationspaket enthält keine Betriebsdaten oder Zugangsdaten.
 
 ## GitHub
 
-`enigma2-web-git-v1.1.19.zip` enthält das vorbereitete Repository mit Branch `main`
-und Tag `v1.1.19`. Alle bisherigen bereinigten Tags einschließlich `v1.1.18`
+`enigma2-web-git-v1.1.20.zip` enthält das vorbereitete Repository mit Branch `main`
+und Tag `v1.1.20`. Alle bisherigen bereinigten Tags einschließlich `v1.1.19`
 bleiben auf ihren bisherigen Ständen. Ein gewöhnlicher Push von `main` und
-`v1.1.19` genügt; der vorige Tag `v1.1.18` kann dabei mit übertragen werden,
+`v1.1.20` genügt; der vorige Tag `v1.1.19` kann dabei mit übertragen werden,
 falls er noch nicht auf GitHub vorhanden ist. Quellstand und Installationspaket
 sind identisch. Anleitung: [GITHUB.md](GITHUB.md).
 Lizenz- und Herkunftsangaben: [NOTICE.md](NOTICE.md).

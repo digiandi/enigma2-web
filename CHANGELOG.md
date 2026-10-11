@@ -1,5 +1,12 @@
 # Versionsverlauf
 
+## 1.1.20 – 11.10.2026
+
+- Wiederholung und Ersteller in der Timerliste durch **|** statt **/** trennen.
+- **Zur Timerliste** auch bei **Timer bearbeiten** entfernen, einschließlich
+  Ladeansicht und erneut angezeigter Formulare nach Eingabefehlern.
+- Keine neue Migration oder Abhängigkeit; Datenbankschema weiterhin `0005`.
+
 ## 1.1.19 – 11.10.2026
 
 - Aufnahmepfad bei allen Timern anzeigen; bei fehlender Receiver-Angabe **unbekannt**.

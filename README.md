@@ -1,13 +1,12 @@
-# Enigma2 Timer 1.1.19
+# Enigma2 Timer 1.1.20
 
 Eigenständige, zentral betriebene Webanwendung zur Timer- und
 Aufnahmen-Verwaltung für Enigma2-Receiver.
 
-Version 1.1.19 zeigt bei jedem Timer den jeweiligen Aufnahmepfad. Unter dem
-Titel stehen Wiederholung und Ersteller in einer Zeile, beispielsweise
-**Einmalig / von Anzeigename**. Darunter folgt **Aufnahmepfad: /hdd/movie** mit
-dem tatsächlichen Pfad. Beschreibungen erscheinen nicht mehr in der Timerliste.
-Die Version setzt den Stand 1.1.18 fort.
+Version 1.1.20 trennt Wiederholung und Ersteller in der Timerliste mit **|**,
+beispielsweise **Einmalig | von Anzeigename**. Bei **Timer bearbeiten** entfällt
+der Button **Zur Timerliste** auch in der Ladeansicht.
+Die Version setzt den Stand 1.1.19 fort.
 Die seit 1.1.2 bereinigte Git-Historie wird mit einem gewöhnlichen neuen
 Release-Commit fortgesetzt.
 Installation und Update: [INSTALL.md](INSTALL.md). GitHub: [GITHUB.md](GITHUB.md).
@@ -153,7 +152,7 @@ des Administrators. Er benötigt Python 3.12+, `python3-venv`, `rsync` und
 Zugang zum Python-Paketindex. Diese Systempakete bei Bedarf zuvor installieren.
 Der Installer aktiviert keine nginx-Konfigurationen.
 Der Nutzer hat die Erstinstallation und nginx-Anbindung für Version
-0.1.0 auf Ubuntu bestätigt. Die Timer- und Aufnahmefunktionen von 1.1.19 wurden mit
+0.1.0 auf Ubuntu bestätigt. Die Timer- und Aufnahmefunktionen von 1.1.20 wurden mit
 simulierten Receivern geprüft; die Prüfung an der tatsächlichen Hardware steht noch aus.
 
 Pfade:
@@ -489,7 +488,7 @@ Einträgen bleiben beide Bereiche mit einem kurzen Hinweis sichtbar. Vorbereitet
 und deaktivierte Timer stehen unter Anstehend; erledigte Timer bleiben in einem
 aufklappbaren Verlauf. Innerhalb der Bereiche wird nach Beginn sortiert.
 Unter dem Titel stehen Wiederholung und Ersteller gemeinsam, beispielsweise
-**Einmalig / von Anzeigename** oder **Mo, Mi / von Anzeigename**. Die nächste
+**Einmalig | von Anzeigename** oder **Mo, Mi | von Anzeigename**. Die nächste
 Zeile zeigt **Aufnahmepfad:** mit dem Pfad des jeweiligen Timers. Das gilt auch
 für vorbereitete, deaktivierte und erledigte Timer. Liefert der Receiver keinen
 Pfad, erscheint **unbekannt**. Die Beschreibung wird in der Timerliste nicht
@@ -526,11 +525,11 @@ verhindern keine Timerbearbeitung. Ohne zugeordnete Datei erscheint
 Geplante, vorbereitete, deaktivierte und erledigte Timer zeigen keine Dateizeile.
 Für sie werden auch keine Aufnahmelisten zur Dateigrößenanzeige abgefragt.
 
-**Timer erstellen** öffnet direkt das Timerformular ohne Rücksprungbutton
-**Zur Timerliste** in der Überschrift, auch während der Ladeanzeige.
-Am Formularende führt **Abbrechen**
-zur Timerliste zurück. Die gemeinsame
-Bouquet-Auswahl enthält zunächst die TV-Bouquets, darunter die Radio-Bouquets,
+**Timer erstellen** und **Timer bearbeiten** öffnen das jeweilige Formular
+ohne Rücksprungbutton **Zur Timerliste** in der Überschrift, auch während der
+Ladeanzeige. Am Formularende führt **Abbrechen** zur Timerliste zurück.
+Bei **Timer erstellen** enthält die gemeinsame
+Bouquet-Auswahl zunächst die TV-Bouquets, darunter die Radio-Bouquets,
 in der Reihenfolge des Receivers. Das erste Bouquet und dessen erster
 aufnehmbarer Sender sind vorausgewählt. Unter der Bouquet-Auswahl steht die
 Senderliste dieses Bouquets. Ein Wechsel lädt die passende Liste und wählt
@@ -751,21 +750,21 @@ Ordner und ihre Unterordner werden akzeptiert. Es wird keine bestimmte
 Symlinkbeziehung vorausgesetzt und kein fremder Wunschpfad zur Prüfung geladen.
 Nach erfolgreichem Löschen bleibt die aktuelle Aufnahmeliste erreichbar.
 
-## Update von 0.1.x bis 1.1.18 auf 1.1.19
+## Update von 0.1.x bis 1.1.19 auf 1.1.20
 
 Das neue Paket auf den Ubuntu-Server übertragen, entpacken und aus dem neuen
 Projektverzeichnis den Installer erneut ausführen. Als root:
 
 ```bash
-unzip enigma2-web-v1.1.19.zip
-cd enigma2-web-v1.1.19
+unzip enigma2-web-v1.1.20.zip
+cd enigma2-web-v1.1.20
 bash scripts/install.sh
 curl --retry 10 --retry-delay 1 --retry-connrefused http://127.0.0.1:8081/health
 ```
 
 Der Installer hält den laufenden Dienst während des Updates an und startet ihn
 anschließend wieder. Der Health-Aufruf wartet bei Bedarf auf den Dienststart.
-Die erwartete Antwort enthält `"version":"1.1.19"`.
+Die erwartete Antwort enthält `"version":"1.1.20"`.
 
 Die vorhandenen Benutzer, Receiver, Passwörter, Sitzungen, die Konfiguration
 und der Verschlüsselungsschlüssel werden weiterverwendet. Ein Administrator
@@ -774,7 +773,7 @@ standardmäßig wird Port 8081 verwendet. Bei einem anderen Port den Health-Aufr
 entsprechend anpassen. In der vorhandenen nginx-Site das Lesezeitlimit auf
 300 Sekunden erhöhen (siehe nächsten Abschnitt); der Installer verändert nginx nicht.
 
-Die Datenbank wird automatisch auf Revision `0005` migriert. Von 0.8.0 bis 1.1.18 auf 1.1.19 ist keine neue Schemaänderung nötig. Vorhandene Konten,
+Die Datenbank wird automatisch auf Revision `0005` migriert. Von 0.8.0 bis 1.1.19 auf 1.1.20 ist keine neue Schemaänderung nötig. Vorhandene Konten,
 Receiverzuordnungen, Sitzungen, Audit-Ereignisse und alte Eigentümerkennungen
 bleiben erhalten. Die neue Migration ergänzt sprechende Ersteller-Tags für alle
 vorhandenen Konten. Frühere Revisionen ergänzen weiterhin Eigentümerkennungen,
@@ -810,8 +809,8 @@ Danach als root:
 nginx -t && systemctl reload nginx
 ```
 
-CSS und JavaScript verwenden URLs wie `/static/app.css?v=1.1.19`.
-Das Favicon verwendet ebenfalls eine versionierte URL: `/favicon.ico?v=1.1.19`.
+CSS und JavaScript verwenden URLs wie `/static/app.css?v=1.1.20`.
+Das Favicon verwendet ebenfalls eine versionierte URL: `/favicon.ico?v=1.1.20`.
 Der Browser lädt sie dadurch unter derselben HTTPS-Adresse wie die Seite.
 Das verhindert HTTP-Asset-URLs und Mixed Content bei einer HTTPS-Verbindung
 zum Proxy. Der Proxy-Header ist weiterhin für sichere Sitzungscookies wichtig.
@@ -867,7 +866,7 @@ Receiver dienen jetzt der weiteren Kompatibilitätsprüfung.
 
 ## Favicon und Lesezeichen
 
-Alle Seiten verweisen auf `/favicon.ico?v=1.1.19`. Das Icon ist ohne Anmeldung
+Alle Seiten verweisen auf `/favicon.ico?v=1.1.20`. Das Icon ist ohne Anmeldung
 mit dem Inhaltstyp `image/vnd.microsoft.icon` erreichbar und enthält das
 vorhandene Logo in 16, 32 und 48 Pixeln. Auch die statischen Icon-Dateien
 dürfen einen Tag lang gespeichert werden (`Cache-Control: public, max-age=86400`).

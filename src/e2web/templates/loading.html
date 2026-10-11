@@ -9,7 +9,7 @@
       {% include "receiver_selection.html" %}
       {% if request.url.path == '/timer' and can_write_receiver %}<a class="button button-primary" href="/timer/new?receiver_id={{ selected_receiver.id }}">Timer erstellen</a>{% endif %}
     </div>
-    {% elif request.url.path == '/timer/edit' %}<a class="button button-quiet" href="/timer">Zur Timerliste</a>{% endif %}
+    {% endif %}
   </div>
   <section class="panel empty-state loading-state" aria-busy="true" data-loading-panel>
     <p class="loading-message" role="status"><span class="loading-spinner" aria-hidden="true"></span><span data-loading-message>Lade Daten von Receiver...</span></p>
