@@ -1,4 +1,51 @@
-# Prüfung von Version 1.1.18
+# Prüfung von Version 1.1.19
+
+Prüfstand: 11.10.2026, Python 3.12 unter Linux.
+
+- 344 automatisierte Tests erfolgreich. Vorhandene Prüfung der Bearbeitung
+  laufender Timer über JSON/XML angepasst: Beschreibung in der Timerliste
+  ausgeblendet, in der Bearbeitung vorausgefüllt und beim Speichern erhalten.
+  Code- und Formatprüfung, JavaScript- und Installer-Syntax erfolgreich.
+- Acht Browseransichten mit simulierten JSON- und XML-Receivern bei 320, 390,
+  768 und 1440 Pixeln aus dem installierten Wheel: insgesamt 64 Timereinträge.
+  Laufende, einmalige, wiederkehrende, vorbereitete, deaktivierte, erledigte
+  und Umschalt-Timer sowie ein Timer ohne Pfadangabe geprüft.
+- Wiederholung und Ersteller gemeinsam unter dem Titel, tatsächlicher Aufnahmepfad
+  in der nächsten Zeile; Anzeigenamen statt Anmeldenamen. Lange Pfade, Leerzeichen,
+  Sonderzeichen, fehlender Pfad als **unbekannt** und erledigte Timer im Verlauf
+  geprüft. Keine Beschreibungszeile in der Liste. Desktop- und Mobilansicht
+  zusätzlich visuell kontrolliert; keine horizontal überbreiten Seiten.
+- Pfad- und Wiederholungsänderung durch die automatische Fünf-Sekunden-Aktualisierung
+  über JSON und XML geprüft. Suchtext und Fokus bleiben erhalten. Der Listenfilter
+  reagiert weiterhin nur auf Titel und Sender, nicht auf Pfad oder Ersteller.
+  Beschreibung in Bearbeitungsformularen über JSON und XML erhalten.
+  Keine JavaScript-Fehler, Dialoge oder Schreibaufträge an Receiver bei der Browserprüfung.
+- Wheel und Quelldistribution gebaut. Installiertes Wheel startet mit Version
+  1.1.19 und Release-Datum 11.10.2026. CLI-Initialisierung erhält Schlüssel,
+  geänderten Port und Aufnahmezeitlimit von 90 Sekunden; Schema `0005`.
+  Login, Assets, Favicon, Seitenrahmen, EPG-Standard-/Tagesansicht über JSON/XML,
+  Standardordner, Ordner-Fallback, Festplattenanzeige, Download und eigenständige
+  Timerkopie geprüft.
+- Installations- und Git-ZIP entpackt und dateiweise verglichen. Paketbau aus
+  dem finalen Installations-ZIP hat identische Inhalte zum geprüften Paketbau.
+  Keine Betriebsdaten oder Zugangsdaten enthalten.
+- Sauberer Branch `main`, annotierter Tag `v1.1.19`, neunzehn unveränderte bisherige
+  Tags, `git fsck`, Klonen und gewöhnlicher lokaler Push geprüft. Die Historie
+  setzt `v1.1.18` direkt fort; die verworfene Version `v1.1.15` ist nicht enthalten.
+  Alle Archivdateien und Git-Objekte weiterhin ohne die entfernten Netzwerkbeispiele.
+- Hardwareprüfung, GitHub-Push und GitHub-CI wurden nicht ausgeführt; die
+  bestehende Ubuntu-Installation wurde nicht geändert. Receiver-Antworten sind
+  in dieser Prüfung simuliert.
+
+## Änderungen 1.1.19
+
+- Aufnahmepfad bei allen Timern anzeigen, fehlende Pfadangabe als **unbekannt**.
+- Wiederholung und Ersteller gemeinsam unter dem Titel, getrennt durch ** / **;
+  darunter **Aufnahmepfad:** mit dem jeweiligen Pfad.
+- Beschreibungszeile aus der Timerliste entfernen; Beschreibung in Formularen erhalten.
+- Keine neue Migration oder Abhängigkeit; Datenbankschema weiterhin `0005`.
+
+## Prüfung von Version 1.1.18
 
 Prüfstand: 11.10.2026, Python 3.12 unter Linux.
 

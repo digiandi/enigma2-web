@@ -392,6 +392,8 @@ td small { margin-top: .15rem; color: var(--muted); }
 .timer-table td { vertical-align: top; }
 .recording-table td { vertical-align: top; }
 .timer-description { margin: .5rem 0 0; white-space: pre-line; color: var(--muted); }
+.timer-meta { margin-top: .15rem; }
+.timer-meta > small { display: inline; margin: 0; }
 .delete-hint { max-width: 230px; margin-left: auto; white-space: normal; }
 .folder-navigation { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: 1.2rem; }
 .folder-navigation .button { overflow-wrap: anywhere; }

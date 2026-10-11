@@ -4,7 +4,7 @@
     <thead><tr><th>Aufnahme</th><th>Sender</th><th>Receiver</th><th>Start</th><th>Ende</th><th>Dauer</th><th>Status</th><th class="table-action">Aktionen</th></tr></thead>
     <tbody>{% for item in entries %}{% set timer = item.timer %}
     <tr class="timer-data-row recording-data-row{% if timer.state == 2 %} recording-data-row-with-file{% if not timer.justplay %} recording-active-row{% endif %}{% endif %}" data-search-name="{{ timer.name or 'Ohne Titel' }}" data-search-channel="{{ timer.channel or 'Unbekannter Sender' }}">
-      <td data-label="Aufnahme"><div class="epg-copy"><strong>{{ timer.name or 'Ohne Titel' }}</strong><small>{{ timer.repeat_label or 'Einmalig' }}{% if timer.justplay %} · Umschalt-Timer{% endif %}</small><small class="recording-owner">von {{ item.owner_name }}</small>{% if timer.description|trim %}<p class="timer-description">{{ timer.description }}</p>{% endif %}</div></td>
+      <td data-label="Aufnahme"><div class="epg-copy"><strong>{{ timer.name or 'Ohne Titel' }}</strong><div class="timer-meta"><small>{{ timer.repeat_label or 'Einmalig' }}{% if timer.justplay %} · Umschalt-Timer{% endif %} / </small><small class="recording-owner">von {{ item.owner_name }}</small></div><small class="timer-directory">Aufnahmepfad: {{ timer.directory or 'unbekannt' }}</small></div></td>
       <td data-label="Sender">{% with channel=timer.channel %}{% include "channel_details.html" %}{% endwith %}</td>
       <td data-label="Receiver">{{ selected_receiver.name }}</td>
       <td class="datetime-cell" data-label="Start">{{ item.begin.strftime('%d.%m.%Y %H:%M') }}</td>

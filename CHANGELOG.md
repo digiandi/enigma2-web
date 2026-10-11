@@ -1,5 +1,14 @@
 # Versionsverlauf
 
+## 1.1.19 – 11.10.2026
+
+- Aufnahmepfad bei allen Timern anzeigen; bei fehlender Receiver-Angabe **unbekannt**.
+- Wiederholung und Ersteller unter dem Titel gemeinsam als **Einmalig / von Anzeigename**
+  bzw. mit Wochentagen darstellen; darunter **Aufnahmepfad:** mit dem jeweiligen Pfad.
+- Beschreibungszeile aus der Timerliste entfernen. Beschreibung in Timerformularen
+  und auf dem Receiver erhalten.
+- Keine neue Migration oder Abhängigkeit; Datenbankschema weiterhin `0005`.
+
 ## 1.1.18 – 11.10.2026
 
 - Button **Zur Timerliste** auch aus der Ladeansicht von **Timer erstellen**

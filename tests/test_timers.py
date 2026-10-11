@@ -338,14 +338,19 @@ def test_running_timer_can_be_edited_without_creating_a_duplicate(setup, xml):
         login(client, "user", "User-123")
         page = client.get("/timer")
         assert '<h1>Timer <span class="heading-receiver">VU+ Duo 4K</span></h1>' in page.text
-        assert '<p class="timer-description">Nachrichten</p>' in page.text
+        assert 'class="timer-description"' not in page.text
+        assert "Aufnahmepfad: /media/hdd/movie/" in page.text
         assert "<summary>Beschreibung</summary>" not in page.text
         edit = client.get(existing_url("/timer/edit", original))
         assert edit.status_code == 200 and not box.writes
+        description = html.unescape(
+            re.search(r'<textarea name="description"[^>]*>(.*?)</textarea>', edit.text, re.S)[1]
+        )
+        assert description == original["description"]
         assert (
             client.post(
                 "/timer/save",
-                data=form_values(edit, name="Laufender Timer geändert"),
+                data=form_values(edit, name="Laufender Timer geändert", description=description),
                 follow_redirects=False,
             ).status_code
             == 303
@@ -355,6 +360,7 @@ def test_running_timer_can_be_edited_without_creating_a_duplicate(setup, xml):
         assert box.timers[0]["name"] == "Laufender Timer geändert"
         assert len(box.writes) == 1 and box.writes[0][0] == "timerchange"
         assert box.writes[0][1]["deleteOldOnSave"] == "1"
+        assert box.writes[0][1]["description"] == original["description"]
         box.timers[0]["description"] = "   "
         empty = client.get("/timer")
         assert 'class="timer-description"' not in empty.text
