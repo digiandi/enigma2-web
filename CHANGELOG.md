@@ -1,5 +1,11 @@
 # Versionsverlauf
 
+## 1.1.17 – 11.10.2026
+
+- Button **Zur Timerliste** aus der Überschrift von **Timer erstellen** entfernen,
+  auch bei Timerkopien, Entwürfen aus dem EPG und erneut angezeigten Formularen.
+- Keine neue Migration oder Abhängigkeit; Datenbankschema weiterhin `0005`.
+
 ## 1.1.16 – 11.10.2026
 
 - Sender-EPG standardmäßig mit **Alle verfügbaren Tage** öffnen und den Eintrag

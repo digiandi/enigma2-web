@@ -1,4 +1,42 @@
-# Prüfung von Version 1.1.16
+# Prüfung von Version 1.1.17
+
+Prüfstand: 11.10.2026, Python 3.12 unter Linux.
+
+- 344 automatisierte Tests erfolgreich. Code- und Formatprüfung,
+  JavaScript- und Installer-Syntax erfolgreich.
+- 16 Formularansichten im Browser mit simulierten JSON- und XML-Receivern
+  bei 390 und 1440 Pixeln: direkte Timererstellung, Timerkopie, EPG-Entwurf
+  und Bearbeitung. Der Rücksprungbutton **Zur Timerliste** erscheint bei
+  neuen Timern nicht; **Abbrechen** und **Timer speichern** sind bedienbar.
+- Vier erneut angezeigte Erstellformulare nach ungültigen Endzeiten geprüft.
+  Formularwerte und Fehlerhinweis bleiben sichtbar, ohne Rücksprungbutton.
+  Keine horizontal überbreiten Seiten, JavaScript-Fehler, Dialoge oder
+  Schreibaufträge an Receiver. Bearbeitungs-Rücksprung zur Timerliste geprüft.
+  Desktop- und Mobilansicht zusätzlich visuell kontrolliert.
+- Wheel und Quelldistribution gebaut. Installiertes Wheel startet mit Version
+  1.1.17 und Release-Datum 11.10.2026. CLI-Initialisierung erhält Schlüssel,
+  geänderten Port und Aufnahmezeitlimit von 90 Sekunden; Schema `0005`.
+  Login, Assets, Favicon, Seitenrahmen, EPG-Standard-/Tagesansicht über JSON/XML,
+  Standardordner, Ordner-Fallback, Festplattenanzeige, Download und eigenständige
+  Timerkopie geprüft.
+- Installations- und Git-ZIP entpackt und dateiweise verglichen. Paketbau aus
+  dem finalen Installations-ZIP hat identische Inhalte zum geprüften Paketbau.
+  Keine Betriebsdaten oder Zugangsdaten enthalten.
+- Sauberer Branch `main`, annotierter Tag `v1.1.17`, siebzehn unveränderte bisherige
+  Tags, `git fsck`, Klonen und gewöhnlicher lokaler Push geprüft. Die Historie
+  setzt `v1.1.16` direkt fort; die verworfene Version `v1.1.15` ist nicht enthalten.
+  Alle Archivdateien und Git-Objekte weiterhin ohne die entfernten Netzwerkbeispiele.
+- Hardwareprüfung, GitHub-Push und GitHub-CI wurden nicht ausgeführt; die
+  bestehende Ubuntu-Installation wurde nicht geändert. Receiver-Antworten sind
+  in dieser Prüfung simuliert.
+
+## Änderungen 1.1.17
+
+- Button **Zur Timerliste** aus der Überschrift von **Timer erstellen** entfernen,
+  auch bei Timerkopien, Entwürfen aus dem EPG und erneut angezeigten Formularen.
+- Keine neue Migration oder Abhängigkeit; Datenbankschema weiterhin `0005`.
+
+## Prüfung von Version 1.1.16
 
 Prüfstand: 11.10.2026, Python 3.12 unter Linux.
 
