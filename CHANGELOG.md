@@ -1,5 +1,16 @@
 # Versionsverlauf
 
+## 1.1.16 – 11.10.2026
+
+- Sender-EPG standardmäßig mit **Alle verfügbaren Tage** öffnen und den Eintrag
+  an die erste Stelle der Datumsauswahl setzen.
+- Eingabefeld **Liste filtern** links von **Zurück zur Senderliste** ergänzen;
+  Sendungstitel filtern und Tagesblöcke ohne Treffer ausblenden.
+- Rücksprung aus der Sendungsansicht in **Zurück zur Senderliste**, aus einer
+  Senderliste in **Zurück zur Übersicht** umbenennen.
+- Fortsetzung des Stands 1.1.14; die verworfene Version 1.1.15 ist nicht enthalten.
+  Keine neue Migration oder Abhängigkeit; Datenbankschema weiterhin `0005`.
+
 ## 1.1.14 – 10.10.2026
 
 - Bouquet-, Anbieter- und Senderlisten auf die Breite von **Timer erstellen**

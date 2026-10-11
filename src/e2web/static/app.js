@@ -16,6 +16,7 @@ function filterTable(input) {
   });
   area.querySelectorAll("[data-filter-section]").forEach(section => {
     const count = section.querySelectorAll("[data-search-name]:not([hidden])").length;
+    if (section.hasAttribute("data-filter-hide-empty")) section.hidden = Boolean(query) && count === 0;
     section.querySelectorAll("[data-filter-count]").forEach(label => {
       label.textContent = `${label.dataset.filterLabel} (${count})`;
     });

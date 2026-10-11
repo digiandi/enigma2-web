@@ -578,7 +578,7 @@ def create_app(config: Config | None = None) -> FastAPI:
         name = label_param(request, "name")
         timestamp = now()
         today = datetime.fromtimestamp(timestamp, timezone).date()
-        selected_day = request.query_params.get("day", today.isoformat())
+        selected_day = request.query_params.get("day", "all")
         if selected_day != "all":
             try:
                 selected_day = date.fromisoformat(selected_day).isoformat()

@@ -1,14 +1,13 @@
-# Enigma2 Timer 1.1.14
+# Enigma2 Timer 1.1.16
 
 Eigenständige, zentral betriebene Webanwendung zur Timer- und
 Aufnahmen-Verwaltung für Enigma2-Receiver.
 
-Version 1.1.14 begrenzt die Bouquet-, Anbieter- und Senderlisten auf die
-Breite des Formulars **Timer erstellen**: maximal 850 Pixel, auf schmalen
-Bildschirmen die verfügbare Seitenbreite. Sendernamen und Aktionen stehen
-dadurch auf großen Bildschirmen näher beieinander.
-Projekttexte und Kommentare beschreiben die eigenständige Anwendung
-ohne Vergleiche mit anderen Projekten.
+Version 1.1.16 öffnet das Sender-EPG mit **Alle verfügbaren Tage**.
+Dieser Eintrag steht an erster Stelle in der Datumsauswahl. **Liste filtern**
+steht links von **Zurück zur Senderliste** und filtert Sendungstitel sofort.
+In geöffneten Senderlisten heißt der Rücksprung **Zurück zur Übersicht**.
+Die Version setzt den bewährten Stand 1.1.14 fort.
 Die seit 1.1.2 bereinigte Git-Historie wird mit einem gewöhnlichen neuen
 Release-Commit fortgesetzt.
 Installation und Update: [INSTALL.md](INSTALL.md). GitHub: [GITHUB.md](GITHUB.md).
@@ -154,7 +153,7 @@ des Administrators. Er benötigt Python 3.12+, `python3-venv`, `rsync` und
 Zugang zum Python-Paketindex. Diese Systempakete bei Bedarf zuvor installieren.
 Der Installer aktiviert keine nginx-Konfigurationen.
 Der Nutzer hat die Erstinstallation und nginx-Anbindung für Version
-0.1.0 auf Ubuntu bestätigt. Die Timer- und Aufnahmefunktionen von 1.1.14 wurden mit
+0.1.0 auf Ubuntu bestätigt. Die Timer- und Aufnahmefunktionen von 1.1.16 wurden mit
 simulierten Receivern geprüft; die Prüfung an der tatsächlichen Hardware steht noch aus.
 
 Pfade:
@@ -415,7 +414,7 @@ Unter **Sender** zunächst TV/Radio und Bouquets/Anbieter wählen.
 Die Übersicht öffnet standardmäßig TV und Bouquets. Beide Listenarten öffnen
 ihre Senderliste. Bei einem Sender führt **EPG anzeigen** direkt zu dessen
 Sendungen. Das EPG hat keinen eigenen Menüpunkt; der Bereich **Sender** bleibt
-während der EPG-Anzeige aktiv. **Zur Übersicht** steht bei geöffneten Senderlisten
+während der EPG-Anzeige aktiv. **Zurück zur Übersicht** steht bei geöffneten Senderlisten
 in derselben Auswahlzeile wie TV, Radio, Bouquets und Anbieter. Der Namensfilter verändert die Reihenfolge nicht.
 Bouquet-, Anbieter- und Senderlisten sind wie das Formular **Timer erstellen**
 maximal 850 Pixel breit und am linken Seitenrand ausgerichtet. Auf schmalen
@@ -428,8 +427,13 @@ Damit funktioniert die Abfrage auch über die ältere XML-Schnittstelle.
 Die bisherigen eigenen Auswahlbuttons Favoriten und Satelliten entfallen.
 Persönliche Favoritenbouquets bleiben als normale Bouquets erreichbar.
 
-Das EPG zeigt standardmäßig den heutigen Tag. Die Datumsauswahl bietet die
-Tage, für die der Receiver Daten liefert, sowie **Alle verfügbaren Tage**.
+Das EPG zeigt standardmäßig **Alle verfügbaren Tage**. Dieser Eintrag steht
+an erster Stelle in der Datumsauswahl; danach folgen die einzelnen Tage.
+**Liste filtern** steht links von **Zurück zur Senderliste**, hat dieselbe
+Gestaltung wie die anderen Listenfilter und wirkt ausschließlich auf Sendungstitel.
+Nicht passende Sendungen und Tagesblöcke ohne Treffer werden ausgeblendet.
+Beim Leeren des Filters erscheinen alle Sendungen der gewählten Datumsauswahl
+wieder. Das Filtern benötigt keine zusätzliche Receiver-Abfrage.
 Ein laufendes Programm, das vor Mitternacht begonnen hat, erscheint weiterhin
 in der heutigen Ansicht. Leere EPG-Daten sind kein Verbindungsfehler.
 Die verfügbaren Daten hängen vom EPG-Speicher der Box ab.
@@ -739,21 +743,21 @@ Ordner und ihre Unterordner werden akzeptiert. Es wird keine bestimmte
 Symlinkbeziehung vorausgesetzt und kein fremder Wunschpfad zur Prüfung geladen.
 Nach erfolgreichem Löschen bleibt die aktuelle Aufnahmeliste erreichbar.
 
-## Update von 0.1.x bis 1.1.13 auf 1.1.14
+## Update von 0.1.x bis 1.1.14 auf 1.1.16
 
 Das neue Paket auf den Ubuntu-Server übertragen, entpacken und aus dem neuen
 Projektverzeichnis den Installer erneut ausführen. Als root:
 
 ```bash
-unzip enigma2-web-v1.1.14.zip
-cd enigma2-web-v1.1.14
+unzip enigma2-web-v1.1.16.zip
+cd enigma2-web-v1.1.16
 bash scripts/install.sh
 curl --retry 10 --retry-delay 1 --retry-connrefused http://127.0.0.1:8081/health
 ```
 
 Der Installer hält den laufenden Dienst während des Updates an und startet ihn
 anschließend wieder. Der Health-Aufruf wartet bei Bedarf auf den Dienststart.
-Die erwartete Antwort enthält `"version":"1.1.14"`.
+Die erwartete Antwort enthält `"version":"1.1.16"`.
 
 Die vorhandenen Benutzer, Receiver, Passwörter, Sitzungen, die Konfiguration
 und der Verschlüsselungsschlüssel werden weiterverwendet. Ein Administrator
@@ -762,7 +766,7 @@ standardmäßig wird Port 8081 verwendet. Bei einem anderen Port den Health-Aufr
 entsprechend anpassen. In der vorhandenen nginx-Site das Lesezeitlimit auf
 300 Sekunden erhöhen (siehe nächsten Abschnitt); der Installer verändert nginx nicht.
 
-Die Datenbank wird automatisch auf Revision `0005` migriert. Von 0.8.0 bis 1.1.13 auf 1.1.14 ist keine neue Schemaänderung nötig. Vorhandene Konten,
+Die Datenbank wird automatisch auf Revision `0005` migriert. Von 0.8.0 bis 1.1.14 auf 1.1.16 ist keine neue Schemaänderung nötig. Vorhandene Konten,
 Receiverzuordnungen, Sitzungen, Audit-Ereignisse und alte Eigentümerkennungen
 bleiben erhalten. Die neue Migration ergänzt sprechende Ersteller-Tags für alle
 vorhandenen Konten. Frühere Revisionen ergänzen weiterhin Eigentümerkennungen,
@@ -798,8 +802,8 @@ Danach als root:
 nginx -t && systemctl reload nginx
 ```
 
-CSS und JavaScript verwenden URLs wie `/static/app.css?v=1.1.14`.
-Das Favicon verwendet ebenfalls eine versionierte URL: `/favicon.ico?v=1.1.14`.
+CSS und JavaScript verwenden URLs wie `/static/app.css?v=1.1.16`.
+Das Favicon verwendet ebenfalls eine versionierte URL: `/favicon.ico?v=1.1.16`.
 Der Browser lädt sie dadurch unter derselben HTTPS-Adresse wie die Seite.
 Das verhindert HTTP-Asset-URLs und Mixed Content bei einer HTTPS-Verbindung
 zum Proxy. Der Proxy-Header ist weiterhin für sichere Sitzungscookies wichtig.
@@ -855,7 +859,7 @@ Receiver dienen jetzt der weiteren Kompatibilitätsprüfung.
 
 ## Favicon und Lesezeichen
 
-Alle Seiten verweisen auf `/favicon.ico?v=1.1.14`. Das Icon ist ohne Anmeldung
+Alle Seiten verweisen auf `/favicon.ico?v=1.1.16`. Das Icon ist ohne Anmeldung
 mit dem Inhaltstyp `image/vnd.microsoft.icon` erreichbar und enthält das
 vorhandene Logo in 16, 32 und 48 Pixeln. Auch die statischen Icon-Dateien
 dürfen einen Tag lang gespeichert werden (`Cache-Control: public, max-age=86400`).

@@ -234,7 +234,7 @@ def test_epg_timezone_escaping_and_date_filter(setup, start, expected_time, expe
         assert "&lt;script&gt;" in page.text and "&lt;img" in page.text
         assert '<script>alert("title")' not in page.text and "<img src=x" not in page.text
         assert "Morgen" not in page.text
-        page = client.get("/epg", params={"reference": CHANNEL, "day": "all"})
+        page = client.get("/epg", params={"reference": CHANNEL})
         assert "Morgen" in page.text
 
 
@@ -253,7 +253,7 @@ def test_running_program_across_midnight(setup, monkeypatch):
     )
     with TestClient(app) as client:
         login(client, "user", "User-123")
-        page = client.get("/epg", params={"reference": CHANNEL})
+        page = client.get("/epg", params={"reference": CHANNEL, "day": "2026-10-03"})
         assert "Nachtprogramm" in page.text and ">Läuft</span>" in page.text
         assert "bis 03.10. 00:30" in page.text
         assert 'value="2026-10-03" selected' in page.text
