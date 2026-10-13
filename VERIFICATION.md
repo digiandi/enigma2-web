@@ -1,4 +1,47 @@
-# Prüfung von Version 1.1.20
+# Prüfung von Version 1.1.21
+
+Prüfstand: 13.10.2026, Python 3.12 unter Linux.
+
+- 344 automatisierte Tests erfolgreich. Vorhandene Fußzeilenprüfung auf
+  **Enigma2 Web 1.1.21 · Release 13.10.2026 · Zeitzone Europe/Berlin** angepasst.
+  Die bisherige Prüfung des Namens **Enigma2 Timer** berücksichtigt jetzt,
+  dass **Enigma2 Web** ausdrücklich in der Fußzeile steht.
+  Code- und Formatprüfung, JavaScript- und Installer-Syntax erfolgreich.
+- Zwanzig Browseransichten aus dem installierten Wheel bei 320 und 1440 Pixeln:
+  Anmeldung, Timer, Sender, Aufnahmen, Timererstellung, Timerbearbeitung,
+  Receiver- und Benutzerverwaltung sowie Passwortformular. Zusätzlich gezielt
+  verzögerte Receiver-Ladeansicht der Timerliste bei beiden Breiten geprüft.
+- Auf jeder geprüften Seite genau eine Fußzeile mit dem neuen Namen, der
+  Versionsnummer, Release-Datum und Zeitzone. Kleine Schrift und Ausrichtung
+  bleiben erhalten; keine horizontal überbreiten Seiten. Name **Enigma2 Timer**
+  in der Kopfleiste erhalten. Mobile Anmeldung und Desktop-Timerliste zusätzlich
+  visuell kontrolliert. Keine JavaScript-Fehler, Dialoge oder Schreibaufträge an
+  Receiver bei der Browserprüfung.
+- Wheel und Quelldistribution gebaut. Installiertes Wheel startet mit Version
+  1.1.21 und Release-Datum 13.10.2026. CLI-Initialisierung erhält Schlüssel,
+  geänderten Port und Aufnahmezeitlimit von 90 Sekunden; Schema `0005`.
+  Login, Assets, Favicon, Seitenrahmen, EPG-Standard-/Tagesansicht über JSON/XML,
+  Standardordner, Ordner-Fallback, Festplattenanzeige, Download und eigenständige
+  Timerkopie geprüft.
+- Installations- und Git-ZIP entpackt und dateiweise verglichen. Paketbau aus
+  dem finalen Installations-ZIP hat identische Inhalte zum geprüften Paketbau.
+  Keine Betriebsdaten oder Zugangsdaten enthalten.
+- Sauberer Branch `main`, annotierter Tag `v1.1.21`, einundzwanzig unveränderte
+  bisherige Tags, `git fsck`, Klonen und gewöhnlicher lokaler Push geprüft.
+  Die Historie setzt `v1.1.20` direkt fort; die verworfene Version `v1.1.15`
+  ist nicht enthalten. Alle Archivdateien und Git-Objekte weiterhin ohne die
+  entfernten Netzwerkbeispiele.
+- Hardwareprüfung, GitHub-Push und GitHub-CI wurden nicht ausgeführt; die
+  bestehende Ubuntu-Installation wurde nicht geändert. Receiver-Antworten sind
+  in dieser Prüfung simuliert.
+
+## Änderungen 1.1.21
+
+- **Enigma2 Web** statt **Version** vor der Versionsnummer am Seitenende,
+  auf allen Seiten einschließlich Anmeldung und Ladeansichten.
+- Keine neue Migration oder Abhängigkeit; Datenbankschema weiterhin `0005`.
+
+## Prüfung von Version 1.1.20
 
 Prüfstand: 11.10.2026, Python 3.12 unter Linux.
 

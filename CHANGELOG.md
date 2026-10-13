@@ -1,5 +1,11 @@
 # Versionsverlauf
 
+## 1.1.21 – 13.10.2026
+
+- **Version** am Seitenende durch **Enigma2 Web** vor der Versionsnummer ersetzen,
+  auf allen Seiten einschließlich Anmeldung und Ladeansichten.
+- Keine neue Migration oder Abhängigkeit; Datenbankschema weiterhin `0005`.
+
 ## 1.1.20 – 11.10.2026
 
 - Wiederholung und Ersteller in der Timerliste durch **|** statt **/** trennen.

@@ -249,7 +249,7 @@ def test_timer_and_recording_pages_show_ordered_channel_details_and_new_branding
         login_page = client.get("/login")
         assert "Enigma2 Timer" in login_page.text and "Aufnahmen-Verwaltung" in login_page.text
         assert "Mit einem Benutzerkonto fortfahren." not in login_page.text
-        assert "Enigma2 Web" not in login_page.text
+        assert "Enigma2 Web" not in login_page.text.partition("</header>")[0]
         login(client, "user", "User-123")
         timers = client.get("/timer")
         assert re.search(

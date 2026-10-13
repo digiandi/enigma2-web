@@ -1,11 +1,18 @@
-# Enigma2 Timer 1.1.20
+# Enigma2 Timer 1.1.21
 
-Release: 11.10.2026 · Git-Tag: `v1.1.20` · Datenbankschema: `0005`
+Release: 13.10.2026 · Git-Tag: `v1.1.21` · Datenbankschema: `0005`
 
 Zentrale Timer- und Aufnahmen-Verwaltung für mehrere Enigma2-Receiver über
 OpenWebif oder das ältere XML-WebInterface, mit deutscher, responsiver Oberfläche.
 
-## Neu in 1.1.20
+## Neu in 1.1.21
+
+- **Seitenende:** **Enigma2 Web 1.1.21** statt **Version 1.1.21** in der
+  gemeinsamen Fußzeile aller Seiten anzeigen. Release-Datum und Zeitzone
+  stehen weiterhin direkt dahinter.
+- **Update:** Keine Konfigurationsänderung, neue Migration oder Abhängigkeit nötig.
+
+## Timerdarstellung seit 1.1.20
 
 - **Timer:** Wiederholung und Ersteller mit **|** statt **/** trennen,
   beispielsweise **Einmalig | von Anzeigename** oder **Mo, Mi | von Anzeigename**.
@@ -243,34 +250,34 @@ OpenWebif oder das ältere XML-WebInterface, mit deutscher, responsiver Oberflä
   Rückstellung nach fünf Sekunden.
 - Sprechende Ersteller-Tags, manuell am Receiver verwendbar; alte Kennungen bleiben gültig.
 - systemd-Installer, nginx-Vorlage und HTTPS-Betrieb hinter einem vorhandenen Proxy.
-- GitHub-Unterlagen mit CI-Workflow und vorbereiteter Git-Historie samt `v1.1.20`.
+- GitHub-Unterlagen mit CI-Workflow und vorbereiteter Git-Historie samt `v1.1.21`.
 
 ## Installation und Update
 
-Das Installationspaket `enigma2-web-v1.1.20.zip` entpacken und im enthaltenen
+Das Installationspaket `enigma2-web-v1.1.21.zip` entpacken und im enthaltenen
 Projektverzeichnis als root `bash scripts/install.sh` ausführen.
 Bei Neuinstallation danach einen Administrator anlegen und `e2web` aktivieren;
 bei vorhandener Installation werden Konten, Receiver, Konfiguration, Datenbank
 und Schlüssel weiterverwendet. Einzelheiten: [INSTALL.md](INSTALL.md).
 
-Das Update von 0.8.0 bis 1.1.19 auf 1.1.20 benötigt keine neue Schemaänderung
+Das Update von 0.8.0 bis 1.1.20 auf 1.1.21 benötigt keine neue Schemaänderung
 und verändert keine Timer oder Aufnahmedateien auf Receivern. Vorhandene
 Konfiguration, einschließlich eines geänderten Ports, wird erhalten.
 
 ## Prüfung
 
 344 automatisierte Tests, Code-/Formatprüfung, JavaScript-/Installer-Syntax,
-Browserprüfung des Trenners und der Timerbearbeitung mit JSON- und XML-Receivern
-auf Desktop und mobil, einschließlich verzögerter Ladeansichten und Eingabefehler,
-sowie Paketbau und Start des installierten Wheels; Prüfergebnisse stehen in [VERIFICATION.md](VERIFICATION.md).
+Browserprüfung der gemeinsamen Fußzeile auf Desktop und mobil, einschließlich
+Anmeldung, Receiver-Ladeansicht und Verwaltungsseiten, sowie Paketbau und
+Start des installierten Wheels; Prüfergebnisse stehen in [VERIFICATION.md](VERIFICATION.md).
 Das Installationspaket enthält keine Betriebsdaten oder Zugangsdaten.
 
 ## GitHub
 
-`enigma2-web-git-v1.1.20.zip` enthält das vorbereitete Repository mit Branch `main`
-und Tag `v1.1.20`. Alle bisherigen bereinigten Tags einschließlich `v1.1.19`
+`enigma2-web-git-v1.1.21.zip` enthält das vorbereitete Repository mit Branch `main`
+und Tag `v1.1.21`. Alle bisherigen bereinigten Tags einschließlich `v1.1.20`
 bleiben auf ihren bisherigen Ständen. Ein gewöhnlicher Push von `main` und
-`v1.1.20` genügt; der vorige Tag `v1.1.19` kann dabei mit übertragen werden,
+`v1.1.21` genügt; der vorige Tag `v1.1.20` kann dabei mit übertragen werden,
 falls er noch nicht auf GitHub vorhanden ist. Quellstand und Installationspaket
 sind identisch. Anleitung: [GITHUB.md](GITHUB.md).
 Lizenz- und Herkunftsangaben: [NOTICE.md](NOTICE.md).
