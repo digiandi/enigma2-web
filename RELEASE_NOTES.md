@@ -1,11 +1,25 @@
-# Enigma2 Timer 1.1.21
+# Enigma2 Timer 1.1.22
 
-Release: 13.10.2026 · Git-Tag: `v1.1.21` · Datenbankschema: `0005`
+Release: 26.10.2026 · Git-Tag: `v1.1.22` · Datenbankschema: `0005`
 
 Zentrale Timer- und Aufnahmen-Verwaltung für mehrere Enigma2-Receiver über
 OpenWebif oder das ältere XML-WebInterface, mit deutscher, responsiver Oberfläche.
 
-## Neu in 1.1.21
+## Neu in 1.1.22
+
+- **Aufnahmen:** Die Spalten heißen nun **Aufnahme, Sender, Receiver, Start, Ende,
+  Dauer, Status, Aktionen**, in derselben Reihenfolge wie auf **Timer**.
+- **Geplantes Ende:** Endzeit aus dem eindeutig über den vollständigen Dateipfad
+  zugeordneten Aufnahme-Timer anzeigen. Noch vorhandene erledigte Timer werden
+  ebenfalls berücksichtigt; Änderungen erscheinen bei der Aktualisierung alle fünf Sekunden.
+- **Fehlende Angaben:** Ohne eindeutigen passenden Timer oder bei nicht erreichbarer
+  Timerliste erscheint **Unbekannt**. Die Spalte **Dauer** bleibt unverändert.
+- **Darstellung:** Mobile Beschriftungen und die über alle acht Spalten reichende
+  Dateinamenzeile angepasst.
+- **Update:** Keine zusätzliche Receiverabfrage, Konfigurationsänderung, Migration
+  oder Abhängigkeit nötig.
+
+## Fußzeile seit 1.1.21
 
 - **Seitenende:** **Enigma2 Web 1.1.21** statt **Version 1.1.21** in der
   gemeinsamen Fußzeile aller Seiten anzeigen. Release-Datum und Zeitzone

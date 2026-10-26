@@ -17,7 +17,7 @@ from e2web.db import User, WebSession
 from e2web.openwebif import ReceiverError, TimerOutcomeUnknown
 from e2web.ownership import can_manage, owner_name, require_manage
 from e2web.receiver_actions import ReceiverActions
-from e2web.recordings import directory_path, duration_label, recording_running
+from e2web.recordings import directory_path, duration_label, recording_end, recording_running
 from e2web.security import now, token_hash
 
 
@@ -126,6 +126,7 @@ def register_recording_pages(app, config, *, render, selected_receiver, check_cs
                 for recording in sorted(
                     listing.recordings, key=lambda r: (-r.begin, r.title.casefold(), r.reference)
                 ):
+                    end = recording_end(recording, timers)
                     running = timers is not None and recording_running(
                         recording, timers, protect_unknown=False
                     )
@@ -148,6 +149,7 @@ def register_recording_pages(app, config, *, render, selected_receiver, check_cs
                             "begin": datetime.fromtimestamp(recording.begin, timezone)
                             if recording.begin
                             else None,
+                            "end": datetime.fromtimestamp(end, timezone) if end else None,
                             "duration": duration_label(recording.duration),
                             "delete_token": None,
                             "download_url": "/aufnahmen/download?"

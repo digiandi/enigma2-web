@@ -83,3 +83,18 @@ def recording_running(recording, timers, *, protect_unknown=True):
         ):
             return True
     return False
+
+
+def recording_end(recording, timers):
+    matches = [
+        timer
+        for timer in timers or []
+        if not timer.justplay
+        and timer.filename
+        and (
+            recording.filename == timer.filename
+            or recording.filename.removesuffix(".ts") == timer.filename
+        )
+    ]
+    # A recording's elapsed duration does not identify its planned end.
+    return matches[0].end if len(matches) == 1 and matches[0].end else None

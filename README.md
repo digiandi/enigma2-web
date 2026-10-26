@@ -1,11 +1,12 @@
-# Enigma2 Timer 1.1.21
+# Enigma2 Timer 1.1.22
 
 Eigenständige, zentral betriebene Webanwendung zur Timer- und
 Aufnahmen-Verwaltung für Enigma2-Receiver.
 
-Version 1.1.21 zeigt am Seitenende **Enigma2 Web 1.1.21** statt
-**Version 1.1.21**, gefolgt von Release-Datum und Anzeigezeitzone.
-Die Version setzt den Stand 1.1.20 fort.
+Version 1.1.22 zeigt auf **Aufnahmen** die Spalten **Start** und **Ende**
+in derselben Reihenfolge wie auf **Timer**. Die geplante Endzeit stammt aus dem
+eindeutig zugeordneten Aufnahme-Timer; bei fehlender Zuordnung steht **Unbekannt**.
+Die Version setzt den Stand 1.1.21 fort.
 Die seit 1.1.2 bereinigte Git-Historie wird mit einem gewöhnlichen neuen
 Release-Commit fortgesetzt.
 Installation und Update: [INSTALL.md](INSTALL.md). GitHub: [GITHUB.md](GITHUB.md).
@@ -73,7 +74,7 @@ Implementiert:
   neuer Timer mit eigenem Ersteller, Wiederholung, Aufnahmepfad und Receiveroptionen;
 - Aufnahmelisten mit direkt ausgewähltem Receiver-Standardpfad und Unterordnern
   in einer gemeinsamen Ordnerauswahl ohne separate Unterordnerbuttons;
-  Spalten Aufnahme, Sender, Receiver, Beginn, Dauer und Status; separate Dateinamenzeile mit
+  Spalten Aufnahme, Sender, Receiver, Start, Ende, Dauer und Status; separate Dateinamenzeile mit
   Dateigröße; Download, Löschung und Schutz laufender Aufnahmen;
 - freier Speicherplatz mit Festplattenname direkt neben der Aufnahmeordnerauswahl;
   alle gemeldeten Festplatten bündig untereinander, bei fehlender Angabe **unbekannt**;
@@ -151,7 +152,7 @@ des Administrators. Er benötigt Python 3.12+, `python3-venv`, `rsync` und
 Zugang zum Python-Paketindex. Diese Systempakete bei Bedarf zuvor installieren.
 Der Installer aktiviert keine nginx-Konfigurationen.
 Der Nutzer hat die Erstinstallation und nginx-Anbindung für Version
-0.1.0 auf Ubuntu bestätigt. Die Timer- und Aufnahmefunktionen von 1.1.21 wurden mit
+0.1.0 auf Ubuntu bestätigt. Die Timer- und Aufnahmefunktionen von 1.1.22 wurden mit
 simulierten Receivern geprüft; die Prüfung an der tatsächlichen Hardware steht noch aus.
 
 Pfade:
@@ -684,7 +685,12 @@ Feldreferenzen:
 [OpenWebif-XML](https://github.com/E2OpenPlugins/e2openplugin-OpenWebif/blob/master/plugin/controllers/views/web/deviceinfo.tmpl)
 und [älteres WebInterface-XML](https://github.com/oe-alliance/enigma2-plugins/blob/master/webinterface/src/web/deviceinfo.xml).
 
-Die Tabelle enthält die Spalten **Aufnahme, Sender, Receiver, Beginn, Dauer, Status**.
+Die Tabelle enthält die Spalten **Aufnahme, Sender, Receiver, Start, Ende, Dauer, Status**.
+**Ende** zeigt die geplante Endzeit des eindeutig über den vollständigen Dateipfad
+zugeordneten Aufnahme-Timers, einschließlich noch vorhandener erledigter Timer.
+Die Angabe aktualisiert sich alle fünf Sekunden, auch nach einer Timerverlängerung.
+Ohne passenden Timer, bei mehrdeutiger Dateizuordnung oder nicht erreichbarer
+Timerliste erscheint **Unbekannt**. Die bisherige Aufnahmedauer bleibt unverändert.
 Der Dateiname steht in einer eigenen Zeile am unteren Rand in derselben
 Monospace-Schrift, rechts daneben die Dateigröße. Laufende Dateien sind über
 beide Zeilen durchgehend orange. Datum/Uhrzeit verwenden `DD.MM.YYYY HH:MM`,
@@ -749,21 +755,21 @@ Ordner und ihre Unterordner werden akzeptiert. Es wird keine bestimmte
 Symlinkbeziehung vorausgesetzt und kein fremder Wunschpfad zur Prüfung geladen.
 Nach erfolgreichem Löschen bleibt die aktuelle Aufnahmeliste erreichbar.
 
-## Update von 0.1.x bis 1.1.20 auf 1.1.21
+## Update von 0.1.x bis 1.1.21 auf 1.1.22
 
 Das neue Paket auf den Ubuntu-Server übertragen, entpacken und aus dem neuen
 Projektverzeichnis den Installer erneut ausführen. Als root:
 
 ```bash
-unzip enigma2-web-v1.1.21.zip
-cd enigma2-web-v1.1.21
+unzip enigma2-web-v1.1.22.zip
+cd enigma2-web-v1.1.22
 bash scripts/install.sh
 curl --retry 10 --retry-delay 1 --retry-connrefused http://127.0.0.1:8081/health
 ```
 
 Der Installer hält den laufenden Dienst während des Updates an und startet ihn
 anschließend wieder. Der Health-Aufruf wartet bei Bedarf auf den Dienststart.
-Die erwartete Antwort enthält `"version":"1.1.21"`.
+Die erwartete Antwort enthält `"version":"1.1.22"`.
 
 Die vorhandenen Benutzer, Receiver, Passwörter, Sitzungen, die Konfiguration
 und der Verschlüsselungsschlüssel werden weiterverwendet. Ein Administrator
@@ -772,7 +778,7 @@ standardmäßig wird Port 8081 verwendet. Bei einem anderen Port den Health-Aufr
 entsprechend anpassen. In der vorhandenen nginx-Site das Lesezeitlimit auf
 300 Sekunden erhöhen (siehe nächsten Abschnitt); der Installer verändert nginx nicht.
 
-Die Datenbank wird automatisch auf Revision `0005` migriert. Von 0.8.0 bis 1.1.20 auf 1.1.21 ist keine neue Schemaänderung nötig. Vorhandene Konten,
+Die Datenbank wird automatisch auf Revision `0005` migriert. Von 0.8.0 bis 1.1.21 auf 1.1.22 ist keine neue Schemaänderung nötig. Vorhandene Konten,
 Receiverzuordnungen, Sitzungen, Audit-Ereignisse und alte Eigentümerkennungen
 bleiben erhalten. Die neue Migration ergänzt sprechende Ersteller-Tags für alle
 vorhandenen Konten. Frühere Revisionen ergänzen weiterhin Eigentümerkennungen,
@@ -808,8 +814,8 @@ Danach als root:
 nginx -t && systemctl reload nginx
 ```
 
-CSS und JavaScript verwenden URLs wie `/static/app.css?v=1.1.21`.
-Das Favicon verwendet ebenfalls eine versionierte URL: `/favicon.ico?v=1.1.21`.
+CSS und JavaScript verwenden URLs wie `/static/app.css?v=1.1.22`.
+Das Favicon verwendet ebenfalls eine versionierte URL: `/favicon.ico?v=1.1.22`.
 Der Browser lädt sie dadurch unter derselben HTTPS-Adresse wie die Seite.
 Das verhindert HTTP-Asset-URLs und Mixed Content bei einer HTTPS-Verbindung
 zum Proxy. Der Proxy-Header ist weiterhin für sichere Sitzungscookies wichtig.
@@ -865,7 +871,7 @@ Receiver dienen jetzt der weiteren Kompatibilitätsprüfung.
 
 ## Favicon und Lesezeichen
 
-Alle Seiten verweisen auf `/favicon.ico?v=1.1.21`. Das Icon ist ohne Anmeldung
+Alle Seiten verweisen auf `/favicon.ico?v=1.1.22`. Das Icon ist ohne Anmeldung
 mit dem Inhaltstyp `image/vnd.microsoft.icon` erreichbar und enthält das
 vorhandene Logo in 16, 32 und 48 Pixeln. Auch die statischen Icon-Dateien
 dürfen einen Tag lang gespeichert werden (`Cache-Control: public, max-age=86400`).

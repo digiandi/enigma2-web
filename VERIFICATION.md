@@ -1,4 +1,50 @@
-# Prüfung von Version 1.1.21
+# Prüfung von Version 1.1.22
+
+Prüfstand: 26.10.2026, Python 3.12.14 unter Linux.
+
+- 364 automatisierte Tests erfolgreich geprüft: 363 im vollständigen Lauf;
+  ein bestehender Zeitumstellungstest wurde anschließend separat erfolgreich
+  nachgeprüft. Sein festes Beispieldatum 25.10.2026 lag am Prüfdatum bereits
+  in der Vergangenheit. Die Validierungszeit wird nun allein innerhalb dieses
+  Tests vor das Beispiel gesetzt; das Anwendungsverhalten bleibt unverändert.
+- Zwanzig neue JSON-/XML-Prüfungen für geplante Aufnahme-Endzeiten:
+  Dateipfade mit und ohne `.ts`, laufende und erledigte Timer, Mitternachtswechsel,
+  Timerverlängerung mit Live-Aktualisierung, fehlende oder mehrdeutige Zuordnung,
+  gleichnamige Dateien in anderen Ordnern, fehlende Dateinamen, Umschalt-Timer
+  und nicht erreichbare Timerliste. Die Aufnahmedauer bleibt unabhängig davon.
+- HTML-Antworten aus dem installierten Wheel für Timer und Aufnahmen über beide
+  Receiver-Schnittstellen verglichen. Spaltenfolge Aufnahme, Sender, Receiver,
+  Start, Ende, Dauer, Status, Aktionen; mobile `data-label`-Beschriftungen und
+  Dateinamenzeilen mit `colspan="8"` geprüft. Keine neue Receiverabfrage.
+- Code- und Formatprüfung, JavaScript- und Installer-Syntax erfolgreich.
+  Wheel und Quelldistribution gebaut. Installiertes Wheel startet im ASGI-
+  Testclient mit Health-Antwort `{"status":"ok","version":"1.1.22"}`;
+  CSS und JavaScript mit der neuen Asset-Version erreichbar.
+- Visuelle Browserprüfung in dieser Umgebung nicht möglich: Ein lokaler Browser
+  stand nicht zur Verfügung; der bereitgestellte Browser konnte die lokale
+  Prüfinstallation nicht öffnen. Es werden keine erfolgreichen Desktop- oder
+  Mobil-Browserprüfungen für diese Version behauptet.
+- Installations- und Git-ZIP auf identische Quelldateien und gültige Archive
+  geprüft. Der Paketbau wird zusätzlich aus dem entpackten Installations-ZIP
+  geprüft; die Python-Paketinhalte entsprechen dem ursprünglichen Paketbau.
+- Branch `main` und annotierter Tag `v1.1.22` setzen `v1.1.21` direkt fort.
+  Alle 22 bisherigen Tags bleiben unverändert; `v1.1.15` bleibt ausgelassen.
+  `git fsck`, Klonen und gewöhnlicher lokaler Fast-Forward-Push geprüft.
+- Keine neue Migration, Abhängigkeit oder Konfigurationsänderung; Schema `0005`.
+  Hardwareprüfung, GitHub-Push und GitHub-CI wurden nicht ausgeführt. Es wurden
+  ausschließlich simulierte Receiver verwendet; die Ubuntu-Installation wurde
+  nicht verändert.
+
+## Änderungen 1.1.22
+
+- Auf Aufnahmen **Beginn** in **Start** umbenennen und **Ende** direkt danach
+  ergänzen. Die Spalten stehen in derselben Reihenfolge wie auf Timer.
+- Geplante Endzeit aus dem eindeutig über den vollständigen Dateipfad
+  zugeordneten Aufnahme-Timer anzeigen, einschließlich vorhandener erledigter
+  Timer. Änderungen werden alle fünf Sekunden übernommen.
+- Ohne eindeutige Zuordnung oder erreichbare Timerliste **Unbekannt** anzeigen.
+
+## Prüfung von Version 1.1.21
 
 Prüfstand: 13.10.2026, Python 3.12 unter Linux.
 

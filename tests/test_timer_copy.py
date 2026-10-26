@@ -309,11 +309,13 @@ def test_copy_snapshot_remains_independent_when_source_is_removed_and_rights_are
         assert len(box.writes) == 1
 
 
-def test_copy_preserves_the_second_dst_occurrence_and_seconds(setup):
+def test_copy_preserves_the_second_dst_occurrence_and_seconds(setup, monkeypatch):
     _, _, app = setup
     box = install_selector(app)
     timezone = ZoneInfo("Europe/Berlin")
     begin = int(datetime(2026, 10, 25, 2, 30, 17, tzinfo=timezone, fold=1).timestamp())
+    # Keep this fixed DST example in the future relative to form validation.
+    monkeypatch.setattr("e2web.timer_pages.now", lambda: begin - 86400)
     source = timer_row(begin=begin, end=begin + 600)
     box.timers = [source]
     with TestClient(app) as client:

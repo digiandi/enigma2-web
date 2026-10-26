@@ -1,5 +1,16 @@
 # Versionsverlauf
 
+## 1.1.22 – 26.10.2026
+
+- **Aufnahmen:** **Beginn** in **Start** umbenennen und **Ende** direkt danach
+  ergänzen; Spaltenfolge wie bei **Timer**.
+- Geplante Endzeit aus dem eindeutig anhand des vollständigen Dateipfads
+  zugeordneten Aufnahme-Timer anzeigen, auch aus noch vorhandenen erledigten Timern.
+  Änderungen werden mit der vorhandenen Fünf-Sekunden-Aktualisierung übernommen.
+- Ohne eindeutige Timerzuordnung oder bei nicht erreichbarer Timerliste
+  **Unbekannt** anzeigen. Dateinamenzeile und mobile Beschriftungen anpassen.
+- Keine zusätzliche Receiverabfrage, Migration oder Abhängigkeit; Schema `0005`.
+
 ## 1.1.21 – 13.10.2026
 
 - **Version** am Seitenende durch **Enigma2 Web** vor der Versionsnummer ersetzen,

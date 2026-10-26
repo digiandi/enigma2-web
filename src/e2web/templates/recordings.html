@@ -16,18 +16,19 @@
 </div>{% endif %}
 {% if not selected_receiver %}<section class="panel">{% include "receiver_empty.html" %}</section>
 {% elif list_failed %}<section class="panel empty-state"><h2>Aufnahmeliste nicht erreichbar</h2><p>Bitte die Verbindung prüfen und die Seite neu laden.</p></section>
-{% elif entries %}<section class="panel table-panel" id="recording-rows"><div class="table-scroll"><table class="recording-table"><thead><tr><th>Aufnahme</th><th>Sender</th><th>Receiver</th><th>Beginn</th><th>Dauer</th><th>Status</th><th class="table-action">Aktionen</th></tr></thead><tbody>
+{% elif entries %}<section class="panel table-panel" id="recording-rows"><div class="table-scroll"><table class="recording-table"><thead><tr><th>Aufnahme</th><th>Sender</th><th>Receiver</th><th>Start</th><th>Ende</th><th>Dauer</th><th>Status</th><th class="table-action">Aktionen</th></tr></thead><tbody>
 {% for item in entries %}{% set recording = item.recording %}
 <tr class="recording-data-row recording-data-row-with-file{% if item.running %} recording-active-row{% endif %}" data-search-name="{{ recording.title }}" data-search-channel="{{ recording.channel or 'Unbekannter Sender' }}" data-search-filename="{{ recording.filename.rsplit('/', 1)[-1] }}">
   <td data-label="Aufnahme"><div class="epg-copy"><strong>{{ recording.title }}</strong><small class="recording-owner">von {{ item.owner_name }}</small>{% if recording.description|trim %}<p class="timer-description">{{ recording.description }}</p>{% endif %}</div></td>
   <td data-label="Sender">{% with channel=recording.channel %}{% include "channel_details.html" %}{% endwith %}</td>
   <td data-label="Receiver">{{ selected_receiver.name }}</td>
-  <td class="datetime-cell" data-label="Beginn">{{ item.begin.strftime('%d.%m.%Y %H:%M') if item.begin else 'Unbekannt' }}</td>
+  <td class="datetime-cell" data-label="Start">{{ item.begin.strftime('%d.%m.%Y %H:%M') if item.begin else 'Unbekannt' }}</td>
+  <td class="datetime-cell" data-label="Ende">{{ item.end.strftime('%d.%m.%Y %H:%M') if item.end else 'Unbekannt' }}</td>
   <td class="duration-cell" data-label="Dauer">{{ item.duration }}</td>
   <td data-label="Status"><span class="badge {{ 'badge-warning' if item.running else '' if item.status_known else 'badge-muted' }}">{{ 'Läuft' if item.running else 'Abgeschlossen' if item.status_known else 'Unbekannt' }}</span></td>
   <td class="table-action"><div class="row-actions"><a class="button button-quiet button-small" href="{{ item.download_url }}" download>Herunterladen</a>{% if item.delete_token %}<form method="post" action="/aufnahmen/delete"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><input type="hidden" name="action_token" value="{{ item.delete_token }}"><input type="hidden" name="confirmed" value="" data-action-confirm-value><button class="button button-danger button-small action-confirm-button" data-action-confirm data-busy-label="Wird gelöscht …"><span class="action-initial-label">Löschen</span><span class="action-confirm-label" aria-hidden="true">Wirklich löschen?</span></button></form>{% endif %}</div>{% if item.can_manage and not item.running and not item.delete_token %}<small>Löschen derzeit nicht verfügbar</small>{% endif %}</td>
 </tr>
-<tr class="recording-file-row{% if item.running %} recording-active-row{% endif %}" data-filter-detail><td colspan="7"><div class="table-detail-line"><span class="recording-file">{{ recording.filename.rsplit('/', 1)[-1] }}</span><span class="table-detail-value">{{ recording.size_label }}</span></div></td></tr>
+<tr class="recording-file-row{% if item.running %} recording-active-row{% endif %}" data-filter-detail><td colspan="8"><div class="table-detail-line"><span class="recording-file">{{ recording.filename.rsplit('/', 1)[-1] }}</span><span class="table-detail-value">{{ recording.size_label }}</span></div></td></tr>
 {% endfor %}</tbody></table></div><p class="filter-empty" data-filter-empty hidden role="status">Keine passenden Einträge.</p></section>
 {% else %}<section class="panel empty-state"><h2>Keine Aufnahmen</h2><p>In diesem Ordner sind keine Aufnahmen vorhanden.</p></section>{% endif %}
 </div>

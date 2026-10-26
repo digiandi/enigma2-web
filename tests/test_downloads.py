@@ -236,8 +236,8 @@ def test_layout_footer_relative_assets_and_active_companion_rows(setup):
     with TestClient(app, base_url="http://example.test") as client:
         page = client.get("/login")
         assert "Deine Receiver" not in page.text and "auth-panel-single" in page.text
-        assert 'href="/static/app.css?v=1.1.21"' in page.text
-        assert 'src="/static/app.js?v=1.1.21"' in page.text
+        assert 'href="/static/app.css?v=1.1.22"' in page.text
+        assert 'src="/static/app.js?v=1.1.22"' in page.text
         assert "http://example.test" not in page.text
         login(client, "user", "User-123")
         page = client.get("/aufnahmen")
@@ -246,7 +246,7 @@ def test_layout_footer_relative_assets_and_active_companion_rows(setup):
         assert 'class="recording-file-row recording-active-row"' in page.text
         assert 'class="recording-file"' in page.text
         assert (
-            "<th>Aufnahme</th><th>Sender</th><th>Receiver</th><th>Beginn</th><th>Dauer</th><th>Status</th>"
+            "<th>Aufnahme</th><th>Sender</th><th>Receiver</th><th>Start</th><th>Ende</th><th>Dauer</th><th>Status</th>"
             in page.text
         )
         page = client.get("/timer")
@@ -255,6 +255,6 @@ def test_layout_footer_relative_assets_and_active_companion_rows(setup):
             in page.text
         )
         assert page.text.count("Zeitzone") == 1
-        assert "Enigma2 Web 1.1.21 · Release 13.10.2026 · Zeitzone Europe/Berlin" in page.text
+        assert "Enigma2 Web 1.1.22 · Release 26.10.2026 · Zeitzone Europe/Berlin" in page.text
         assert "00:00:00" in page.text  # State is running but mock start lies in the future.
         assert "Dateityp" not in page.text
