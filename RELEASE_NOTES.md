@@ -1,19 +1,29 @@
-# Enigma2 Timer 1.1.22
+# Enigma2 Timer 1.1.23
 
-Release: 26.10.2026 · Git-Tag: `v1.1.22` · Datenbankschema: `0005`
+Release: 27.10.2026 · Git-Tag: `v1.1.23` · Datenbankschema: `0005`
 
 Zentrale Timer- und Aufnahmen-Verwaltung für mehrere Enigma2-Receiver über
 OpenWebif oder das ältere XML-WebInterface, mit deutscher, responsiver Oberfläche.
 
-## Neu in 1.1.22
+## Neu in 1.1.23
+
+- **Aufnahmen:** **Ende** wird ausschließlich aus **Startzeit + Aufnahmedauer**
+  berechnet, auch bei laufenden Aufnahmen. Ein passender Timer ist dafür nicht nötig.
+- **Aktualisierung:** Eine geänderte Dauer wird bei der bestehenden automatischen
+  Aktualisierung alle fünf Sekunden auch in der berechneten Endzeit berücksichtigt.
+- **Fehlende Angaben:** Ohne gültige Startzeit oder Dauer sowie bei einem nicht
+  darstellbaren Ergebnis erscheint **Unbekannt**. Timerzeiten werden nicht als
+  Ersatz verwendet. Null Sekunden Dauer ergeben dieselbe End- wie Startzeit.
+- **Timer:** Die Endzeit stammt weiterhin aus dem jeweiligen Timer.
+- **Update:** Keine zusätzliche Receiverabfrage, Konfigurationsänderung, Migration
+  oder Abhängigkeit nötig.
+
+## Aufnahmespalten seit 1.1.22
 
 - **Aufnahmen:** Die Spalten heißen nun **Aufnahme, Sender, Receiver, Start, Ende,
   Dauer, Status, Aktionen**, in derselben Reihenfolge wie auf **Timer**.
-- **Geplantes Ende:** Endzeit aus dem eindeutig über den vollständigen Dateipfad
-  zugeordneten Aufnahme-Timer anzeigen. Noch vorhandene erledigte Timer werden
-  ebenfalls berücksichtigt; Änderungen erscheinen bei der Aktualisierung alle fünf Sekunden.
-- **Fehlende Angaben:** Ohne eindeutigen passenden Timer oder bei nicht erreichbarer
-  Timerliste erscheint **Unbekannt**. Die Spalte **Dauer** bleibt unverändert.
+- Die in 1.1.22 eingeführte Anzeige der geplanten Timer-Endzeit wird ab 1.1.23
+  durch die oben beschriebene Berechnung aus den Aufnahmedaten ersetzt.
 - **Darstellung:** Mobile Beschriftungen und die über alle acht Spalten reichende
   Dateinamenzeile angepasst.
 - **Update:** Keine zusätzliche Receiverabfrage, Konfigurationsänderung, Migration

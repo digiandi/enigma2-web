@@ -1,5 +1,16 @@
 # Versionsverlauf
 
+## 1.1.23 – 27.10.2026
+
+- **Aufnahmen:** **Ende** ausschließlich aus Startzeit und gemeldeter
+  Aufnahmedauer berechnen, für abgeschlossene und laufende Aufnahmen.
+- Berechnung unabhängig von Timerzuordnung und erreichbarer Timerliste;
+  Änderungen der Dauer erscheinen mit der Fünf-Sekunden-Aktualisierung.
+  Ohne gültige Startzeit oder Dauer beziehungsweise bei nicht darstellbarem
+  Ergebnis **Unbekannt** anzeigen, ohne Ersatz durch eine Timer-Endzeit.
+- **Timer:** Endzeit weiterhin aus dem jeweiligen Timer auslesen.
+- Keine zusätzliche Receiverabfrage, Migration oder Abhängigkeit; Schema `0005`.
+
 ## 1.1.22 – 26.10.2026
 
 - **Aufnahmen:** **Beginn** in **Start** umbenennen und **Ende** direkt danach

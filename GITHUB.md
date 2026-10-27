@@ -1,9 +1,9 @@
-# Version 1.1.22 auf GitHub bereitstellen
+# Version 1.1.23 auf GitHub bereitstellen
 
-Das Git-Paket `enigma2-web-git-v1.1.22.zip` enthält den vollständigen Quellstand
-als vorbereitetes Repository mit Branch `main` und annotiertem Tag `v1.1.22`.
-Es setzt den bereinigten Stand 1.1.21 mit einem neuen Release-Commit fort.
-Die vorhandenen Tags einschließlich `v1.1.21` bleiben auf
+Das Git-Paket `enigma2-web-git-v1.1.23.zip` enthält den vollständigen Quellstand
+als vorbereitetes Repository mit Branch `main` und annotiertem Tag `v1.1.23`.
+Es setzt den bereinigten Stand 1.1.22 mit einem neuen Release-Commit fort.
+Die vorhandenen Tags einschließlich `v1.1.22` bleiben auf
 ihren bisherigen bereinigten Ständen. Für dieses Update genügt ein normaler Push.
 Die Autorenkennung lautet `Enigma2 Timer Release <release@localhost>`.
 Das Paket enthält noch kein Remote. Die verworfene Version 1.1.15 ist nicht enthalten.
@@ -18,8 +18,10 @@ git status --short --branch
 git log -2 --oneline
 git remote add origin https://github.com/digiandi/enigma2-web.git
 git push -u origin main
-git push origin v1.1.14 v1.1.16 v1.1.17 v1.1.18 v1.1.19 v1.1.20 v1.1.21 v1.1.22
-git ls-remote origin refs/heads/main "refs/tags/v1.*"
+git push origin v1.1.23
+git fetch origin
+git status --short --branch
+git ls-remote origin refs/heads/main refs/tags/v1.1.23 "refs/tags/v1.1.23^{}"
 ```
 
 Bei einem anderen GitHub-Konto oder Repository die URL entsprechend anpassen.
@@ -29,21 +31,20 @@ Zugangsdaten gehören nicht in die Remote-URL.
 
 Eigene zusätzliche Commits auf GitHub müssen vor dem Push berücksichtigt werden.
 Ein normaler Push bricht ab, wenn der neue Stand die dortige Historie nicht fortsetzt.
-Die vorhandenen Release-Tags werden nicht verschoben. Der Push enthält auch
-`v1.1.14`, `v1.1.16`, `v1.1.17`, `v1.1.18`, `v1.1.19`, `v1.1.20` und `v1.1.21`, falls diese Tags noch nicht hochgeladen wurden.
-Sind sie bereits mit denselben Kennungen vorhanden, bleiben sie unverändert.
+Die vorhandenen Release-Tags werden nicht verschoben. Der Befehl lädt nur den
+neuen Tag `v1.1.23` hoch; die zuvor veröffentlichten Tags bleiben unverändert.
 
 ## Einmalige Bereinigung aus Version 1.1.2
 
 Die Entfernung privater Netzwerkbeispiele aus älteren Releases erfolgte mit
 Version 1.1.2. Wer diese Umstellung bereits abgeschlossen hat, verwendet für
-1.1.22 ausschließlich die normalen Update-Befehle oben.
+1.1.23 ausschließlich die normalen Update-Befehle oben.
 
 Das weiterhin enthaltene `scripts/github-bereinigen.ps1` ist das Hilfsmittel für
 die einmalige Umstellung auf 1.1.2. Es prüft genau diesen Release-Stand und
 ist kein allgemeines Update-Skript für spätere Versionen. Bei einem noch
 unbereinigten Repository zuerst das Git-Paket 1.1.2 samt damaliger Anleitung
-verwenden und anschließend mit Version 1.1.22 fortsetzen.
+verwenden und anschließend mit Version 1.1.23 fortsetzen.
 
 Alte hochgeladene ZIP-Dateien an GitHub-Releases zusätzlich entfernen oder durch
 bereinigte Pakete ersetzen. Heruntergeladene Kopien und Forks werden durch
@@ -63,16 +64,16 @@ Das Git-Paket vollständig entpacken und im Projektordner ausführen;
 ```powershell
 git remote add origin https://github.com/OWNER/enigma2-web.git
 git push -u origin main
-git push origin v1.0.0 v1.1.0 v1.1.1 v1.1.2 v1.1.3 v1.1.4 v1.1.5 v1.1.6 v1.1.7 v1.1.8 v1.1.9 v1.1.10 v1.1.11 v1.1.12 v1.1.13 v1.1.14 v1.1.16 v1.1.17 v1.1.18 v1.1.19 v1.1.20 v1.1.21 v1.1.22
+git push origin v1.0.0 v1.1.0 v1.1.1 v1.1.2 v1.1.3 v1.1.4 v1.1.5 v1.1.6 v1.1.7 v1.1.8 v1.1.9 v1.1.10 v1.1.11 v1.1.12 v1.1.13 v1.1.14 v1.1.16 v1.1.17 v1.1.18 v1.1.19 v1.1.20 v1.1.21 v1.1.22 v1.1.23
 ```
 
 Für ein leeres Repository ist das Bereinigungsskript nicht erforderlich.
 
 ## Release veröffentlichen
 
-Unter **Releases** einen Release für Tag `v1.1.22` mit Titel **Enigma2 Timer 1.1.22**
+Unter **Releases** einen Release für Tag `v1.1.23` mit Titel **Enigma2 Timer 1.1.23**
 erstellen. `RELEASE_NOTES.md` als Beschreibung verwenden und
-`enigma2-web-v1.1.22.zip` als Installationspaket anhängen. Git-Tag und Installationspaket
+`enigma2-web-v1.1.23.zip` als Installationspaket anhängen. Git-Tag und Installationspaket
 enthalten denselben Quellstand.
 
 ## Prüfungen und weitere Versionen

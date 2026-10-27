@@ -1,4 +1,46 @@
-# Prüfung von Version 1.1.22
+# Prüfung von Version 1.1.23
+
+Prüfstand: 27.10.2026, Python 3.12.14 unter Linux.
+
+- Alle 368 automatisierten Tests im vollständigen Lauf erfolgreich.
+- Vierundzwanzig JSON-/XML-Prüfungen für Aufnahme-Endzeiten: laufende und
+  abgeschlossene Aufnahmen mit passendem Timer, Änderungen von Timer-Endzeit
+  und Aufnahmedauer, Live-Aktualisierung, fehlende/mehrdeutige Timerzuordnung,
+  andere Dateipfade, fehlende Timer-Dateinamen, Umschalt-Timer und nicht
+  erreichbare Timerliste. Die Endzeit stammt ausschließlich aus Start + Dauer.
+- Fehlende, unbekannte und ungültige Zeitangaben sowie nicht darstellbare
+  Ergebnisse zeigen Unbekannt, auch wenn ein passender Timer existiert.
+  Null Sekunden Dauer, Stunden-/Minutenformate, Mitternachtswechsel und beide
+  Zeitumstellungen einschließlich der doppelten Herbststunde geprüft.
+- Timer zeigen weiterhin ihre eigene geplante Endzeit, auch nach einer
+  Timerverlängerung. Aufnahmedauer und daraus berechnetes Ende ändern sich
+  unabhängig davon. Keine Receiver-Schreibaufträge bei diesen Prüfungen.
+- Code- und Formatprüfung, JavaScript- und Installer-Syntax erfolgreich.
+  Wheel und Quelldistribution gebaut. Installiertes Wheel im ASGI-Testclient
+  mit JSON/XML, Health-Antwort {"status":"ok","version":"1.1.23"},
+  neuer Fußzeile, Assets sowie unterschiedlichen Aufnahme-/Timer-Endzeiten geprüft.
+- Darstellung, Spaltenfolge und mobile Beschriftungen unverändert zur Vorversion.
+  Keine visuelle Browserprüfung durchgeführt; die lokale Prüfinstallation war
+  in der bereitgestellten Browserumgebung bereits nicht erreichbar.
+- Installations- und Git-ZIP auf gültige Archive und identische Quelldateien
+  geprüft. Paketbau aus dem entpackten Installations-ZIP zusätzlich geprüft;
+  seine Wheel-Inhalte entsprechen dem zuvor geprüften Paketbau.
+- Branch main und annotierter Tag v1.1.23 setzen v1.1.22 direkt fort.
+  Alle 23 bisherigen Tags bleiben unverändert; v1.1.15 bleibt ausgelassen.
+  git fsck, Klonen und gewöhnlicher lokaler Fast-Forward-Push geprüft.
+- Keine zusätzliche Receiverabfrage, Migration, Abhängigkeit oder
+  Konfigurationsänderung; Schema 0005. Hardwareprüfung, GitHub-Push und GitHub-CI
+  wurden nicht ausgeführt. Ausschließlich simulierte Receiver verwendet;
+  die Ubuntu-Installation wurde nicht verändert.
+
+## Änderungen 1.1.23
+
+- Auf Aufnahmen Ende ausschließlich aus Startzeit + gemeldeter Dauer berechnen,
+  auch bei laufenden Aufnahmen und ohne erreichbaren oder passenden Timer.
+- Bei fehlenden oder unbrauchbaren Aufnahmedaten kein Ersatz durch Timerzeiten.
+- Bei Timern die bisherige Endzeit aus dem jeweiligen Timer erhalten.
+
+## Prüfung von Version 1.1.22
 
 Prüfstand: 26.10.2026, Python 3.12.14 unter Linux.
 

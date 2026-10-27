@@ -126,7 +126,11 @@ def register_recording_pages(app, config, *, render, selected_receiver, check_cs
                 for recording in sorted(
                     listing.recordings, key=lambda r: (-r.begin, r.title.casefold(), r.reference)
                 ):
-                    end = recording_end(recording, timers)
+                    end = recording_end(recording)
+                    try:
+                        end = datetime.fromtimestamp(end, timezone) if end is not None else None
+                    except (OverflowError, OSError, ValueError):
+                        end = None
                     running = timers is not None and recording_running(
                         recording, timers, protect_unknown=False
                     )
@@ -149,7 +153,7 @@ def register_recording_pages(app, config, *, render, selected_receiver, check_cs
                             "begin": datetime.fromtimestamp(recording.begin, timezone)
                             if recording.begin
                             else None,
-                            "end": datetime.fromtimestamp(end, timezone) if end else None,
+                            "end": end,
                             "duration": duration_label(recording.duration),
                             "delete_token": None,
                             "download_url": "/aufnahmen/download?"
