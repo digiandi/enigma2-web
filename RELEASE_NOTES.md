@@ -1,11 +1,20 @@
-# Enigma2 Timer 1.1.23
+# Enigma2 Timer 1.1.24
 
-Release: 27.10.2026 · Git-Tag: `v1.1.23` · Datenbankschema: `0005`
+Release: 04.11.2026 · Git-Tag: `v1.1.24` · Datenbankschema: `0005`
 
 Zentrale Timer- und Aufnahmen-Verwaltung für mehrere Enigma2-Receiver über
 OpenWebif oder das ältere XML-WebInterface, mit deutscher, responsiver Oberfläche.
 
-## Neu in 1.1.23
+## Neu in 1.1.24
+
+- **Timerformular:** Zuerst **Abbrechen**, rechts daneben **Timer speichern**.
+  Gilt für Erstellen, Bearbeiten, Kopieren und erneut angezeigte Formulare
+  nach Eingabefehlern oder Receiverkonflikten.
+- **Mobile Ansicht:** Die Aktionen stehen weiterhin untereinander, mit
+  **Abbrechen** zuerst.
+- **Update:** Keine Konfigurationsänderung, neue Migration oder Abhängigkeit nötig.
+
+## Aufnahme-Endzeit seit 1.1.23
 
 - **Aufnahmen:** **Ende** wird ausschließlich aus **Startzeit + Aufnahmedauer**
   berechnet, auch bei laufenden Aufnahmen. Ein passender Timer ist dafür nicht nötig.

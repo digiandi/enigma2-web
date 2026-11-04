@@ -1,4 +1,40 @@
-# Prüfung von Version 1.1.23
+# Prüfung von Version 1.1.24
+
+Prüfstand: 04.11.2026, Python 3.12.14 unter Linux.
+
+- Alle 368 vorhandenen automatisierten Tests im vollständigen Lauf erfolgreich.
+- Im gemeinsamen Timerformular Abbrechen vor Timer speichern angeordnet.
+  Desktop-Reihenfolge links nach rechts; bei höchstens 720 Pixeln nur im
+  Timerformular mobile Stapelung in derselben Reihenfolge. Andere Formulare
+  verwenden ihre bisherigen Regeln.
+- Neun HTML-Formularansichten aus dem installierten Wheel kontrolliert:
+  Erstellen, Bearbeiten, Kopieren und erneut angezeigte Eingabefehler jeweils
+  über JSON und XML sowie ein EPG-Entwurf über JSON. Abbrechen steht in der
+  Dokumentreihenfolge vor Timer speichern; Link, Speichern-Button und dessen
+  Attribute bleiben erhalten. Keine Receiver-Schreibaufträge bei dieser Kontrolle.
+- Code- und Formatprüfung, JavaScript- und Installer-Syntax erfolgreich.
+  Wheel und Quelldistribution gebaut. Installiertes Wheel mit Health-Antwort
+  {"status":"ok","version":"1.1.24"}, Fußzeile mit Release 04.11.2026,
+  CSS, JavaScript und Favicon unter der neuen Asset-Version geprüft.
+- Keine visuelle Browserprüfung durchgeführt. Die Reihenfolge wurde anhand
+  der gerenderten HTML-Antworten und der zugehörigen CSS-Regeln kontrolliert.
+- Installations- und Git-ZIP auf gültige Archive und identische Quelldateien
+  geprüft; Paketbau aus dem entpackten Installations-ZIP zusätzlich geprüft.
+  Die Wheel-Inhalte entsprechen dem zuvor geprüften installierten Paket.
+- Branch main und annotierter Tag v1.1.24 setzen v1.1.23 direkt fort.
+  Alle 24 bisherigen Tags bleiben unverändert; v1.1.15 bleibt ausgelassen.
+  git fsck, Klonen und gewöhnlicher lokaler Fast-Forward-Push geprüft.
+- Keine neue Migration, Abhängigkeit oder Konfigurationsänderung; Schema 0005.
+  Hardwareprüfung, GitHub-Push und GitHub-CI wurden nicht ausgeführt.
+  Ausschließlich simulierte Receiver verwendet; die Ubuntu-Installation wurde
+  nicht verändert.
+
+## Änderungen 1.1.24
+
+- Im Timerformular zuerst Abbrechen, rechts daneben Timer speichern anzeigen.
+- Auf schmalen Bildschirmen Abbrechen oberhalb von Timer speichern stapeln.
+
+## Prüfung von Version 1.1.23
 
 Prüfstand: 27.10.2026, Python 3.12.14 unter Linux.
 

@@ -1,12 +1,12 @@
-# Enigma2 Timer 1.1.23
+# Enigma2 Timer 1.1.24
 
 Eigenständige, zentral betriebene Webanwendung zur Timer- und
 Aufnahmen-Verwaltung für Enigma2-Receiver.
 
-Version 1.1.23 berechnet **Ende** auf **Aufnahmen** ausschließlich aus der
-Startzeit und der vom Receiver gemeldeten Aufnahmedauer. Das gilt auch für
-laufende Aufnahmen; auf **Timer** stammt die Endzeit weiterhin aus dem Timer.
-Die Version setzt den Stand 1.1.22 fort.
+Version 1.1.24 zeigt im Timerformular zuerst **Abbrechen** und rechts daneben
+**Timer speichern**, beim Erstellen, Bearbeiten und Kopieren. Auf schmalen
+Bildschirmen steht **Abbrechen** oberhalb von **Timer speichern**.
+Die Version setzt den Stand 1.1.23 fort.
 Die seit 1.1.2 bereinigte Git-Historie wird mit einem gewöhnlichen neuen
 Release-Commit fortgesetzt.
 Installation und Update: [INSTALL.md](INSTALL.md). GitHub: [GITHUB.md](GITHUB.md).
@@ -152,7 +152,7 @@ des Administrators. Er benötigt Python 3.12+, `python3-venv`, `rsync` und
 Zugang zum Python-Paketindex. Diese Systempakete bei Bedarf zuvor installieren.
 Der Installer aktiviert keine nginx-Konfigurationen.
 Der Nutzer hat die Erstinstallation und nginx-Anbindung für Version
-0.1.0 auf Ubuntu bestätigt. Die Timer- und Aufnahmefunktionen von 1.1.23 wurden mit
+0.1.0 auf Ubuntu bestätigt. Die Timer- und Aufnahmefunktionen von 1.1.24 wurden mit
 simulierten Receivern geprüft; die Prüfung an der tatsächlichen Hardware steht noch aus.
 
 Pfade:
@@ -545,6 +545,11 @@ sendet einen Auftrag. Der ausgewählte Sender wird vor dem Schreiben erneut
 im aktuellen Bouquet des ausgewählten Receivers geprüft. Lese-/Schreibrechte,
 Sitzungsbindung und die vorhandene Receiversperre gelten unverändert.
 
+Am Formularende steht zuerst **Abbrechen**, rechts daneben **Timer speichern**.
+Dies gilt beim Erstellen, Bearbeiten und Kopieren sowie nach Eingabefehlern oder
+Receiverkonflikten. In der mobilen Ansicht stehen die beiden Aktionen
+untereinander, mit **Abbrechen** zuerst.
+
 Sender- und EPG-Links öffnen weiterhin Entwürfe mit ihrer konkreten Auswahl.
 Bei einer Auswahl aus einem Bouquet ist die gemeinsame Bouquetauswahl ebenfalls
 verfügbar. EPG-Entwürfe behalten ihre Sendungsdaten und Vor-/Nachlauf. Diese
@@ -759,21 +764,21 @@ Ordner und ihre Unterordner werden akzeptiert. Es wird keine bestimmte
 Symlinkbeziehung vorausgesetzt und kein fremder Wunschpfad zur Prüfung geladen.
 Nach erfolgreichem Löschen bleibt die aktuelle Aufnahmeliste erreichbar.
 
-## Update von 0.1.x bis 1.1.22 auf 1.1.23
+## Update von 0.1.x bis 1.1.23 auf 1.1.24
 
 Das neue Paket auf den Ubuntu-Server übertragen, entpacken und aus dem neuen
 Projektverzeichnis den Installer erneut ausführen. Als root:
 
 ```bash
-unzip enigma2-web-v1.1.23.zip
-cd enigma2-web-v1.1.23
+unzip enigma2-web-v1.1.24.zip
+cd enigma2-web-v1.1.24
 bash scripts/install.sh
 curl --retry 10 --retry-delay 1 --retry-connrefused http://127.0.0.1:8081/health
 ```
 
 Der Installer hält den laufenden Dienst während des Updates an und startet ihn
 anschließend wieder. Der Health-Aufruf wartet bei Bedarf auf den Dienststart.
-Die erwartete Antwort enthält `"version":"1.1.23"`.
+Die erwartete Antwort enthält `"version":"1.1.24"`.
 
 Die vorhandenen Benutzer, Receiver, Passwörter, Sitzungen, die Konfiguration
 und der Verschlüsselungsschlüssel werden weiterverwendet. Ein Administrator
@@ -782,7 +787,7 @@ standardmäßig wird Port 8081 verwendet. Bei einem anderen Port den Health-Aufr
 entsprechend anpassen. In der vorhandenen nginx-Site das Lesezeitlimit auf
 300 Sekunden erhöhen (siehe nächsten Abschnitt); der Installer verändert nginx nicht.
 
-Die Datenbank wird automatisch auf Revision `0005` migriert. Von 0.8.0 bis 1.1.22 auf 1.1.23 ist keine neue Schemaänderung nötig. Vorhandene Konten,
+Die Datenbank wird automatisch auf Revision `0005` migriert. Von 0.8.0 bis 1.1.23 auf 1.1.24 ist keine neue Schemaänderung nötig. Vorhandene Konten,
 Receiverzuordnungen, Sitzungen, Audit-Ereignisse und alte Eigentümerkennungen
 bleiben erhalten. Die neue Migration ergänzt sprechende Ersteller-Tags für alle
 vorhandenen Konten. Frühere Revisionen ergänzen weiterhin Eigentümerkennungen,
@@ -818,8 +823,8 @@ Danach als root:
 nginx -t && systemctl reload nginx
 ```
 
-CSS und JavaScript verwenden URLs wie `/static/app.css?v=1.1.23`.
-Das Favicon verwendet ebenfalls eine versionierte URL: `/favicon.ico?v=1.1.23`.
+CSS und JavaScript verwenden URLs wie `/static/app.css?v=1.1.24`.
+Das Favicon verwendet ebenfalls eine versionierte URL: `/favicon.ico?v=1.1.24`.
 Der Browser lädt sie dadurch unter derselben HTTPS-Adresse wie die Seite.
 Das verhindert HTTP-Asset-URLs und Mixed Content bei einer HTTPS-Verbindung
 zum Proxy. Der Proxy-Header ist weiterhin für sichere Sitzungscookies wichtig.
@@ -875,7 +880,7 @@ Receiver dienen jetzt der weiteren Kompatibilitätsprüfung.
 
 ## Favicon und Lesezeichen
 
-Alle Seiten verweisen auf `/favicon.ico?v=1.1.23`. Das Icon ist ohne Anmeldung
+Alle Seiten verweisen auf `/favicon.ico?v=1.1.24`. Das Icon ist ohne Anmeldung
 mit dem Inhaltstyp `image/vnd.microsoft.icon` erreichbar und enthält das
 vorhandene Logo in 16, 32 und 48 Pixeln. Auch die statischen Icon-Dateien
 dürfen einen Tag lang gespeichert werden (`Cache-Control: public, max-age=86400`).
