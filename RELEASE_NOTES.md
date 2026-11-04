@@ -11,7 +11,7 @@ OpenWebif oder das ältere XML-WebInterface, mit deutscher, responsiver Oberflä
   Gilt für Erstellen, Bearbeiten, Kopieren und erneut angezeigte Formulare
   nach Eingabefehlern oder Receiverkonflikten.
 - **Mobile Ansicht:** Die Aktionen stehen weiterhin untereinander, mit
-  **Abbrechen** zuerst.
+  **Timer speichern** zuerst.
 - **Update:** Keine Konfigurationsänderung, neue Migration oder Abhängigkeit nötig.
 
 ## Aufnahme-Endzeit seit 1.1.23

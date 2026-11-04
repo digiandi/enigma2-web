@@ -6,7 +6,7 @@
   Gilt beim Erstellen, Bearbeiten und Kopieren sowie bei erneut angezeigten
   Formularen nach Eingabefehlern oder Receiverkonflikten.
 - Auf schmalen Bildschirmen beide Aktionen weiterhin stapeln, mit
-  **Abbrechen** oberhalb von **Timer speichern**.
+  **Timer speichern** oberhalb von **Abbrechen**.
 - Keine neue Migration, Abhängigkeit oder Konfigurationsänderung; Schema `0005`.
 
 ## 1.1.23 – 27.10.2026

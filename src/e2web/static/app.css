@@ -307,7 +307,6 @@ td small { margin-top: .15rem; color: var(--muted); }
   .form-grid-action { grid-column: auto; }
   .inline-form { align-items: stretch; flex-direction: column; }
   .form-actions { align-items: stretch; flex-direction: column-reverse; }
-  .timer-form-panel .form-actions { flex-direction: column; }
   .form-actions .button { width: 100%; }
   .panel-heading-row { align-items: stretch; flex-direction: column; }
   .panel-heading-row .button { width: 100%; }

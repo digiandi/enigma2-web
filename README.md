@@ -5,7 +5,7 @@ Aufnahmen-Verwaltung für Enigma2-Receiver.
 
 Version 1.1.24 zeigt im Timerformular zuerst **Abbrechen** und rechts daneben
 **Timer speichern**, beim Erstellen, Bearbeiten und Kopieren. Auf schmalen
-Bildschirmen steht **Abbrechen** oberhalb von **Timer speichern**.
+Bildschirmen steht **Timer speichern** oberhalb von **Abbrechen**.
 Die Version setzt den Stand 1.1.23 fort.
 Die seit 1.1.2 bereinigte Git-Historie wird mit einem gewöhnlichen neuen
 Release-Commit fortgesetzt.
@@ -548,7 +548,7 @@ Sitzungsbindung und die vorhandene Receiversperre gelten unverändert.
 Am Formularende steht zuerst **Abbrechen**, rechts daneben **Timer speichern**.
 Dies gilt beim Erstellen, Bearbeiten und Kopieren sowie nach Eingabefehlern oder
 Receiverkonflikten. In der mobilen Ansicht stehen die beiden Aktionen
-untereinander, mit **Abbrechen** zuerst.
+untereinander, mit **Timer speichern** zuerst.
 
 Sender- und EPG-Links öffnen weiterhin Entwürfe mit ihrer konkreten Auswahl.
 Bei einer Auswahl aus einem Bouquet ist die gemeinsame Bouquetauswahl ebenfalls

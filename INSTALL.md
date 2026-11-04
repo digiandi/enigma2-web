@@ -76,6 +76,10 @@ Erwartete Antwort:
 Nach dem Update die Browserseite neu laden. Vorher geöffnete Timerformulare neu
 öffnen, damit Version und Formularauftrag übereinstimmen.
 
+Bei der korrigierten Fassung von 1.1.24 bleibt die Versionsnummer gleich.
+Nach der Installation den Browsercache für die Seite leeren, damit die
+korrigierte mobile Button-Reihenfolge geladen wird; am Desktop genügt Strg+F5.
+
 Für die neue Bindung in einer vorhandenen Installation den `host`-Eintrag in
 `/etc/e2web/e2web.toml` auf folgenden Wert setzen:
 

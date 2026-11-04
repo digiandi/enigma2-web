@@ -2,9 +2,13 @@
 
 Das Git-Paket `enigma2-web-git-v1.1.24.zip` enthält den vollständigen Quellstand
 als vorbereitetes Repository mit Branch `main` und annotiertem Tag `v1.1.24`.
-Es setzt den bereinigten Stand 1.1.23 mit einem neuen Release-Commit fort.
+Es enthält die mobile Korrektur als zusätzlichen Commit nach dem zunächst
+bereitgestellten Stand 1.1.24. Branch `main` setzt dessen Historie fort.
+Der annotierte Tag `v1.1.24` bezeichnet jetzt die korrigierte Fassung.
 Die vorhandenen Tags einschließlich `v1.1.23` bleiben auf
-ihren bisherigen bereinigten Ständen. Für dieses Update genügt ein normaler Push.
+ihren bisherigen bereinigten Ständen. `main` wird mit einem normalen Push
+aktualisiert; für einen bereits veröffentlichten Tag `v1.1.24` gilt der unten
+beschriebene gezielte Tag-Push.
 Die Autorenkennung lautet `Enigma2 Timer Release <release@localhost>`.
 Das Paket enthält noch kein Remote. Die verworfene Version 1.1.15 ist nicht enthalten.
 
@@ -29,10 +33,23 @@ Falls `origin` bereits eingerichtet ist, dessen URL mit `git remote -v` prüfen.
 Die normale GitHub-Anmeldung erfolgt über die eingerichtete Git-/Credential-Verwaltung;
 Zugangsdaten gehören nicht in die Remote-URL.
 
+Wurde der erste Stand von 1.1.24 bereits hochgeladen, bleibt der Push von `main`
+ein gewöhnlicher Fast-Forward. Der Tag-Push wird dann wegen des bereits
+vorhandenen Tags abgelehnt. Nur für diesen zuvor bereitgestellten Tag stattdessen:
+
+```powershell
+git push --force-with-lease=refs/tags/v1.1.24:e2394334ba93de352d744384b959e47686127ff0 origin refs/tags/v1.1.24:refs/tags/v1.1.24
+```
+
+Der Befehl ersetzt den Tag nur, wenn auf GitHub noch genau der erste Stand
+von 1.1.24 vorliegt. Bei einer anderen Tag-Kennung zuerst den aktuellen Stand
+prüfen. Wenn der Tag noch nicht auf GitHub existiert, genügt der normale
+Tag-Push oben.
+
 Eigene zusätzliche Commits auf GitHub müssen vor dem Push berücksichtigt werden.
 Ein normaler Push bricht ab, wenn der neue Stand die dortige Historie nicht fortsetzt.
-Die vorhandenen Release-Tags werden nicht verschoben. Der Befehl lädt nur den
-neuen Tag `v1.1.24` hoch; die zuvor veröffentlichten Tags bleiben unverändert.
+Alle Tags bis einschließlich `v1.1.23` bleiben unverändert. Ausschließlich
+`v1.1.24` wird wegen der beibehaltenen Versionsnummer auf die mobile Korrektur gesetzt.
 
 ## Einmalige Bereinigung aus Version 1.1.2
 

@@ -3,10 +3,11 @@
 Prüfstand: 04.11.2026, Python 3.12.14 unter Linux.
 
 - Alle 368 vorhandenen automatisierten Tests im vollständigen Lauf erfolgreich.
+  Für die mobile Korrektur innerhalb von 1.1.24 erneut ausgeführt.
 - Im gemeinsamen Timerformular Abbrechen vor Timer speichern angeordnet.
-  Desktop-Reihenfolge links nach rechts; bei höchstens 720 Pixeln nur im
-  Timerformular mobile Stapelung in derselben Reihenfolge. Andere Formulare
-  verwenden ihre bisherigen Regeln.
+  Desktop-Reihenfolge links nach rechts; bei höchstens 720 Pixeln steht durch
+  die bestehende umgekehrte mobile Stapelung Timer speichern über Abbrechen.
+  Die zuvor ergänzte Sonderregel für das Timerformular wurde entfernt.
 - Neun HTML-Formularansichten aus dem installierten Wheel kontrolliert:
   Erstellen, Bearbeiten, Kopieren und erneut angezeigte Eingabefehler jeweils
   über JSON und XML sowie ein EPG-Entwurf über JSON. Abbrechen steht in der
@@ -21,9 +22,12 @@ Prüfstand: 04.11.2026, Python 3.12.14 unter Linux.
 - Installations- und Git-ZIP auf gültige Archive und identische Quelldateien
   geprüft; Paketbau aus dem entpackten Installations-ZIP zusätzlich geprüft.
   Die Wheel-Inhalte entsprechen dem zuvor geprüften installierten Paket.
-- Branch main und annotierter Tag v1.1.24 setzen v1.1.23 direkt fort.
-  Alle 24 bisherigen Tags bleiben unverändert; v1.1.15 bleibt ausgelassen.
-  git fsck, Klonen und gewöhnlicher lokaler Fast-Forward-Push geprüft.
+- Branch main enthält einen Korrektur-Commit nach dem ersten Stand von 1.1.24;
+  der annotierte Tag v1.1.24 wurde auf die korrigierte Fassung gesetzt.
+  Alle 24 Tags bis einschließlich v1.1.23 bleiben unverändert;
+  v1.1.15 bleibt ausgelassen. git fsck, Klonen und gewöhnlicher lokaler
+  Fast-Forward-Push ab dem ersten Stand von 1.1.24 geprüft. Der gezielte
+  Tag-Push mit Lease auf den zuvor ausgegebenen Tag ebenfalls lokal geprüft.
 - Keine neue Migration, Abhängigkeit oder Konfigurationsänderung; Schema 0005.
   Hardwareprüfung, GitHub-Push und GitHub-CI wurden nicht ausgeführt.
   Ausschließlich simulierte Receiver verwendet; die Ubuntu-Installation wurde
@@ -32,7 +36,7 @@ Prüfstand: 04.11.2026, Python 3.12.14 unter Linux.
 ## Änderungen 1.1.24
 
 - Im Timerformular zuerst Abbrechen, rechts daneben Timer speichern anzeigen.
-- Auf schmalen Bildschirmen Abbrechen oberhalb von Timer speichern stapeln.
+- Auf schmalen Bildschirmen Timer speichern oberhalb von Abbrechen stapeln.
 
 ## Prüfung von Version 1.1.23
 
