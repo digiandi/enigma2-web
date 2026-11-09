@@ -31,6 +31,8 @@ from e2web.timer_selection import (
 )
 from e2web.timers import WEEKDAYS, local_timestamp, service_key
 
+EPG_DESCRIPTION_LIMIT = 250
+
 
 def register_timer_pages(app, config, *, render, selected_receiver, check_csrf, redirect):
     timezone = ZoneInfo(config.timezone)
@@ -300,7 +302,9 @@ def register_timer_pages(app, config, *, render, selected_receiver, check_csrf, 
                     )
                 reference, channel = event.reference, event.name or "Ausgewählter Sender"
                 begin, end, name = event.begin, event.end, event.title[:256]
-                description = (event.short_description or event.description)[:4000]
+                description = event.short_description.strip()
+                if len(description) > EPG_DESCRIPTION_LIMIT:
+                    description = description[: EPG_DESCRIPTION_LIMIT - 1].rstrip() + "…"
                 event_info = {"id": event.id, "begin": event.begin, "reference": reference}
             elif not reference:
                 groups = timer_bouquets(client)

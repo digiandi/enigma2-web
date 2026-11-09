@@ -1,4 +1,38 @@
-# Prüfung von Version 1.1.24
+# Prüfung von Version 1.1.25
+
+Prüfstand: 09.11.2026, Python 3.12.14 unter Linux.
+
+- Alle 376 automatisierten Tests im vollständigen Lauf erfolgreich.
+- Acht Fälle für die EPG-Übernahme: fehlender und leerer Kurztext, genau
+  250 Zeichen und zu langer Kurztext, jeweils über JSON und XML. Der
+  ausführliche Text bleibt im EPG sichtbar und wird nicht in das Formular
+  übernommen. Das Formular sendet erst nach dem Speichern einen Auftrag;
+  die angezeigte Beschreibung wird dann auch an den Receiver übermittelt.
+- Eine eigene Beschreibung mit mehr als 250 Zeichen wird beim Speichern
+  aus einem EPG-Entwurf vollständig erhalten. Titel, Vor- und Nachlauf und
+  EPG-Kennung werden weiterhin übernommen. Bearbeiten und Kopieren verwenden
+  die vorhandenen Timerbeschreibungen wie bisher.
+- Code- und Formatprüfung, JavaScript- und Installer-Syntax erfolgreich.
+- Wheel und Quelldistribution aus dem entpackten Installations-ZIP gebaut.
+  Installiertes Wheel im ASGI-Testclient mit Health-Antwort
+  `{"status":"ok","version":"1.1.25"}`, neuen Asset-URLs und EPG-Entwürfen
+  über JSON und XML geprüft. Keine visuelle Browserprüfung durchgeführt.
+- Installations- und Git-ZIP enthalten dieselben Quelldateien. Beide Archive
+  auf Integrität geprüft. Branch `main` und annotierter Tag `v1.1.25` setzen
+  den korrigierten Stand `v1.1.24` fort. Alle 25 bisherigen Tags bleiben
+  unverändert; `v1.1.15` bleibt ausgelassen. `git fsck`, Klonen und normaler
+  Push von `main` und neuem Tag in ein lokales Testrepository geprüft.
+- Keine neue Migration, Abhängigkeit oder Konfigurationsänderung; Schema
+  `0005`. Receiver-Prüfungen erfolgten mit simulierten Antworten.
+  Hardwareprüfung, GitHub-Push und GitHub-CI wurden nicht ausgeführt.
+
+## Änderungen 1.1.25
+
+- EPG-Entwürfe übernehmen nur den Kurztext, höchstens 250 Zeichen.
+- Ohne Kurztext bleibt das Feld leer. Vollständige Sendungsdetails bleiben
+  im EPG verfügbar, eigene Timerbeschreibungen bis 4000 Zeichen sind möglich.
+
+## Prüfung von Version 1.1.24
 
 Prüfstand: 04.11.2026, Python 3.12.14 unter Linux.
 

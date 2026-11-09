@@ -1,11 +1,20 @@
-# Enigma2 Timer 1.1.24
+# Enigma2 Timer 1.1.25
 
-Release: 04.11.2026 · Git-Tag: `v1.1.24` · Datenbankschema: `0005`
+Release: 09.11.2026 · Git-Tag: `v1.1.25` · Datenbankschema: `0005`
 
 Zentrale Timer- und Aufnahmen-Verwaltung für mehrere Enigma2-Receiver über
 OpenWebif oder das ältere XML-WebInterface, mit deutscher, responsiver Oberfläche.
 
-## Neu in 1.1.24
+## Neu in 1.1.25
+
+- **Timer aus dem EPG:** Nur die Kurzbeschreibung vorausfüllen, höchstens
+  250 Zeichen einschließlich eines Auslassungszeichens bei gekürzten Texten.
+  Fehlt der Kurztext, bleibt das Feld leer.
+- **Sendungsdetails und eigene Texte:** Die vollständige Beschreibung bleibt
+  im EPG sichtbar. Eigene Timerbeschreibungen sind bis 4000 Zeichen möglich.
+- **Update:** Keine Konfigurationsänderung, neue Migration oder Abhängigkeit nötig.
+
+## Timerformular seit 1.1.24
 
 - **Timerformular:** Zuerst **Abbrechen**, rechts daneben **Timer speichern**.
   Gilt für Erstellen, Bearbeiten, Kopieren und erneut angezeigte Formulare

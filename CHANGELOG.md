@@ -1,5 +1,13 @@
 # Versionsverlauf
 
+## 1.1.25 – 09.11.2026
+
+- Beim Erstellen eines Timers aus dem EPG nur die Kurzbeschreibung übernehmen.
+  Sie ist auf höchstens 250 Zeichen begrenzt; ohne Kurztext bleibt das Feld leer.
+- Ausführliche Sendungsdetails bleiben im EPG lesbar. Eigene Beschreibungen sind
+  weiterhin bis zu 4000 Zeichen möglich.
+- Keine neue Migration, Abhängigkeit oder Konfigurationsänderung; Schema `0005`.
+
 ## 1.1.24 – 04.11.2026
 
 - Im Timerformular **Abbrechen** links und **Timer speichern** rechts anordnen.

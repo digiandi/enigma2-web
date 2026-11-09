@@ -67,6 +67,8 @@ class MockReceiver:
         self.lost_reply = False
         self.event_begin = now() + 7200
         self.event_id = 99
+        self.event_short_description = "Beschreibung"
+        self.event_description = "Details"
 
     def timer_xml(self):
         root = Element("e2timerlist")
@@ -135,23 +137,34 @@ class MockReceiver:
                     },
                 )
             if method == "epgservice":
-                return httpx.Response(
-                    200,
-                    json={
-                        "events": [
-                            {
-                                "id": self.event_id,
-                                "begin_timestamp": self.event_begin,
-                                "duration_sec": 1800,
-                                "title": "Aus dem EPG",
-                                "shortdesc": "Beschreibung",
-                                "longdesc": "Details",
-                                "sref": REFERENCE,
-                                "sname": "Das Erste HD",
-                            }
-                        ]
-                    },
-                )
+                event = {
+                    "id": self.event_id,
+                    "begin_timestamp": self.event_begin,
+                    "duration_sec": 1800,
+                    "title": "Aus dem EPG",
+                    "shortdesc": self.event_short_description,
+                    "longdesc": self.event_description,
+                    "sref": REFERENCE,
+                    "sname": "Das Erste HD",
+                }
+                if self.xml:
+                    root = Element("e2eventlist")
+                    row = SubElement(root, "e2event")
+                    mapping = {
+                        "id": "e2eventid",
+                        "begin_timestamp": "e2eventstart",
+                        "duration_sec": "e2eventduration",
+                        "title": "e2eventtitle",
+                        "shortdesc": "e2eventdescription",
+                        "longdesc": "e2eventdescriptionextended",
+                        "sref": "e2eventservicereference",
+                        "sname": "e2eventservicename",
+                    }
+                    for key, tag in mapping.items():
+                        if event[key] is not None:
+                            SubElement(row, tag).text = str(event[key])
+                    return httpx.Response(200, content=tostring(root))
+                return httpx.Response(200, json={"events": [event]})
             raise AssertionError(request.url.path)
         assert request.method == "POST"
         params = {
@@ -375,12 +388,47 @@ def test_epg_draft_is_read_only_until_submit_and_applies_margins(setup):
         href = html.unescape(re.search(r'href="([^"]*/timer/new\?[^"]+)"', epg.text)[1])
         page = client.get(href)
         assert "Aus dem EPG" in page.text and not box.writes
-        form = form_values(page, before="3", after="5")
+        assert ">Beschreibung</textarea>" in page.text
+        own_description = ("Eigene ausführliche Beschreibung. " * 20).strip()
+        form = form_values(page, before="3", after="5", description=own_description)
         assert client.post("/timer/save", data=form, follow_redirects=False).status_code == 303
         params = box.writes[0][1]
         assert int(params["begin"]) == box.event_begin - 180
         assert int(params["end"]) == box.event_begin + 1800 + 300
         assert params["eit"] == "99"
+        assert params["description"] == own_description
+
+
+@pytest.mark.parametrize("xml", [False, True])
+@pytest.mark.parametrize(
+    ("short_description", "expected"),
+    [(None, ""), (" \n\t ", ""), ("Ä" * 250, "Ä" * 250), ("Ä" * 1500, "Ä" * 249 + "…")],
+    ids=["missing", "blank", "at-limit", "over-limit"],
+)
+def test_epg_timer_prefills_only_a_bounded_short_description(
+    setup, xml, short_description, expected
+):
+    _, _, app = setup
+    box = install_mock(app, xml=xml)
+    box.event_short_description = short_description
+    box.event_description = ("Ausführlicher Inhalt der Sendung. " * 160).strip()
+    with TestClient(app) as client:
+        login(client, "user", "User-123")
+        epg = client.get("/epg", params={"reference": REFERENCE, "day": "all"})
+        assert epg.status_code == 200 and box.event_description in epg.text
+        href = html.unescape(re.search(r'href="([^"]*/timer/new\?[^"]+)"', epg.text)[1])
+        draft = client.get(href)
+        assert draft.status_code == 200 and not box.writes
+        description = html.unescape(
+            re.search(r'<textarea name="description"[^>]*>(.*?)</textarea>', draft.text, re.S)[1]
+        )
+        assert description == expected
+        saved = client.post(
+            "/timer/save", data=form_values(draft, description=description), follow_redirects=False
+        )
+        assert saved.status_code == 303
+        assert len(box.writes) == 1 and box.writes[0][0] == "timeradd"
+        assert box.writes[0][1]["description"] == expected
 
 
 def test_changed_epg_and_forged_sender_are_rejected_without_writes(setup):

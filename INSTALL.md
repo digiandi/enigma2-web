@@ -1,4 +1,4 @@
-# Enigma2 Timer 1.1.24 installieren
+# Enigma2 Timer 1.1.25 installieren
 
 Voraussetzungen: Ubuntu/Debian mit systemd, Python 3.12 oder neuer, `python3-venv`,
 `rsync` und `unzip`. Der Server muss die Receiver erreichen können. Der Installer
@@ -29,8 +29,8 @@ Die angezeigte Python-Version muss mindestens 3.12 sein. Anschließend das
 Installationspaket auf den Server übertragen und entpacken:
 
 ```bash
-unzip enigma2-web-v1.1.24.zip
-cd enigma2-web-v1.1.24
+unzip enigma2-web-v1.1.25.zip
+cd enigma2-web-v1.1.25
 bash scripts/install.sh
 runuser -u e2web-service -- /opt/e2web/.venv/bin/e2web \
   --config /etc/e2web/e2web.toml create-admin
@@ -54,8 +54,8 @@ gestopptem Webdienst oder mit einer konsistenten SQLite-Sicherung.
 Das neue Paket in einen neuen Ordner entpacken und als root ausführen:
 
 ```bash
-unzip enigma2-web-v1.1.24.zip
-cd enigma2-web-v1.1.24
+unzip enigma2-web-v1.1.25.zip
+cd enigma2-web-v1.1.25
 bash scripts/install.sh
 curl --retry 10 --retry-delay 1 --retry-connrefused \
   http://127.0.0.1:8081/health
@@ -70,15 +70,11 @@ das Update keine Timer oder Aufnahmedateien verändert.
 Erwartete Antwort:
 
 ```json
-{"status":"ok","version":"1.1.24"}
+{"status":"ok","version":"1.1.25"}
 ```
 
 Nach dem Update die Browserseite neu laden. Vorher geöffnete Timerformulare neu
 öffnen, damit Version und Formularauftrag übereinstimmen.
-
-Bei der korrigierten Fassung von 1.1.24 bleibt die Versionsnummer gleich.
-Nach der Installation den Browsercache für die Seite leeren, damit die
-korrigierte mobile Button-Reihenfolge geladen wird; am Desktop genügt Strg+F5.
 
 Für die neue Bindung in einer vorhandenen Installation den `host`-Eintrag in
 `/etc/e2web/e2web.toml` auf folgenden Wert setzen:
